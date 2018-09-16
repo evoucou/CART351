@@ -1,9 +1,23 @@
 
 html {
   background-color: #F7B32B;
+  font-family: sans-serif;
 }
 
-#wraper {
+header {
+  position: fixed;
+  float: left;
+    margin-top: 5px;
+}
+
+header ul {
+  list-style-type: none;
+}
+
+header ul li {
+display: inline-block;
+color: #496e88;
+margin-right: 30px;
 }
 
 main svg {
@@ -13,7 +27,5 @@ main svg {
 
 main svg text {
   font-size: 10px;
-font-family: sans-serif;
 z-index: 1;
-
 }
