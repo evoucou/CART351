@@ -1,13 +1,7 @@
 
-@font-face {
-    font-family: 'fjallaone-regular';
-    src: url('fonts/fjallaone-regular-webfont.woff') format('woff'),
-         url('fonts/fjallaone-regular-webfont.woff2') format('woff2');
-    font-weight: normal;
-    font-style: normal;
+
+#wraper {
 }
 
-
-header {
-  font-family: 'fjallaone-regular', sans-serif;
+#squares {
 }
