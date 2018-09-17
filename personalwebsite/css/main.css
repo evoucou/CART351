@@ -1,27 +1,10 @@
-@import url('https://fonts.googleapis.com/css?family=Playfair+Display|Source+Sans+Pro');
+@import url('https://fonts.googleapis.com/css?family=Playfair+Display');
 
 html {
   background-color: #FFBB4F;
-}
-#bg {
-  position: fixed;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-    z-index: -1;
-}
-
-#bg img {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  margin: auto;
-  max-width: 50%;
-  max-height: 50%;
-  z-index: -1;
+  font-family: 'helvetica', sans-serif;
+  color: #F20000;
+  fill: #F20000;
 }
 
 header {
@@ -31,20 +14,28 @@ header {
   padding-left: 35px;
 }
 
-h1 {
-  font-family: 'helvetica', sans-serif;
+header h1 {
   font-size: 30px;
-  color: #F20000;
   letter-spacing: -2px;
 }
 
-h2 {
+header h2 {
   font-size: 13px;
-  color: #F20000;
   font-weight: normal;
   margin-top: -20px;
-  font-family: 'helvetica', sans-serif;
   letter-spacing: 2px;
+}
+
+header p {
+  margin-top: 30px;
+  font-size: 13px;
+  font-family: 'Playfair Display', serif;
+  text-align: justify;
+  width: 340px;
+}
+
+header p b {
+  font-size: 30px;
 }
 
 
@@ -62,29 +53,26 @@ position: absolute;
 }
 
 main svg {
-  z-index: -1;
   position: fixed;
-}
-
-main svg rect:hover {
-  fill: #FFBB4F;
-  transition-delay: 0.1s;
-  transition: 0.3s;
+  left:0;
+  top:0;
 }
 
 main svg text {
   font-size: 7.5px;
   font-weight: bold;
-  font-family: 'helvetica', sans-serif;
   letter-spacing: 3px;
-  fill: #F20000;
 }
 
 main svg text tspan {
-  font-family: 'helvetica', sans-serif;
   font-size: 33px;
   font-weight: bold;
   letter-spacing: -3px;
+}
+
+main svg rect:hover {
+  transition-delay: 0.1s;
+  transition: 0.3s;
 }
 
 main svg text tspan a {
@@ -96,4 +84,19 @@ stroke-width: 1px;
 main svg text tspan a:hover {
 stroke-width: 1.4px;
 transition: 0.1s;
+}
+
+footer {
+  font-size:12px;
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  width: 100%;
+  height: 10px;
+  background-color: rgba(242,0,0,0.4);
+  color: white;
+ text-align: right;
+ padding-right: 40px;
+ padding-bottom: 10px;
+ padding-top: 10px;
 }
