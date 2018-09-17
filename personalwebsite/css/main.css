@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css?family=Playfair+Display|Source+Sans+Pro');
 
 html {
   background-color: #F7B32B;
@@ -7,17 +8,31 @@ html {
 header {
   position: fixed;
   float: left;
-    margin-top: 5px;
+  padding-top: 15px;
+  padding-left: 35px;
 }
 
-header ul {
-  list-style-type: none;
+h1 {
+  font-family: Playfair;
+  font-size: 35px;
+  font-weight: bolder;
+  color: #F20000;
 }
 
-header ul li {
-display: inline-block;
-color: #496e88;
-margin-right: 30px;
+h2 {
+  font-size: 17px;
+  color: #F20000;
+  font-weight: normal;
+  margin-top: -27px;
+}
+
+main #titles {
+  position: absolute;
+  width: 230px;
+  height: 230px;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
 }
 
 main svg {
@@ -26,6 +41,11 @@ main svg {
 }
 
 main svg text {
-  font-size: 10px;
-z-index: 1;
+font-size: 13px;
+font-family: 'Source Sans Pro', sans-serif;
+font-weight: bold;
+}
+
+main svg text tspan {
+font-size: 10px;
 }
