@@ -13,8 +13,9 @@ header {
 
 h1 {
   font-family: 'helvetica', sans-serif;
-  font-size: 35px;
+  font-size: 40px;
   color: #F20000;
+  letter-spacing: -3px;
 }
 
 h2 {
@@ -23,18 +24,18 @@ h2 {
   font-weight: normal;
   margin-top: -20px;
   font-family: 'helvetica', sans-serif;
-  letter-spacing: 10px;
+  letter-spacing: 9.7px;
 }
 
 
-main #titles {
+/*main #titles {
   position: absolute;
   width: 230px;
   height: 230px;
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-}
+}*/
 
 main ellipse{
 position: absolute;
@@ -46,12 +47,15 @@ main svg {
 }
 
 main svg text {
-  font-family: 'helvetica', sans-serif;
-  font-size: 10px;
+  font-size: 7.5px;
   font-weight: bold;
-  color: #F20000;
+  font-family: 'helvetica', sans-serif;
+  letter-spacing: 3px;
 }
 
 main svg text tspan {
-font-size: 10px;
+  font-family: 'helvetica', sans-serif;
+  font-size: 33px;
+  font-weight: bold;
+  letter-spacing: -3px;
 }
