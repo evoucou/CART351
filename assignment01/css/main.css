@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css?family=Playfair+Display');
 
 html {
-  background-color: #FFBB4F;
+  background-color: #fec161;
   font-family: 'helvetica', sans-serif;
   color: #F20000;
   fill: #F20000;
@@ -34,20 +34,6 @@ header p {
   width: 340px;
 }
 
-header p b {
-  font-size: 30px;
-}
-
-
-/*main #titles {
-  position: absolute;
-  width: 230px;
-  height: 230px;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-}*/
-
 main ellipse {
 position: absolute;
 }
@@ -69,7 +55,6 @@ main svg text tspan {
   font-weight: bold;
   letter-spacing: -3px;
 }
-
 
 main svg text tspan a {
 fill: none;
