@@ -18,7 +18,8 @@
     <!-- the main div -->
 <main>
 <img src="sources/titles.svg" id="titles">
-<svg viewBox="240 60 1000 1000">
+<svg viewBox="240 60 1000 1000" xmlns:xlink="http://www.w3.org/1999/xlink">
+
   <!-- Right upper rectangle -->
   <rect x="630" y='60' width="650" height="430" fill='#A9E5BB' transform='rotate(-15)' />
   <text x="700" y="450" style="fill:red;" transform='rotate(-15)'>Proposal / Prototype live;github /
@@ -36,6 +37,25 @@
   <text x="710" y="535" style="fill:red;" transform='rotate(-15)'>Reflections /
      <tspan x="710" y="550">Presentations</tspan>
    </text>
+
+   <g transform="translate(730, 335)"> <!-- Create a Cartesian coordinate system (with the y-axis flipped) for the animated square. That is, place the origin at the center of the 800 x 800 SVG viewport. -->
+     <circle cx="0" cy="0" r="100" style="fill:none;stroke:#F20000;stroke-width:4" stroke-linecap="round"
+       path stroke-dasharray="0,32"0 d="M5 50 l215 50">
+       <animateTransform attributeType="xml" attributeName="transform" type="rotate" from="0" to="360" begin="0" dur="12s" repeatCount="indefinite" />
+     </circle>
+     <circle cx="0" cy="0" r="150" style="fill:none;stroke:#F20000;stroke-width:6" stroke-linecap="round"
+       path stroke-dasharray="0,50"0 d="M5 50 l215 50">
+       <animateTransform attributeType="xml" attributeName="transform" type="rotate" from="0" to="-360" begin="0" dur="40s" repeatCount="indefinite" />
+     </circle>
+     <circle cx="0" cy="0" r="200" style="fill:none;stroke:#F20000;stroke-width:8" stroke-linecap="round"
+       path stroke-dasharray="0,84"0 d="M5 50 l215 50">
+       <animateTransform attributeType="xml" attributeName="transform" type="rotate" from="0" to="360" begin="0" dur="80s" repeatCount="indefinite" />
+     </circle>
+     <circle cx="0" cy="0" r="250" style="fill:none;stroke:#F20000;stroke-width:8" stroke-linecap="round"
+       path stroke-dasharray="0,143"0 d="M5 50 l215 50">
+       <animateTransform attributeType="xml" attributeName="transform" type="rotate" from="0" to="360" begin="0" dur="170s" repeatCount="indefinite" />
+     </circle>
+   </g>
 </svg>
 </main>
 

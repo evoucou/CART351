@@ -26,6 +26,7 @@ h2 {
   margin-top: -27px;
 }
 
+
 main #titles {
   position: absolute;
   width: 230px;
@@ -33,6 +34,10 @@ main #titles {
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
+}
+
+main ellipse{
+position: absolute;
 }
 
 main svg {
