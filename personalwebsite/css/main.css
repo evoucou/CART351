@@ -2,7 +2,6 @@
 
 html {
   background-color: #F7B32B;
-  font-family: sans-serif;
 }
 
 header {
@@ -13,17 +12,18 @@ header {
 }
 
 h1 {
-  font-family: Playfair;
+  font-family: 'helvetica', sans-serif;
   font-size: 35px;
-  font-weight: bolder;
   color: #F20000;
 }
 
 h2 {
-  font-size: 17px;
+  font-size: 13px;
   color: #F20000;
   font-weight: normal;
-  margin-top: -27px;
+  margin-top: -20px;
+  font-family: 'helvetica', sans-serif;
+  letter-spacing: 10px;
 }
 
 
@@ -46,9 +46,10 @@ main svg {
 }
 
 main svg text {
-font-size: 13px;
-font-family: 'Source Sans Pro', sans-serif;
-font-weight: bold;
+  font-family: 'helvetica', sans-serif;
+  font-size: 10px;
+  font-weight: bold;
+  color: #F20000;
 }
 
 main svg text tspan {
