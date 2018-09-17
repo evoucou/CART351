@@ -1,7 +1,27 @@
 @import url('https://fonts.googleapis.com/css?family=Playfair+Display|Source+Sans+Pro');
 
 html {
-  background-color: #F7B32B;
+  background-color: #FFBB4F;
+}
+#bg {
+  position: fixed;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+    z-index: -1;
+}
+
+#bg img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: auto;
+  max-width: 50%;
+  max-height: 50%;
+  z-index: -1;
 }
 
 header {
@@ -13,9 +33,9 @@ header {
 
 h1 {
   font-family: 'helvetica', sans-serif;
-  font-size: 40px;
+  font-size: 30px;
   color: #F20000;
-  letter-spacing: -3px;
+  letter-spacing: -2px;
 }
 
 h2 {
@@ -24,7 +44,7 @@ h2 {
   font-weight: normal;
   margin-top: -20px;
   font-family: 'helvetica', sans-serif;
-  letter-spacing: 9.7px;
+  letter-spacing: 2px;
 }
 
 
@@ -37,7 +57,7 @@ h2 {
   transform: translate(-50%, -50%);
 }*/
 
-main ellipse{
+main ellipse {
 position: absolute;
 }
 
@@ -46,11 +66,18 @@ main svg {
   position: fixed;
 }
 
+main svg rect:hover {
+  fill: #FFBB4F;
+  transition-delay: 0.1s;
+  transition: 0.3s;
+}
+
 main svg text {
   font-size: 7.5px;
   font-weight: bold;
   font-family: 'helvetica', sans-serif;
   letter-spacing: 3px;
+  fill: #F20000;
 }
 
 main svg text tspan {
@@ -58,4 +85,15 @@ main svg text tspan {
   font-size: 33px;
   font-weight: bold;
   letter-spacing: -3px;
+}
+
+main svg text tspan a {
+fill: none;
+stroke:#F20000;
+stroke-width: 1px;
+}
+
+main svg text tspan a:hover {
+stroke-width: 1.4px;
+transition: 0.1s;
 }
