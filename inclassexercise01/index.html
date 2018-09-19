@@ -1,0 +1,153 @@
+
+<!DOCTYPE html>
+<html>
+
+
+<head>
+  <title> EXERCISE 1 </title>
+  <script>
+  window.onload =function(){
+
+
+        let handleClickAnyBox = function (event){
+            if(this.id == "c")
+                {
+                    this.style.background = '#7E5835';
+                    if (this.innerHTML == 'Text c')
+                    {
+                        this.innerHTML = "Box c was clicked";
+                        } else
+                        {
+                            this.innerHTML = "Text c";
+                            this.style.background = '#3e181b'
+                        }
+                }
+               if(this.id == "d")
+                {
+                   this.style.background = '#9932CC';
+                    if (this.innerHTML == 'Text d')
+                    {
+                        this.innerHTML = "Box c was clicked";
+                        } else
+                        {
+                            this.innerHTML = "Text d";
+                            this.style.background = '#422018'
+
+                        }
+                }
+               if(this.id == "e")
+                {
+                   this.style.background = '#8FBC8F';
+                    if (this.innerHTML == 'Text e')
+                    {
+                        this.innerHTML = "Box c was clicked";
+                        } else
+                        {
+                            this.innerHTML = "Text e";
+                            this.style.background = '#45391b'
+                        }
+                }
+
+        };
+
+        let handleMouseOver = function(event)
+            {
+
+                if(this.id == "c")
+                {
+                  this.style.opacity = 0.5;
+                }
+               if(this.id == "d")
+                {
+                    this.style.opacity = 0.5;
+                }
+               if(this.id == "e")
+                {
+                  this.style.opacity = 0.5;
+                }
+
+            };
+
+        let handleMouseOut = function (event)
+            {
+
+                if(this.id == "c")
+                {
+                  this.style.opacity = 1;
+                }
+               if(this.id == "d")
+                {
+                    this.style.opacity = 1;
+                }
+               if(this.id == "e")
+                {
+                  this.style.opacity = 1;
+                }
+
+            };
+
+      var cBox = document.getElementById('c');
+      var dBox = document.getElementById('d');
+      var eBox = document.getElementById('e');
+      var BoxPara = document.getElementById('displayText');
+
+      cBox.addEventListener('click', handleClickAnyBox);
+      cBox.addEventListener('mouseover', handleMouseOver);
+      cBox.addEventListener('mouseout',handleMouseOut);
+
+      dBox.addEventListener('click', handleClickAnyBox);
+      dBox.addEventListener('mouseover', handleMouseOver);
+      dBox.addEventListener('mouseout',handleMouseOut);
+
+      eBox.addEventListener('click', handleClickAnyBox);
+      eBox.addEventListener('mouseover', handleMouseOver);
+      eBox.addEventListener('mouseout',handleMouseOut);
+
+      BoxPara.addEventListener('click',handleClickAnyBox);
+
+
+  };
+
+
+  </script>
+  <style>
+  #c {
+      background-color: #3e181b;
+      border: 3px solid #db1d2d;}
+
+  #d {
+      background-color: #422018;
+      border: 3px solid #f0421c;}
+
+  #e {
+      background-color: #45391b;
+      border: 3px solid #fec02d;}
+
+  body{
+        background:black;}
+  .para {color:white;font-size:22pt; background:purple;margin-left: 1%;margin-top: 1%; padding:1%;}
+      .box {
+      width: 10vw; /*(1/10th) viewport width */
+      height: 10vw;
+      margin-left: 1%;
+      margin-top: 1%;
+      display:inline-block;
+    }
+  .wrapper{
+    margin-left:30%;
+    margin-top:15%;
+  }
+  </style>
+
+</head>
+<body>
+  <div class = "wrapper">
+  <div id = "c" class = "box">Text c</div>
+  <div id = "d" class = "box">Text d</div>
+  <div id = "e" class = "box">Text e</div>
+  <br />
+  <p style = "display:none" id= "displayText" class = "para"></p>
+</div>
+
+</body>
+</html>
