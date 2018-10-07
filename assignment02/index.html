@@ -6,72 +6,81 @@
   <meta name="keywords" content="Marie-Eve Cousineau, Matteo Mannarino, CART351, Concordia University, Sabine Rosenberg">
 <meta name="description" content="Assignment02 for CART351 - Marie-Eve and Matteo">
 <meta name="author" content="Marie-Eve Cousineau and Matteo Mannarino">
-</head>
-<body>
 
-  <!-- the header div -->
-<header>
+<script>
+window.onload = function(){
 
 
-    <!-- the main div -->
-<main><div>
+var context = document.getElementById('myCanvas').getContext("2d");
 
-  <script>
-  var images = {};
+var images = {};
 
 // Note to myself: we first draw parts that are the farthest away
 // Order is: arms, head, legs, torso, eyes...
-  loadImage("leftarm");
-  loadImage("leftleg");
-  loadImage("torso");
-  loadImage("rightarm");
-  loadImage("rightleg");
-  loadImage("head");
-  loadImage("eye");
+loadImage("leftarm");
+loadImage("leftleg");
+loadImage("torso");
+loadImage("rightarm");
+loadImage("rightleg");
+loadImage("head");
+loadImage("eye");
 
-  function loadImage(name) {
+function loadImage(name) {
 
-    images[name] = new Image();
-    images[name].onload = function() {
-        resourceLoaded();
-    }
-    images[name].src = "sources/" + name + ".png";
+  images[name] = new Image();
+  images[name].onload = function() {
+      resourceLoaded();
   }
+  images[name].src = "sources/" + name + ".svg";
+}
 
-  var totalResources = 6;
+var totalResources = 6;
 var numResourcesLoaded = 0;
 var fps = 30;
 
 function resourceLoaded() {
- // checking if all images have been laoded, if so we trigger 'draw' function
-  numResourcesLoaded += 1;
-  if(numResourcesLoaded === totalResources) {
-    setInterval(redraw, 1000 / fps);
-  }
+// checking if all images have been laoded, if so we trigger 'draw' function
+numResourcesLoaded += 1;
+if(numResourcesLoaded === totalResources) {
+  setInterval(redraw, 1000 / fps);
+}
 }
 
-var context = document.getElementById('canvas').getContext("2d");
-
-var x = 245;
-var y = 185;
+// character X, where the central element is the torso.
+// Basically, charX = torsoX.
+var charX = 245;
+var charY = 185;
 
 function redraw() {
 
-  var x = this.x;
-  var y = this.y;
+var x = charX;
+var y = charY;
 
-  canvas.width = canvas.width; // clears the canvas
+canvas.width = canvas.width; // clears the canvas
 
-  context.drawImage(images["leftarm"], x + 40, y - 42);
-  context.drawImage(images["leftleg"], x, y);
-  context.drawImage(images["torso"], x, y - 50);
-  context.drawImage(images["rightarm"], x - 15, y - 42);
-  context.drawImage(images["rightleg"], x - 15, y - 42);
-  context.drawImage(images["head"], x - 10, y - 125);
-  context.drawImage(images["hair"], x - 37, y - 138);
+context.drawImage(images["leftarm"], this.x + 40, this.y - 42);
+context.drawImage(images["leftleg"], this.x, this.y);
+context.drawImage(images["torso"], this.x, this.y - 50);
+context.drawImage(images["rightarm"], this.x - 15, y - 42);
+context.drawImage(images["rightleg"], this.x - 15, this.y - 42);
+context.drawImage(images["head"], this.x - 10, this.y - 125);
+context.drawImage(images["eye"], this.x - 37, this.y - 138);
+context.drawImage(images["eye"], this.x - 37, this.y - 138);
 }
-  </script>
-</div>
+}
+</script>
+</head>
+<body>
+
+  <!-- the header div -->
+<header></header>
+
+
+    <!-- the main div -->
+<main>
+    <canvas id="myCanvas" width="600" height="700">
+
+  </canvas>
 </main>
 
   <!-- the footer div -->

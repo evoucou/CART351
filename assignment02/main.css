@@ -1,6 +1,6 @@
 @import url('https://fonts.googleapis.com/css?family=Playfair+Display');
 
-main div {
+/*main div {
     width: 164px;
     height: 675px;
     background-color: red;
@@ -12,6 +12,18 @@ main div {
     right: 0;
 
     margin: auto;
+}*/
+
+body{
+  margin:0;
+  padding:0;
+}
+
+canvas {
+  background:black;
+  margin:0;
+  padding:0;
+  position: absolute;
 }
 
 
