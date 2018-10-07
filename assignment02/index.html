@@ -19,11 +19,13 @@
   <script>
   var images = {};
 
-  loadImage("leftArm");
-  loadImage("leftLeg");
+// Note to myself: we first draw parts that are the farthest away
+// Order is: arms, head, legs, torso, eyes...
+  loadImage("leftarm");
+  loadImage("leftleg");
   loadImage("torso");
-  loadImage("rightArm");
-  loadImage("rightLeg");
+  loadImage("rightarm");
+  loadImage("rightleg");
   loadImage("head");
   loadImage("eye");
 
@@ -33,8 +35,41 @@
     images[name].onload = function() {
         resourceLoaded();
     }
-    images[name].src = "images/" + name + ".png";
+    images[name].src = "sources/" + name + ".png";
   }
+
+  var totalResources = 6;
+var numResourcesLoaded = 0;
+var fps = 30;
+
+function resourceLoaded() {
+ // checking if all images have been laoded, if so we trigger 'draw' function
+  numResourcesLoaded += 1;
+  if(numResourcesLoaded === totalResources) {
+    setInterval(redraw, 1000 / fps);
+  }
+}
+
+var context = document.getElementById('canvas').getContext("2d");
+
+var x = 245;
+var y = 185;
+
+function redraw() {
+
+  var x = this.x;
+  var y = this.y;
+
+  canvas.width = canvas.width; // clears the canvas
+
+  context.drawImage(images["leftarm"], x + 40, y - 42);
+  context.drawImage(images["leftleg"], x, y);
+  context.drawImage(images["torso"], x, y - 50);
+  context.drawImage(images["rightarm"], x - 15, y - 42);
+  context.drawImage(images["rightleg"], x - 15, y - 42);
+  context.drawImage(images["head"], x - 10, y - 125);
+  context.drawImage(images["hair"], x - 37, y - 138);
+}
   </script>
 </div>
 </main>
