@@ -23,9 +23,6 @@ var totalResources = 6;
 var numResourcesLoaded = 0;
 var fps = 30;
 
-// character X, where the central element is the torso.
-// Basically, charX = torsoX.
-
 function resourceLoaded() {
 
 // checking if all images have been laoded, if so we trigger 'draw' function
@@ -40,22 +37,36 @@ function redraw() {
 var canvas = document.getElementById("myCanvas");
 var context = canvas.getContext("2d");
 
-var x = canvas.width/2;
-var y = 100;
-
   //context.width = context.width; // clears the canvas
+
+var torsoWidth = images["torso"].width;
+var torsoHeight = images["torso"].height;
+
+var armWidth = images["rightarm"].width;
+var armHeight = images["rightarm"].height;
+
+var legWidth = images["rightleg"].width;
+var legHeight = images["rightleg"].height;
+
+var headWidth = images["head"].width;
+var headHeight = images["head"].height;
+
+//The center of the canvas is the torso.
+var x = canvas.width/2 - torsoWidth/2;
+var y = canvas.height/2 - torsoHeight/2;
 
   // Note to myself: we first draw parts that are the farthest away
   // Order is: arms, head, legs, torso, eyes...
-context.drawImage(images["leftarm"], x-30,y);
-context.drawImage(images["rightarm"], x+30,y);
-context.drawImage(images["head"], x, y);
-context.drawImage(images["leftleg"], x, y + 50);
-context.drawImage(images["rightleg"], x - 15, y - 42);
-context.drawImage(images["torso"], x, y - 50);
+context.drawImage(images["leftarm"], x - armWidth/2, y + 30);
+context.drawImage(images["rightarm"], x + (torsoWidth - armWidth/2), y + 30);
+context.drawImage(images["head"], x - (headWidth/8 + 4), y - (torsoHeight + 15));
+context.drawImage(images["leftleg"], x - (torsoWidth/2 - legWidth/2 + 5), y + legHeight/2);
+context.drawImage(images["rightleg"], x + (torsoWidth - legWidth + 23), y + legHeight/2);
+context.drawImage(images["torso"], x, y);
 
-drawEllipse(x, y, 19, 16); // Left Eye
-drawEllipse(x, y, 19, 16); // Right Eye
+// We want to make him blink, so it's easier to draw shapes
+drawEllipse(x + 33, y - 85, 19, 15); // Left Eye
+drawEllipse(x + 79, y - 85, 19, 15); // Right Eye
 
 function drawEllipse(centerX, centerY, width, height) {
 
