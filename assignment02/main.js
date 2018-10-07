@@ -1,7 +1,6 @@
 
-window.onload = function() {
 
-var images = {};
+var images = [];
 
 // Note to myself: we first draw parts that are the farthest away
 // Order is: arms, head, legs, torso, eyes...
@@ -18,36 +17,36 @@ function loadImage(name) {
   images[name].onload = function() {
       resourceLoaded();
   }
-  images[name].src = "/sources/" + name + ".svg";
+  images[name].src = "sources/png/" + name + ".png";
 }
 
 var totalResources = 6;
 var numResourcesLoaded = 0;
 var fps = 30;
+var charX = 45;
+var charY = 85;
 
 function resourceLoaded() {
 
 // checking if all images have been laoded, if so we trigger 'draw' function
 numResourcesLoaded += 1;
 if(numResourcesLoaded === totalResources) {
-  setInterval(redraw, 1000 / fps);
+  setInterval(redraw(charX, charY), 1000 / fps);
 }
 console.log(numResourcesLoaded);
 }
 
 // character X, where the central element is the torso.
 // Basically, charX = torsoX.
-var charX = 245;
-var charY = 185;
 
-function redraw() {
+function redraw(x,y) {
 
-  var context = document.getElementById('canvas').getContext("2d");
+this.x = charX;
+this.y = charY;
 
-let x = charX;
-let y = charY;
+var context = document.getElementById("myCanvas").getContext("2d");
 
-  canvas.width = canvas.width; // clears the canvas
+  context.width = context.width; // clears the canvas
 
 context.drawImage(images["leftarm"], this.x + 40, this.y - 42);
 context.drawImage(images["leftleg"], this.x, this.y);
@@ -55,5 +54,4 @@ context.drawImage(images["torso"], this.x, this.y - 50);
 context.drawImage(images["rightarm"], this.x - 15, y - 42);
 context.drawImage(images["rightleg"], this.x - 15, this.y - 42);
 context.drawImage(images["head"], this.x - 10, this.y - 125);
-}
 }
