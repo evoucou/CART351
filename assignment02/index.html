@@ -14,9 +14,29 @@
 
 
     <!-- the main div -->
-<main>
-  <img src="sources/head.svg"></img>
+<main><div>
 
+  <script>
+  var images = {};
+
+  loadImage("leftArm");
+  loadImage("leftLeg");
+  loadImage("torso");
+  loadImage("rightArm");
+  loadImage("rightLeg");
+  loadImage("head");
+  loadImage("eye");
+
+  function loadImage(name) {
+
+    images[name] = new Image();
+    images[name].onload = function() {
+        resourceLoaded();
+    }
+    images[name].src = "images/" + name + ".png";
+  }
+  </script>
+</div>
 </main>
 
   <!-- the footer div -->
