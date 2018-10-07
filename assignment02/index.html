@@ -8,10 +8,6 @@
 <meta name="author" content="Marie-Eve Cousineau and Matteo Mannarino">
 
 <script>
-window.onload = function(){
-
-
-var context = document.getElementById('myCanvas').getContext("2d");
 
 var images = {};
 
@@ -23,7 +19,6 @@ loadImage("torso");
 loadImage("rightarm");
 loadImage("rightleg");
 loadImage("head");
-loadImage("eye");
 
 function loadImage(name) {
 
@@ -39,11 +34,13 @@ var numResourcesLoaded = 0;
 var fps = 30;
 
 function resourceLoaded() {
+
 // checking if all images have been laoded, if so we trigger 'draw' function
 numResourcesLoaded += 1;
 if(numResourcesLoaded === totalResources) {
   setInterval(redraw, 1000 / fps);
 }
+console.log(numResourcesLoaded);
 }
 
 // character X, where the central element is the torso.
@@ -53,10 +50,12 @@ var charY = 185;
 
 function redraw() {
 
-var x = charX;
-var y = charY;
+  var context = document.getElementById('canvas').getContext("2d");
 
-canvas.width = canvas.width; // clears the canvas
+let x = charX;
+let y = charY;
+
+  canvas.width = canvas.width; // clears the canvas
 
 context.drawImage(images["leftarm"], this.x + 40, this.y - 42);
 context.drawImage(images["leftleg"], this.x, this.y);
@@ -64,10 +63,10 @@ context.drawImage(images["torso"], this.x, this.y - 50);
 context.drawImage(images["rightarm"], this.x - 15, y - 42);
 context.drawImage(images["rightleg"], this.x - 15, this.y - 42);
 context.drawImage(images["head"], this.x - 10, this.y - 125);
-context.drawImage(images["eye"], this.x - 37, this.y - 138);
-context.drawImage(images["eye"], this.x - 37, this.y - 138);
+
 }
-}
+
+
 </script>
 </head>
 <body>
@@ -78,7 +77,7 @@ context.drawImage(images["eye"], this.x - 37, this.y - 138);
 
     <!-- the main div -->
 <main>
-    <canvas id="myCanvas" width="600" height="700">
+    <canvas id="canvas" width="600" height="700">
 
   </canvas>
 </main>
