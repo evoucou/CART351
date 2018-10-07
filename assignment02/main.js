@@ -64,6 +64,22 @@ context.drawImage(images["leftleg"], x - (torsoWidth/2 - legWidth/2 + 5), y + le
 context.drawImage(images["rightleg"], x + (torsoWidth - legWidth + 23), y + legHeight/2);
 context.drawImage(images["torso"], x, y);
 
+////anim/////
+
+
+// add an event listener
+canvas.addEventListener('mousedown', (event) => {
+   rotateArm();
+});
+
+
+function rotateArm() {
+  console.log("rotatearm");
+      images["rightleg"].x++;
+    }
+
+/////////
+
 // We want to make him blink, so it's easier to draw shapes
 drawEllipse(x + 33, y - 85, 19, 15); // Left Eye
 drawEllipse(x + 79, y - 85, 19, 15); // Right Eye
