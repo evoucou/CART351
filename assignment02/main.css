@@ -21,6 +21,7 @@ canvas {
 position:absolute;
   margin: 0;
   padding: 0;
+  opacity: 0.6;
 }
 
 
