@@ -20,7 +20,7 @@ function loadImage(name) {
 
 var totalResources = 6;
 var numResourcesLoaded = 0;
-var fps = 30;
+var fps = 10;
 
 function resourceLoaded() {
 
@@ -51,8 +51,8 @@ var headWidth = images["head"].width;
 var headHeight = images["head"].height;
 
 //The center of the canvas is the torso.
-var x = canvas.width/2 - torsoWidth/2;
-var y = canvas.height/2 - torsoHeight/2;
+var x = canvas.width/2;
+var y = canvas.height/2;
 
   // Note to myself: we first draw parts that are the farthest away
   // Order is: arms, head, legs, torso, eyes...
@@ -64,18 +64,39 @@ context.drawImage(images["rightleg"], x + (torsoWidth - legWidth + 23), y + legH
 context.drawImage(images["torso"], x, y);
 
 ////anim/////
-
+var angle = 0;
 
 // add an event listener
 canvas.addEventListener('mousedown', (event) => {
-   rotateArm();
-   console.log('clicked')
+  setInterval(rotateArm, 1000 / fps);
+   //console.log('clicked')
 });
+        function incrementAngle() {
+               angle++;
+               if(angle > 30) {
+                   angle = 0;
+               }
+           }
 
+           function convertToRadians(degree) {
+                       return degree*(Math.PI/180);
+                       console.log("degree: " + degree);
+                   }
 
 function rotateArm() {
-      images["rightleg"].x++;
-    }
+
+  // clear the drawing surface
+  context.clearRect(0,0,1280,720);
+  // you can also stroke a rect, the operations need to happen in order
+  incrementAngle();
+  //context.rotate(convertToRadians(angle));
+  context.translate(+10,+10);
+  context.save();
+  context.restore();
+  console.log(angle);
+
+}
+
 
 /////////
 
