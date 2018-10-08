@@ -9,6 +9,9 @@ loadImage("rightarm");
 loadImage("rightleg");
 loadImage("head");
 
+var legImg = new Image();
+legImg.src = "sources/png/rightleg.png";
+
 function loadImage(name) {
 
   images[name] = new Image();
@@ -68,9 +71,7 @@ var angle = 0;
 
 // add an event listener
 canvas.addEventListener('mousedown', (event) => {
-  //setInterval(rotateArm, 1000 / fps);
   requestAnimationFrame(rotateArm);
-   //console.log('clicked')
 });
         function incrementAngle() {
                angle++;
@@ -82,17 +83,18 @@ canvas.addEventListener('mousedown', (event) => {
 
 function rotateArm() {
 
-  // clear the drawing surface
-  context.setTransform(1, 0, 0, 1, 0, 0);
-  //context.clearRect(0,0,canvas.width,canvas.height);
-
   incrementAngle();
-  //context.translate(y,x);
-  context.rotate(angle*(Math.PI/180));
-  context.save();
-  context.restore();
+  context.drawImage(legImg, x+10, y+10);
 
-requestAnimationFrame(rotateArm);
+   context.translate(x,y);
+   context.rotate(-angle + Math.PI/2.0);
+  context.drawImage(legImg, x+10, y+10);
+   context.rotate(angle - Math.PI/2.0);
+   context.translate(-x, -y);
+
+  requestAnimationFrame(rotateArm);
+  console.log(angle);
+
 
 }
 
