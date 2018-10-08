@@ -69,11 +69,11 @@ context.drawImage(images["torso"], x, y);
 // add an event listener
 canvas.addEventListener('mousedown', (event) => {
    rotateArm();
+   console.log('clicked')
 });
 
 
 function rotateArm() {
-  console.log("rotatearm");
       images["rightleg"].x++;
     }
 
