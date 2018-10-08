@@ -68,32 +68,31 @@ var angle = 0;
 
 // add an event listener
 canvas.addEventListener('mousedown', (event) => {
-  setInterval(rotateArm, 1000 / fps);
+  //setInterval(rotateArm, 1000 / fps);
+  requestAnimationFrame(rotateArm);
    //console.log('clicked')
 });
         function incrementAngle() {
                angle++;
-               if(angle > 30) {
+               if(angle > 360) {
                    angle = 0;
                }
            }
 
-           function convertToRadians(degree) {
-                       return degree*(Math.PI/180);
-                       console.log("degree: " + degree);
-                   }
 
 function rotateArm() {
 
   // clear the drawing surface
-  context.clearRect(0,0,1280,720);
-  // you can also stroke a rect, the operations need to happen in order
+  context.setTransform(1, 0, 0, 1, 0, 0);
+  //context.clearRect(0,0,canvas.width,canvas.height);
+
   incrementAngle();
-  //context.rotate(convertToRadians(angle));
-  context.translate(+10,+10);
+  //context.translate(y,x);
+  context.rotate(angle*(Math.PI/180));
   context.save();
   context.restore();
-  console.log(angle);
+
+requestAnimationFrame(rotateArm);
 
 }
 
