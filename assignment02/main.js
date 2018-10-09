@@ -3,59 +3,44 @@ window.onload = init;
 //setInterval(init, 1000 / fps);
 var canvas;
 var context;
-const MAX_SNOWBALLS = 2;
+var charX;
+var charY;
+var rigthHitAnim = [];
+var leftHitAnim = [];
+var charAnimating;
+const MAX_SNOWBALLS = 10;
 let snowballs = [];
+//cont
 
 function init() {
 
-
-  var rigthHitAnim = [];
-  var leftHitAnim = [];
-  var character = new Image();
-  character.src = "sources/character.gif";
+  //var character = new Image();
+  //character.src = "sources/character.gif";
   var name = "righthit";
-  rigthHitAnim = loadAnim(name);
+  rigthHitAnim = loadFrames(name);
   name = "lefthit";
-  leftHitAnim = loadAnim(name);
+  leftHitAnim = loadFrames(name);
+
+  charX = 0;
+  charY = 0;
+
+  var charAnimating = false;
 
   canvas = document.getElementById("myCanvas");
   context = canvas.getContext("2d");
-  requestAnimationFrame(runAnim);
+
+  requestAnimationFrame(requestAnimate);
 
   for (let i =0; i< MAX_SNOWBALLS;i++){
   // have different parameters for each ellipse object
   let objW = 40;
   let offsetX = 10;
-  snowballs.push(new mySnowball((i*(objW+offsetX))+50,300,objW/2,"#8ED6FF",(i%5)+1,(i%6)+2,i));
-
+  snowballs.push(new mySnowball((i*(objW+offsetX))+60,300,objW/2,"#8ED6FF",(i%5)+1,(i%6)+2,i));
   }
-
-  var x = 0;
-  var y = 0;
-  context.drawImage(character,100,100);
-  canvas.addEventListener("click", function(){draw(x,y,canvas,context,leftHitAnim);});
+//ext.drawImage(character,100,100);
 }
 
-async function draw(x,y,canvas,context,leftHitAnim) {
-
-for(i=1;i<7;i++){
-    if(i==0) {
-      //Display initial image
-      context.drawImage(leftHitAnim[i],x,y);
-    } else {
-          showImage(leftHitAnim[i],context,canvas,x,y);
-    }
-    await sleep(50);
-      context.clearRect(0,0,canvas.width,canvas.height)
-  }
-}
-
-function showImage(leftHitAnim,context,canvas,x,y) {
-  context.clearRect(0,0,canvas.width,canvas.height)
-  context.drawImage(leftHitAnim,x,y);
-}
-
-function loadAnim(name) {
+function loadFrames(name) {
   var anim =[];
   for(var i=1;i<7;i++){
     anim[i]=new Image();
@@ -64,24 +49,56 @@ function loadAnim(name) {
 return anim;
 }
 
- function sleep(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
-
-
-
-
-///snowball
 
 
 // add in animation
-function runAnim(){
+function requestAnimate(){
 
 for (let i =0; i< MAX_SNOWBALLS;i++){
   snowballs[i].render();
-  console.log("running");
 }
-  requestAnimationFrame(runAnim);
+//cancelAnimationFrame()
+var e = 0;
+e++;
+
+console.log(e);
+
+if (e==20){
+  charAnimating == true;
+} else {
+  charAnimating = false;
+}
+
+if (charAnimating = true){
+console.log("true");
+charAnimating = !charAnimating;
+}
+
+context.drawImage(leftHitAnim[1],charX,charY);
+//context.clearRect(0,0,canvas.width,canvas.height);
+context.drawImage(leftHitAnim[2],charX,charY);
+
+
+  // function draw(leftHitAnim) {
+  //
+  // for(i=1;i<7;i++){
+  //     if(i==0) {
+  //       //Display initial image
+  //       context.drawImage(leftHitAnim[i]);
+  //     } else {
+  //           showImage(leftHitAnim[i]);
+  //     }
+  //     await sleep(50);
+  //       context.clearRect(0,0,canvas.width,canvas.height)
+  //   }
+  // }
+  //
+  // function showImage(leftHitAnim) {
+  //   context.clearRect(0,0,canvas.width,canvas.height)
+  //   context.drawImage(leftHitAnim);
+  // }
+  //console.log("running");
+  requestAnimationFrame(requestAnimate);
 }
 
 //function collide(a, b) {
