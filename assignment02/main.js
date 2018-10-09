@@ -19,7 +19,7 @@ function init() {
   canvas.addEventListener("click", function(){draw(x,y,canvas,context,leftHitAnim);});
 }
 
-function draw(x,y,canvas,context,leftHitAnim) {
+async function draw(x,y,canvas,context,leftHitAnim) {
   var timer =10000;
   var i=0;
   while(i<6)
@@ -27,10 +27,11 @@ function draw(x,y,canvas,context,leftHitAnim) {
     if(i==0) {
       context.drawImage(leftHitAnim[i],x,y);
     } else {
+          hiddeImage();
           showImage(leftHitAnim[i],context,x,y);
     }
-     setTimeout(function(){i++;
-       console.log(i);},timer);
+    await sleep(100);
+    i++;
 
   }
   //clearTimeout(timer);
@@ -41,6 +42,12 @@ function showImage(leftHitAnim,context,x,y) {
 }
 
 
+function hiddeImage() {
+  var image;
+  document.getElementById("").style.visibilty="hidden";
+  //image.style.visibilty="hidden";
+}
+
 function loadAnim(name) {
   var anim =[];
   for(var i=0;i<6;i++){
@@ -49,6 +56,13 @@ function loadAnim(name) {
   }
 return anim;
 }
+
+ function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+
+
 
 //context.drawImage(character,x,y)
 //context.drawImage(leftHit,x,y)
