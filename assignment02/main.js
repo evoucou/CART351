@@ -25,27 +25,21 @@ async function draw(x,y,canvas,context,leftHitAnim) {
   while(i<6)
    {
     if(i==0) {
+      //Display initial image
       context.drawImage(leftHitAnim[i],x,y);
     } else {
-          hiddeImage();
-          showImage(leftHitAnim[i],context,x,y);
+          //hiddeImage();
+          showImage(leftHitAnim[i],context,canvas,x,y);
     }
-    await sleep(100);
+    await sleep(50);
     i++;
 
   }
   //clearTimeout(timer);
 }
-function showImage(leftHitAnim,context,x,y) {
+function showImage(leftHitAnim,context,canvas,x,y) {
+  context.clearRect(0,0,canvas.width,canvas.height)
   context.drawImage(leftHitAnim,x,y);
-
-}
-
-
-function hiddeImage() {
-  var image;
-  document.getElementById("").style.visibilty="hidden";
-  //image.style.visibilty="hidden";
 }
 
 function loadAnim(name) {
