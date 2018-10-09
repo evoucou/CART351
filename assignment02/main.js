@@ -49,7 +49,8 @@ function loadFrames(name) {
 return anim;
 }
 
-
+var timer = 0;
+var timeIncrement;
 
 // add in animation
 function requestAnimate(){
@@ -58,25 +59,18 @@ for (let i =0; i< MAX_SNOWBALLS;i++){
   snowballs[i].render();
 }
 //cancelAnimationFrame()
-var e = 0;
-e++;
+timer++;
 
-console.log(e);
+console.log(timer);
 
-if (e==20){
-  charAnimating == true;
-} else {
-  charAnimating = false;
-}
 
-if (charAnimating = true){
-console.log("true");
-charAnimating = !charAnimating;
-}
 
-context.drawImage(leftHitAnim[1],charX,charY);
-//context.clearRect(0,0,canvas.width,canvas.height);
-context.drawImage(leftHitAnim[2],charX,charY);
+  //context.drawImage(leftHitAnim[i],charX,charY);
+  //context.clearRect(0,0,canvas.width,canvas.height);
+  //context.drawImage(leftHitAnim[2],charX,charY);
+  //context.clearRect(0,0,canvas.width,canvas.height);
+  //context.drawImage(leftHitAnim[3],charX,charY);
+
 
 
   // function draw(leftHitAnim) {
