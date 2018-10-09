@@ -16,14 +16,31 @@ function init() {
   var y = 100;
   var canvas = document.getElementById("myCanvas");
   var context = canvas.getContext("2d");
-  canvas.addEventListener("click", function(){ draw(x,y,context,leftHitAnim);});
+  canvas.addEventListener("click", function(){draw(x,y,canvas,context,leftHitAnim);});
 }
 
-function draw(x,y,context,leftHitAnim) {
-  for(var i=0;i<6;i++){
+function draw(x,y,canvas,context,leftHitAnim) {
+  var timer =10000;
+  var i=0;
+  while(i<6)
+   {
+    if(i==0) {
       context.drawImage(leftHitAnim[i],x,y);
+    } else {
+          showImage(leftHitAnim[i],context,x,y);
+    }
+     setTimeout(function(){i++;
+       console.log(i);},timer);
+
   }
+  //clearTimeout(timer);
 }
+function showImage(leftHitAnim,context,x,y) {
+  context.drawImage(leftHitAnim,x,y);
+
+}
+
+
 function loadAnim(name) {
   var anim =[];
   for(var i=0;i<6;i++){
@@ -32,6 +49,7 @@ function loadAnim(name) {
   }
 return anim;
 }
+
 //context.drawImage(character,x,y)
 //context.drawImage(leftHit,x,y)
 //context.drawImage(rightHit,x,y)
