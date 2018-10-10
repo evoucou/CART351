@@ -12,7 +12,7 @@ const MAX_SNOWBALLS = 10;
 var snowballs = [];
 const MAX_SNOWFLAKES = 500;
 var snowflakes = [];
-var colors = ["#e6f2ff", "#ccddff", "#4d94ff", "#0047b3", "#66a3ff"];
+var colors = ["#f5f9fc", "#ccddff", "#4d94ff", "#0047b3", "#66a3ff"];
 
 //cont
 
@@ -97,7 +97,7 @@ for (let i =0; i< MAX_SNOWBALLS;i++){
 //cancelAnimationFrame()
 
 
-  //context.drawImage(leftHitAnim[i],charX,charY);
+  context.drawImage(leftHitAnim[1],charX,charY);
   //context.clearRect(0,0,canvas.width,canvas.height);
   //context.drawImage(leftHitAnim[2],charX,charY);
   //context.clearRect(0,0,canvas.width,canvas.height);
