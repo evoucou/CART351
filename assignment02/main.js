@@ -1,68 +1,53 @@
+
+// Call initi when window loads
 window.onload = init;
-  //var fps = 10;
-//setInterval(init, 1000 / fps);
+
 var canvas;
 var context;
+
 var charX;
 var charY;
+
 var rigthHitAnim = [];
 var leftHitAnim = [];
-var charAnimating;
-const MAX_SNOWBALLS = 10;
-var snowball;
+
 const MAX_SNOWFLAKES = 500;
 var snowflakes = [];
 var colors = ["#f5f9fc", "#ccddff", "#4d94ff", "#0047b3", "#66a3ff"];
-var couleur = "#000000";
-var radius = 40;
+
 var hitbox=[];
-var counterImg;
+
 var leftSide = false;
 var rightSide = false;
-var snowball;
 var mouseClick = false;
-var character;
 var collide = false;
-var animtest;
-//cont
+
+var snowball;
+var character;
 
 
 function init() {
 
+  // We were not successful with the animation, but here is the code to load them.
   var name = "righthit";
   rigthHitAnim = loadFrames(name);
   name = "lefthit";
   leftHitAnim = loadFrames(name);
 
-  //animtest = new Image();
-  //animtest.src='sources/.gif'
-
-character = new Image();
-character.src='sources/character.gif';
-
-
-  var charAnimating = false;
+  character = new Image();
+  character.src='sources/character.gif';
 
   canvas = document.getElementById("myCanvas");
   context = canvas.getContext("2d");
 
+// Position of our character
   charX = 700;
   charY = 100;
 
-  collide=false;
-
-//0=right. 1=left;
   hitbox[0]=(charX+character.width)-70;
   hitbox[1]=charX+70;
 
   requestAnimationFrame(requestAnimate);
-
-  // for (let i =0; i< MAX_SNOWBALLS;i++){
-  // // have different parameters for each ellipse object
-  // let objW = 40;
-  // let offsetX = 10;
-  // snowballs.push(new mySnowball((i*(objW+offsetX))+60,300,objW/2,"#8ED6FF",(i%5)+1,(i%6)+2,i));
-  // }
 
   // Snowflake array
   for (var i = 0; i < MAX_SNOWFLAKES; i++){
@@ -71,24 +56,22 @@ character.src='sources/character.gif';
     var rad = getRandomRadius(0,1);
     snowflakes.push(new mySnowflake(rx, ry, colors[i%colors.length], rad, 5));
   }
-      //holdLeft = new playAnim(leftHitAnim,counterImg);
 
-  // Event listerner to detect if mouse is moving.
+// Snowflakes follow your mouse
   canvas.addEventListener("mousemove",function(event) {
     for (let i = 0; i < MAX_SNOWFLAKES; i++){
       snowflakes[i].snowflakeSpeed = map(event.clientX,0,canvas.width,0.5,8);
     }
   });
 
+// Generate snowball when you click
   canvas.addEventListener("mousedown",function(event) {
     snowball = new mySnowball(event.pageX,event.pageY,20,"#FFFFFF");
     mouseClick = true;
-    snowball.isLeft();
-});
+    snowball.testLeft();
+  });
 
 }
-
-
 
 // Mapping the mouse location. Determines where the mouse is, and how fast the snowflakes move.
 function map (num, in_min, in_max, out_min, out_max) {
@@ -103,96 +86,49 @@ function getRandomRadius(min, max) {
   return Math.floor(Math.random() * (2) + 0.1);
 }
 
+// Loading animations for each side
 function loadFrames(name) {
   var anim =[];
   for(var i=1;i<7;i++){
     anim[i]=new Image();
     anim[i].src= "sources/"+name+"/frame"+i+".gif";
   }
-return anim;
+  return anim;
 }
 
+// Checks collision with hitbox (character) and snowball.
+this.checkCollision = function() {
+  this.collide= false;
 
-  this.checkCollision = function() {
-this.collide= false;
+  console.log(snowball.x);
+  if(hitbox[1]<=snowball.x)  {
+    this.collide = true;
+    if (hitbox[0]<=snowball.x){
+      this.collide = false;
+    }
+  }
+}
 
-    console.log(snowball.x);
-            if(hitbox[1]<=snowball.x)  {
-                    this.collide = true;
-                    if (hitbox[0]<=snowball.x){
-                      this.collide = false;
-                    }
-                }
-                //console.log("hitboxgauche:"+hitbox[1]);
-                //console.log("hitboxdroite:"+hitbox[0]);
-                //console.log("snowball"+snowball.x);
-        }
-
-
-
-
-// add in animation
+// Add in animation
 function requestAnimate(){
   context.clearRect(0,0,canvas.width,canvas.height);
   context.drawImage(character,charX,charY);
-  //console.log("chracter"+charX);
 
   if(mouseClick==true){
+    checkCollision();
 
-        checkCollision();
-        console.log(collide);
-
-    //snowball.render();
-    //snowball.checkLeft();
-            if (collide==false){
-              snowball.render();
-              snowball.update();
-          }
-            else {
-              //hitLeft();
-          }
-}
-
-
-
-
-//   } if (rightSide == true){
-//     snowball.moveLeft();
-//   }
-
-
-
-    //var hold;
-
-// if(counterImg<6)
-//     {
-//      if(leftClick)
-//         {
-//             hold = new playAnim(leftHitAnim,counterImg);
-//             hold.render();
-//            counterImg =  hold.update();
-//         }
-//      else {
-//             hold = new playAnim(rigthHitAnim,counterImg);
-//             hold.render();
-//            counterImg =  hold.update();
-//      }
+// Stop displaying when they have collided
+    if (collide==false){
+      snowball.render();
+      snowball.update();
+    }
+  }
 
 
   for (let i = 0 ; i < MAX_SNOWFLAKES;i++){
     snowflakes[i].update();
     snowflakes[i].render();
   }
-
-
-//for (let i =0; i< MAX_SNOWBALLS;i++){
-  //snowballs[i].render();
-// }
-// fdunction createSnowball() {
-//             var snowball = new mySnowball(event.pageX,event.pageY,radius,couleur,10);
-//             counterImg = 0;
-//             requestAnimate(snowball);
-// }
 
   requestAnimationFrame(requestAnimate);
 }
@@ -229,102 +165,46 @@ function mySnowflake (x, y, c, r, snowflakeSpeed) {
 }
 
 
-//function collide(a, b) {
-//  return !(
-//    ((a.y + a.height) < (b.y)) ||
-//    (a.y > (b.y + b.height)) ||
-//    ((a.x + a.width) < b.x) ||
-//    (a.x > (b.x + b.width))/
-//  );
-//}
-
-// this.checkLeft= function() {
-//     if(snowball.x>hitbox[0])
-//         {
-//             leftClick = false;
-//             snowball.xSpeed -= snowball.xSpeed;
-//         }
-//     if(snowball.x<hitbox[1])
-//         {
-//             leftClick = true;
-//         }
-//
-// }
-
-
+// Snowball function and paremeters
 function mySnowball(x,y,r,c){
   //member variables
   this.x = x;
   this.y = y;
   this.radius = r;
   this.color = c;
-      //console.log("snowball"+x);
 
   // new for updating
   this.xSpeed = 10;
   this.leftClick;
-  //this.isPressed = false;
 
   this.render = function() {
-            context.fillStyle = this.color;// change the color we are using
-            context.beginPath();
-            context.arc(this.x,this.y,this.radius,0, Math.PI * 2, true);
-            context.fill(); // set the fill
-            context.closePath(); //close a path ...
-          }
+    context.fillStyle = this.color;
+    context.beginPath();
+    context.arc(this.x,this.y,this.radius,0, Math.PI * 2, true);
+    context.fill();
+    context.closePath();
+  }
 
 
-// this.moveRight = function() {
-// this.x+=this.xSpeed;
-// }
-//
-// this.moveLeft = function() {
-// this.x-=this.xSpeed;
-// }
-
-  //this.x += this.xSpeed;
-this.update = function(){
-
-  this.x += this.xSpeed;
-}
+  this.update = function(){
+    this.x += this.xSpeed;
+  }
 
 
-      this.isLeft = function() {
-          if(this.x>hitbox[0])
-              {
-                console.log("right");
-                  this.leftClick= false;
-                  this.xSpeed = -(this.xSpeed);
-              }
-          if(this.x<hitbox[1])
-              {
-                console.log("left");
-                    this.leftClick= true;
-                   this.xSpeed = this.xSpeed
-              }
-
-      }
-
-
-
-
+// See if it has to go left or right (influences xSpeed)
+  this.testLeft = function() {
+    if(this.x>hitbox[0])
+    {
+      console.log("right");
+      this.leftClick= false;
+      this.xSpeed = -(this.xSpeed);
+    }
+    if(this.x<hitbox[1])
+    {
+      console.log("left");
+      this.leftClick= true;
+      this.xSpeed = this.xSpeed
+    }
+  }
 
 }
-
-
-// function playAnim(anims,i)
-// {
-//     this.anim = anims;
-//     this.i = i;
-//     this.render = function ()
-//     {
-//         context.drawImage(this.anim[this.i],canvas.width/2,canvas.height/2);
-//
-//     }
-//     this.update = function()
-//     {
-//         this.i++;
-//         this.x = this.x+this.xSpeed;
-//         //return this.i;
-//     }
-// }
