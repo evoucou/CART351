@@ -18,6 +18,8 @@ var radius = 40;
 var hitbox=[];
 var counterImg;
 var leftClick = false;
+var snowball;
+var mouseClick = false;
 //cont
 
 function init() {
@@ -62,7 +64,16 @@ function init() {
       snowflakes[i].snowflakeSpeed = map(event.clientX,0,canvas.width,0.5,8);
     }
   });
+
+  canvas.addEventListener("mousedown",function(event) {
+    snowball = new mySnowball(event.pageX,event.pageY,20,"#000000",10);
+    mouseClick = !mouseClick;
+
+console.log(snowball);  });
+
+
 }
+
 
 
 // Mapping the mouse location. Determines where the mouse is, and how fast the snowflakes move.
@@ -90,54 +101,59 @@ return anim;
 var timer = 0;
 var timeIncrement;
 
+
 // add in animation
-function requestAnimate(snowballs){
-
-    canvas.addEventListener("mousedown", createSnowball);
-
-    var hold;
-    if(snowballs.ballX< hitbox[1]&& snowballs.ballX> hitbox[0])
-        {
-            snowballs.render();
-            snowballs.isleft();
-            snowballs.update();
-        }
-if(counterImg<6)
-    {
-     if(leftClick)
-        {
-            hold = new playAnim(leftHitAnim,counterImg);
-            hold.render();
-           counterImg =  hold.update();
-        }
-     else {
-            hold = new playAnim(rigthHitAnim,counterImg);
-            hold.render();
-           counterImg =  hold.update();
-     }
-
-    }
-
+function requestAnimate(){
   context.clearRect(0,0,canvas.width,canvas.height);
+
+  if(mouseClick==true){
+    snowball.render();
+    //snowball.checkLeft();
+    snowball.update()
+  }
+
+
+    // var hold;
+    // if(snowball.x< hitbox[1]&& snowball.x> hitbox[0])
+    //     {
+    //         snowball.render();
+    //         snowball.checkLeft();
+    //         snowball.update();
+    //     }
+// if(counterImg<6)
+//     {
+//      if(leftClick)
+//         {
+//             hold = new playAnim(leftHitAnim,counterImg);
+//             hold.render();
+//            counterImg =  hold.update();
+//         }
+//      else {
+//             hold = new playAnim(rigthHitAnim,counterImg);
+//             hold.render();
+//            counterImg =  hold.update();
+//      }
+
+
   for (let i = 0 ; i < MAX_SNOWFLAKES;i++){
-    snowflakes[i].update();
+    //snowflakes[i].update();
     snowflakes[i].render();
   }
 
 
-for (let i =0; i< MAX_SNOWBALLS;i++){
+//for (let i =0; i< MAX_SNOWBALLS;i++){
   //snowballs[i].render();
-}
-
+// }
+// fdunction createSnowball() {
+//             var snowball = new mySnowball(event.pageX,event.pageY,radius,couleur,10);
+//             counterImg = 0;
+//             requestAnimate(snowball);
+// }
 
   requestAnimationFrame(requestAnimate);
 }
 
-function createSnowball() {
-    var snowball = new mySnowball(event.pageX,event.pageY,20,"#000000",10);
-        snowball.render();
-        console.log("create");
-}
+
 
 // Snowflake function & parameters
 function mySnowflake (x, y, c, r, snowflakeSpeed) {
@@ -178,6 +194,19 @@ function mySnowflake (x, y, c, r, snowflakeSpeed) {
 //  );
 //}
 
+// this.checkLeft= function() {
+//     if(snowball.x>hitbox[0])
+//         {
+//             leftClick = false;
+//             snowball.xSpeed -= snowball.xSpeed;
+//         }
+//     if(snowball.x<hitbox[1])
+//         {
+//             leftClick = true;
+//         }
+//
+// }
+
 
 function mySnowball(x,y,r,c,xSpeed){
   //member variables
@@ -188,6 +217,7 @@ function mySnowball(x,y,r,c,xSpeed){
 
   // new for updating
   this.xSpeed = xSpeed;
+  //this.isPressed = false;
 
   this.render = function() {
             context.fillStyle = this.ballColor;// change the color we are using
@@ -198,47 +228,35 @@ function mySnowball(x,y,r,c,xSpeed){
           }
 
 
-      this.update = function() {
-
-              this.ballX = this.ballX+this.xSpeed;
-
-      }
-      this.isleft= function() {
-          if(this.ballX>hitbox[0])
-              {
-                  leftClick = false;
-                  this.xSpeed = -this.xSpeed;
-              }
-          if(this.ballX<hitbox[1])
-              {
-                  leftClick = true;
-              }
-
-      }
+this.update = function() {
+this.ballX+=this.xSpeed;
 
 }
 
 
-function createSnowball() {
-            var snowball = new mySnowball(event.pageX,event.pageY,radius,couleur,10);
-            counterImg = 0;
-            requestAnimate(snowball);
+
+
+
 }
-function playAnim(anims,i)
-{
-    this.anim = anims;
-    this.i = i;
-    this.render = function ()
-    {
-        context.drawImage(this.anim[this.i],canvas.width/2,canvas.height/2);
-        this.update();
-    }
-    this.update = function()
-    {
-        this.i++;
-        return this.i;
-    }
-}
+
+
+// function playAnim(anims,i)
+// {
+//     this.anim = anims;
+//     this.i = i;
+//     this.render = function ()
+//     {
+//         context.drawImage(this.anim[this.i],canvas.width/2,canvas.height/2);
+//
+//     }
+//     this.update = function()
+//     {
+//         this.i++;
+//         this.ballX = this.ballX+this.xSpeed;
+//         //return this.i;
+//     }
+// }
+
 function collide(snowballs)
 {
     var isCollide = false;
