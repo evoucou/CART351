@@ -43,8 +43,9 @@ character.src='sources/character.gif';
   charX = 700;
   charY = 100;
 
-  hitbox[0]=(canvas.width/2+character.width/2)
-      hitbox[1] =(canvas.width/2-character.width/2);
+//0=right. 1=left;
+  hitbox[0]=(charX+character.width);
+  hitbox[1]=(charX);
 
   requestAnimationFrame(requestAnimate);
 
@@ -73,14 +74,16 @@ character.src='sources/character.gif';
 
   canvas.addEventListener("mousedown",function(event) {
     snowball = new mySnowball(event.pageX,event.pageY,20,"#FFFFFF",10);
-    mouseClick = !mouseClick;
+    mouseClick = true;
+    snowball.isLeft();
       //console.log(event.pageX);
      var pageX = event.pageX;
-      checkSide(pageX);
+      //checkSide(pageX);
 
-console.log(snowball);  });
+//console.log(snowball);
+});
 
-
+//console.log(hitbox[0]);
 }
 
 
@@ -129,14 +132,13 @@ function checkSide(pageX){
 function requestAnimate(){
   context.clearRect(0,0,canvas.width,canvas.height);
   context.drawImage(character,charX,charY);
+  //console.log("chracter"+charX);
 
 
   if(mouseClick==true){
     //snowball.render();
     //snowball.checkLeft();
-
             snowball.render();
-            snowball.isLeft();
             snowball.update();
 //   } if (rightSide == true){
 //     snowball.moveLeft();
@@ -278,11 +280,13 @@ this.collide = function() {
       this.isLeft = function() {
           if(this.ballX>hitbox[0])
               {
+                console.log("right");
                   this.leftClick= false;
                   this.xSpeed = -(this.xSpeed);
               }
           if(this.ballX<hitbox[1])
               {
+                console.log("left");
                     this.leftClick= true;
                    this.xSpeed = this.xSpeed
               }
