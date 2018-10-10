@@ -17,9 +17,11 @@ var couleur = "#000000";
 var radius = 40;
 var hitbox=[];
 var counterImg;
-var leftClick = false;
+var leftSide = false;
+var rightSide = false;
 var snowball;
 var mouseClick = false;
+var character;
 //cont
 
 function init() {
@@ -29,13 +31,17 @@ function init() {
   name = "lefthit";
   leftHitAnim = loadFrames(name);
 
-  charX = 0;
-  charY = 0;
+character = new Image();
+character.src='sources/character.gif';
+
 
   var charAnimating = false;
 
   canvas = document.getElementById("myCanvas");
   context = canvas.getContext("2d");
+
+  charX = 700;
+  charY = 100;
 
   hitbox[0]=(canvas.width/2+leftHitAnim[1].width/2)
   hitbox[1] =(canvas.width/2-leftHitAnim[1].width/2);
@@ -66,8 +72,11 @@ function init() {
   });
 
   canvas.addEventListener("mousedown",function(event) {
-    snowball = new mySnowball(event.pageX,event.pageY,20,"#000000",10);
+    snowball = new mySnowball(event.pageX,event.pageY,20,"#FFFFFF",10);
     mouseClick = !mouseClick;
+      //console.log(event.pageX);
+     var pageX = event.pageX;
+      checkSide(pageX);
 
 console.log(snowball);  });
 
@@ -102,15 +111,35 @@ var timer = 0;
 var timeIncrement;
 
 
+function checkSide(pageX){
+  if (event.pageX>=canvas.width/2) {
+    rightSide = true;
+    console.log("rightside");
+    //event.pageX=0;
+    //rightSide = !rightSide;
+  } else {
+    leftSide = true;
+    console.log("leftside");
+    //event.pageX=0;
+   //leftSide = !leftSide;
+ }
+  }
+
 // add in animation
 function requestAnimate(){
   context.clearRect(0,0,canvas.width,canvas.height);
+  context.drawImage(character,charX,charY);
+
 
   if(mouseClick==true){
     snowball.render();
     //snowball.checkLeft();
-    snowball.update()
-  }
+    // if(leftSide == true) {
+    snowball.moveRight();
+//   } if (rightSide == true){
+//     snowball.moveLeft();
+//   }
+}
 
 
     // var hold;
@@ -136,7 +165,7 @@ function requestAnimate(){
 
 
   for (let i = 0 ; i < MAX_SNOWFLAKES;i++){
-    //snowflakes[i].update();
+    snowflakes[i].update();
     snowflakes[i].render();
   }
 
@@ -228,9 +257,12 @@ function mySnowball(x,y,r,c,xSpeed){
           }
 
 
-this.update = function() {
+this.moveRight = function() {
 this.ballX+=this.xSpeed;
+}
 
+this.moveLeft = function() {
+this.ballX-=this.xSpeed;
 }
 
 
