@@ -9,13 +9,15 @@ var rigthHitAnim = [];
 var leftHitAnim = [];
 var charAnimating;
 const MAX_SNOWBALLS = 10;
-let snowballs = [];
+var snowballs = [];
+const MAX_SNOWFLAKES = 500;
+var snowflakes = [];
+var colors = ["#e6f2ff", "#ccddff", "#4d94ff", "#0047b3", "#66a3ff"];
+
 //cont
 
 function init() {
 
-  //var character = new Image();
-  //character.src = "sources/character.gif";
   var name = "righthit";
   rigthHitAnim = loadFrames(name);
   name = "lefthit";
@@ -37,7 +39,35 @@ function init() {
   let offsetX = 10;
   snowballs.push(new mySnowball((i*(objW+offsetX))+60,300,objW/2,"#8ED6FF",(i%5)+1,(i%6)+2,i));
   }
-//ext.drawImage(character,100,100);
+
+  // Snowflake array
+  for (var i = 0; i < MAX_SNOWFLAKES; i++){
+    var rx = getRandomInt(0,500);
+    var ry = getRandomInt(0,500);
+    var rad = getRandomRadius(0,1);
+    snowflakes.push(new mySnowflake(rx, ry, colors[i%colors.length], rad, 5));
+  }
+
+  // Event listerner to detect if mouse is moving.
+  canvas.addEventListener("mousemove",function(event) {
+    for (let i = 0; i < MAX_SNOWFLAKES; i++){
+      snowflakes[i].snowflakeSpeed = map(event.clientX,0,canvas.width,0.5,8);
+    }
+  });
+}
+
+
+// Mapping the mouse location. Determines where the mouse is, and how fast the snowflakes move.
+function map (num, in_min, in_max, out_min, out_max) {
+  return (num - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+}
+// Determines the random location of each snowflake.
+function getRandomInt(min, max) {
+  return Math.floor(Math.random() * (-canvas.width/2 - canvas.width/2 + 1) + canvas.width/2);
+}
+// Determines the size of the snowflakes.
+function getRandomRadius(min, max) {
+  return Math.floor(Math.random() * (2) + 0.1);
 }
 
 function loadFrames(name) {
@@ -55,14 +85,16 @@ var timeIncrement;
 // add in animation
 function requestAnimate(){
 
+  context.clearRect(0,0,canvas.width,canvas.height);
+  for (let i = 0 ; i < MAX_SNOWFLAKES;i++){
+    snowflakes[i].update();
+    snowflakes[i].render();
+  }
+
 for (let i =0; i< MAX_SNOWBALLS;i++){
-  snowballs[i].render();
+  //snowballs[i].render();
 }
 //cancelAnimationFrame()
-timer++;
-
-console.log(timer);
-
 
 
   //context.drawImage(leftHitAnim[i],charX,charY);
@@ -94,6 +126,36 @@ console.log(timer);
   //console.log("running");
   requestAnimationFrame(requestAnimate);
 }
+
+
+// Snowflake function & parameters
+function mySnowflake (x, y, c, r, snowflakeSpeed) {
+  this.x = x;
+  this.y = y;
+  this.color = c;
+  this.r = r;
+  this.snowflakeSpeed = snowflakeSpeed;
+  this.fillStyle = this.color;
+  this.render = function(){
+    context.fillStyle = this.color;
+    context.beginPath();
+    context.arc(this.x,this.y,this.r,0, Math.PI * 2, true);
+    context.fill();
+    context.closePath();
+  }
+  // Snowflake Update
+  this.update = function(){
+    this.x += this.snowflakeSpeed;
+    this.y += this.snowflakeSpeed;
+    this.z += this.snowflakeSpeed;
+    // Make new snowflakes when they go off screen.
+    if (this.x > canvas.width || this.y > canvas.height) {
+      this.x = getRandomInt(0,500);
+      this.y = getRandomInt(0,500);
+    }
+  }
+}
+
 
 //function collide(a, b) {
 //  return !(
