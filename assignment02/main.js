@@ -43,8 +43,8 @@ character.src='sources/character.gif';
   charX = 700;
   charY = 100;
 
-  hitbox[0]=(canvas.width/2+leftHitAnim[1].width/2)
-  hitbox[1] =(canvas.width/2-leftHitAnim[1].width/2);
+  hitbox[0]=(canvas.width/2+character.width/2)
+      hitbox[1] =(canvas.width/2-character.width/2);
 
   requestAnimationFrame(requestAnimate);
 
@@ -62,7 +62,7 @@ character.src='sources/character.gif';
     var rad = getRandomRadius(0,1);
     snowflakes.push(new mySnowflake(rx, ry, colors[i%colors.length], rad, 5));
   }
-
+      //holdLeft = new playAnim(leftHitAnim,counterImg);
 
   // Event listerner to detect if mouse is moving.
   canvas.addEventListener("mousemove",function(event) {
@@ -132,23 +132,20 @@ function requestAnimate(){
 
 
   if(mouseClick==true){
-    snowball.render();
+    //snowball.render();
     //snowball.checkLeft();
-    // if(leftSide == true) {
-    snowball.moveRight();
+
+            snowball.render();
+            snowball.isLeft();
+            snowball.update();
 //   } if (rightSide == true){
 //     snowball.moveLeft();
 //   }
 }
 
 
-    // var hold;
-    // if(snowball.x< hitbox[1]&& snowball.x> hitbox[0])
-    //     {
-    //         snowball.render();
-    //         snowball.checkLeft();
-    //         snowball.update();
-    //     }
+    //var hold;
+
 // if(counterImg<6)
 //     {
 //      if(leftClick)
@@ -246,6 +243,7 @@ function mySnowball(x,y,r,c,xSpeed){
 
   // new for updating
   this.xSpeed = xSpeed;
+  this.leftClick;
   //this.isPressed = false;
 
   this.render = function() {
@@ -257,13 +255,39 @@ function mySnowball(x,y,r,c,xSpeed){
           }
 
 
-this.moveRight = function() {
-this.ballX+=this.xSpeed;
+// this.moveRight = function() {
+// this.ballX+=this.xSpeed;
+// }
+//
+// this.moveLeft = function() {
+// this.ballX-=this.xSpeed;
+// }
+
+this.update = function(){
+
+  this.ballX += this.xSpeed;
 }
 
-this.moveLeft = function() {
-this.ballX-=this.xSpeed;
-}
+this.collide = function() {
+          if(hitbox[1]>=this.ballX<=hitbox[0])
+              {
+                  this.xSpeed = 0;
+              }
+      }
+
+      this.isLeft = function() {
+          if(this.ballX>hitbox[0])
+              {
+                  this.leftClick= false;
+                  this.xSpeed = -(this.xSpeed);
+              }
+          if(this.ballX<hitbox[1])
+              {
+                    this.leftClick= true;
+                   this.xSpeed = this.xSpeed
+              }
+
+      }
 
 
 
