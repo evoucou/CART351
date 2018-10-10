@@ -22,7 +22,8 @@ var rightSide = false;
 var snowball;
 var mouseClick = false;
 var character;
-var collide;
+var collide = false;
+var animtest;
 //cont
 
 
@@ -32,6 +33,9 @@ function init() {
   rigthHitAnim = loadFrames(name);
   name = "lefthit";
   leftHitAnim = loadFrames(name);
+
+  //animtest = new Image();
+  //animtest.src='sources/.gif'
 
 character = new Image();
 character.src='sources/character.gif';
@@ -80,13 +84,8 @@ character.src='sources/character.gif';
     snowball = new mySnowball(event.pageX,event.pageY,20,"#FFFFFF");
     mouseClick = true;
     snowball.isLeft();
-      //console.log(event.pageX);
-     //var pageX = event.pageX;
-      //checkSide(pageX);
-
-//console.log(snowball);
 });
-//console.log(hitbox[0]);
+
 }
 
 
@@ -115,23 +114,22 @@ return anim;
 
 
   this.checkCollision = function() {
+this.collide= false;
 
     console.log(snowball.x);
             if(hitbox[1]<=snowball.x)  {
                     this.collide = true;
-
-                } if (hitbox[0]<=snowball.x){
-                  this.collide = false;
+                    if (hitbox[0]<=snowball.x){
+                      this.collide = false;
+                    }
                 }
                 //console.log("hitboxgauche:"+hitbox[1]);
                 //console.log("hitboxdroite:"+hitbox[0]);
                 //console.log("snowball"+snowball.x);
         }
 
-        this.animChar=function() {
 
-          context.drawImage(leftHitAnim[1],charX,charY);
-        }
+
 
 // add in animation
 function requestAnimate(){
@@ -141,18 +139,19 @@ function requestAnimate(){
 
   if(mouseClick==true){
 
-
         checkCollision();
+        console.log(collide);
 
     //snowball.render();
     //snowball.checkLeft();
             if (collide==false){
               snowball.render();
               snowball.update();
-          } else {
-                          animChar();
           }
-        }
+            else {
+              //hitLeft();
+          }
+}
 
 
 
