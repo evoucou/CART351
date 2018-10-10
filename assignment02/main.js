@@ -22,7 +22,9 @@ var rightSide = false;
 var snowball;
 var mouseClick = false;
 var character;
+var collide;
 //cont
+
 
 function init() {
 
@@ -42,6 +44,8 @@ character.src='sources/character.gif';
 
   charX = 700;
   charY = 100;
+
+  collide=false;
 
 //0=right. 1=left;
   hitbox[0]=(charX+character.width);
@@ -73,16 +77,15 @@ character.src='sources/character.gif';
   });
 
   canvas.addEventListener("mousedown",function(event) {
-    snowball = new mySnowball(event.pageX,event.pageY,20,"#FFFFFF",10);
+    snowball = new mySnowball(event.pageX,event.pageY,20,"#FFFFFF");
     mouseClick = true;
     snowball.isLeft();
       //console.log(event.pageX);
-     var pageX = event.pageX;
+     //var pageX = event.pageX;
       //checkSide(pageX);
 
 //console.log(snowball);
 });
-
 //console.log(hitbox[0]);
 }
 
@@ -114,19 +117,35 @@ var timer = 0;
 var timeIncrement;
 
 
-function checkSide(pageX){
-  if (event.pageX>=canvas.width/2) {
-    rightSide = true;
-    console.log("rightside");
-    //event.pageX=0;
-    //rightSide = !rightSide;
-  } else {
-    leftSide = true;
-    console.log("leftside");
-    //event.pageX=0;
-   //leftSide = !leftSide;
- }
-  }
+// function checkSide(pageX){
+//   if (event.pageX>=canvas.width/2) {
+//     rightSide = true;
+//     console.log("rightside");
+//     //event.pageX=0;
+//     //rightSide = !rightSide;
+//   } else {
+//     leftSide = true;
+//     console.log("leftside");
+//     //event.pageX=0;
+//    //leftSide = !leftSide;
+//  }
+//   }
+
+
+  this.checkCollision = function() {
+            console.log(this.snowball.x);
+
+
+            if(hitbox[1]>=snowball.x || hitbox[0]<=snowball.x)
+                {
+                    this.collide = true;
+                    console.log("collide=true");
+                }
+
+                //console.log("hitboxgauche:"+hitbox[1]);
+                //console.log("hitboxdroite:"+hitbox[0]);
+                //console.log("snowball"+snowball.x);
+        }
 
 // add in animation
 function requestAnimate(){
@@ -134,12 +153,15 @@ function requestAnimate(){
   context.drawImage(character,charX,charY);
   //console.log("chracter"+charX);
 
-
   if(mouseClick==true){
+        checkCollision();
+
     //snowball.render();
     //snowball.checkLeft();
-            snowball.render();
-            snowball.update();
+            if (collide==false){
+              snowball.render();
+              snowball.update();
+          }
 //   } if (rightSide == true){
 //     snowball.moveLeft();
 //   }
@@ -236,15 +258,16 @@ function mySnowflake (x, y, c, r, snowflakeSpeed) {
 // }
 
 
-function mySnowball(x,y,r,c,xSpeed){
+function mySnowball(x,y,r,c){
   //member variables
   this.ballX = x;
   this.ballY = y;
   this.radius = r;
   this.ballColor = c;
+      //console.log("snowball"+x);
 
   // new for updating
-  this.xSpeed = xSpeed;
+  this.xSpeed = 10;
   this.leftClick;
   //this.isPressed = false;
 
@@ -265,17 +288,12 @@ function mySnowball(x,y,r,c,xSpeed){
 // this.ballX-=this.xSpeed;
 // }
 
+  //this.ballX += this.xSpeed;
 this.update = function(){
 
   this.ballX += this.xSpeed;
 }
 
-this.collide = function() {
-          if(hitbox[1]>=this.ballX<=hitbox[0])
-              {
-                  this.xSpeed = 0;
-              }
-      }
 
       this.isLeft = function() {
           if(this.ballX>hitbox[0])
@@ -316,9 +334,3 @@ this.collide = function() {
 //         //return this.i;
 //     }
 // }
-
-function collide(snowballs)
-{
-    var isCollide = false;
-
-}
