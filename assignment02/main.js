@@ -9,10 +9,12 @@ var rigthHitAnim = [];
 var leftHitAnim = [];
 var charAnimating;
 const MAX_SNOWBALLS = 10;
-var snowballs = [];
+var snowball;
 const MAX_SNOWFLAKES = 500;
 var snowflakes = [];
 var colors = ["#f5f9fc", "#ccddff", "#4d94ff", "#0047b3", "#66a3ff"];
+var couleur = "#000000";
+var radius = 40;
 
 //cont
 
@@ -33,12 +35,12 @@ function init() {
 
   requestAnimationFrame(requestAnimate);
 
-  for (let i =0; i< MAX_SNOWBALLS;i++){
-  // have different parameters for each ellipse object
-  let objW = 40;
-  let offsetX = 10;
-  snowballs.push(new mySnowball((i*(objW+offsetX))+60,300,objW/2,"#8ED6FF",(i%5)+1,(i%6)+2,i));
-  }
+  // for (let i =0; i< MAX_SNOWBALLS;i++){
+  // // have different parameters for each ellipse object
+  // let objW = 40;
+  // let offsetX = 10;
+  // snowballs.push(new mySnowball((i*(objW+offsetX))+60,300,objW/2,"#8ED6FF",(i%5)+1,(i%6)+2,i));
+  // }
 
   // Snowflake array
   for (var i = 0; i < MAX_SNOWFLAKES; i++){
@@ -47,6 +49,8 @@ function init() {
     var rad = getRandomRadius(0,1);
     snowflakes.push(new mySnowflake(rx, ry, colors[i%colors.length], rad, 5));
   }
+
+  canvas.addEventListener("mousedown", createSnowball);
 
   // Event listerner to detect if mouse is moving.
   canvas.addEventListener("mousemove",function(event) {
@@ -136,6 +140,7 @@ function mySnowflake (x, y, c, r, snowflakeSpeed) {
   this.r = r;
   this.snowflakeSpeed = snowflakeSpeed;
   this.fillStyle = this.color;
+
   this.render = function(){
     context.fillStyle = this.color;
     context.beginPath();
@@ -166,7 +171,15 @@ function mySnowflake (x, y, c, r, snowflakeSpeed) {
 //  );
 //}
 
-function mySnowball(x,y,r,c,xSpeed,tempId){
+
+function createSnowball() {
+    snowball = new mySnowball(event.pageX,event.pageY,radius,couleur,10);
+        snowball.render();
+        console.log("create");
+}
+
+
+function mySnowball(x,y,r,c,xSpeed){
   //member variables
   this.ballX = x;
   this.ballY = y;
@@ -175,7 +188,6 @@ function mySnowball(x,y,r,c,xSpeed,tempId){
 
   // new for updating
   this.xSpeed = xSpeed;
-  this.ballId = tempId;
 
   this.render = function() {
     context.fillStyle = this.ballColor;// change the color we are using
