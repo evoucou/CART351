@@ -93,5 +93,22 @@ input[type=text] {
   width: 100%;
   height:30px;
 
+  box-sizing: border-box;
+  border: 2px solid rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  background-color: white;
+  padding-left: 7px;
+}
+
+#chooseColor {
+  background-image: url('sources/searchicon.svg');
+  background-repeat: no-repeat;
+  padding-left: 30px;
+}
+
+#locationBox {
+  background-image: url('sources/currlocactive.svg');
+  background-repeat: no-repeat;
+  padding-left: 30px;
 
 }
