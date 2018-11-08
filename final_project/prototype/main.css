@@ -1,0 +1,97 @@
+body {
+    padding: 0;
+    margin: 0;
+}
+html, body, #map {
+    height: 100%;
+    width: 100vw;
+}
+
+#map {
+  z-index: -2;
+}
+
+#header {
+width: 100%;
+background-color: white;
+position: relative;
+height: 90px;
+-moz-box-shadow:0 7px 8px -6px rgba(0, 0, 0, 0.3);
+-webkit-box-shadow:0 7px 8px -6px rgba(0, 0, 0, 0.3);
+box-shadow: 0 7px 7px -6px rgba(0, 0, 0, 0.3);
+}
+
+#logo {
+position: absolute;
+top: 30%;
+left: 50%;
+transform: translate(-50%, 0);
+width: 170px;
+}
+
+#newrequest {
+height: 25px;
+float: right;
+margin-right: 13px;
+transform: translate(0, 50%);
+z-index: 2;
+}
+
+#searchicon {
+  position: absolute;
+  top: 70%;
+  left: 16%;
+  transform: translate(-50%, -50%);
+  height:25px;
+}
+
+#searchbar {
+  position: absolute;
+  top: 70%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 85%;
+  height:30px;
+
+    box-sizing: border-box;
+    border: 2px solid rgba(230, 230, 230, 0.1);
+    border-radius: 10px;
+    background-color: white;
+    background-image: url('sources/searchicon.svg');
+    background-repeat: no-repeat;
+    padding-left: 30px;
+}
+
+::placeholder {
+    color: rgba(0, 0, 0, 0.2);
+}
+
+#newReqMenu {
+position: fixed;
+top: 56%;
+left: 50%;
+height: 80%;
+width: 88%;
+background-color: rgba(255, 255, 255, 0.8);
+
+transform: translate(-50%, -50%);
+
+  border-radius: 20px;
+}
+
+#newReqTextBox {
+margin: 40px;
+text-align: center;
+color: black;
+
+}
+
+input[type=text] {
+  color: #ccc;
+  font-size: 14px;
+
+  width: 100%;
+  height:30px;
+
+
+}

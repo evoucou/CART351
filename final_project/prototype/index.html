@@ -12,21 +12,41 @@
   integrity="sha512-nMMmRyTVoLYqjP9hrbed9S+FzjZHW5gY1TWCHA5ckwXZBadntCNs8kEqAWdrb9O7rxbCaA4lKTIWjDXZxflOcA=="
   crossorigin=""></script>
   <!-- <script type="text/javascript" src="map.js"></script> -->
-  <link rel="stylesheet" href="css/main.css"/>
+  <link rel="stylesheet" href="main.css"/>
 </head>
 
   <body>
     <div id="header">
-    <img src="sources/plus.svg" id="plus"/>
+    <img src="sources/plus.svg" id="newrequest" onclick="toggleNewReqMenu()"/>
     <img src="sources/logo.svg" id="logo"/><br>
-    <form><img src="sources/search.svg" id="searchicon"/>
-  <input type="text" value="&nbsp;&nbsp;search for a request..." name="search" id="searchbar">
+    <form>
+  <input type="text" placeholder="search for a request..." name="search" id="searchbar">
 </form>
   </div>
-    <div id="map"></div>
+      <div id="newReqMenu"><div id="newReqTextBox"><form>
+        <input type="text" name="title" placeholder="Type in your request">
+        <br><br>
+        <input type="text" name="color" placeholder="Choose a color">
+        <br><br>
+        <input type="text" name="position" placeholder="Current location">
+      </form></div></div>
+  <div id="map"></div>
+
+
+
+
+    <!--   border-width: 0;
+
+      -moz-box-shadow:    inset 0 0 3px #E6E6E6;
+      -webkit-box-shadow: inset 0 0 3px #E6E6E6;
+      box-shadow:         inset 0 0 3px #E6E6E6;-->
 <script>
-var map = L.map('map').fitWorld();
-map.locate({setView: true, maxZoom: 16});
+var map = L.map('map').locate({setView: true, maxZoom: 13});
+//Initially we locate the user's position to load the map around
+
+/*Longitude of Montreal: -73.567256
+
+Latitude of Montreal: 45.5016889*/
 
 L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
     attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
@@ -35,15 +55,41 @@ L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={
 }).addTo(map);
 
 function onLocationFound(e) {
-    var radius = e.accuracy / 2;
 
-    L.marker(e.latlng).addTo(map)
-        .bindPopup("You are within " + radius + " meters from this point").openPopup();
-
-    L.circle(e.latlng, radius).addTo(map);
+// We then add the pin once the new location has been found
+L.marker(e.latlng).addTo(map)
+    .bindPopup("Request for Charging Station").openPopup();
 }
 
-map.on('locationfound', onLocationFound);
+
+function createPinCurLoc() {
+      //console.log("click");
+
+
+// We then zoom the position of the user and add a pin.
+      //map.locate({setView: true, maxZoom: 18, watch: true});
+      map.zoomIn(4, true);
+
+      L.marker(e.latlng).addTo(map)
+          .bindPopup("Request for Charging Station").openPopup();
+      //map.on('click', onLocationFound);
+}
+
+function toggleNewReqMenu() {
+  console.log("click");
+  var e = document.getElementById("newReqMenu");
+
+if (e.style.display === "none") {
+    e.style.display = "block";
+} else {
+    e.style.display = "none";
+}
+}
+
+//document.getElementById("newrequest").addEventListener("click", toggleNewReqMenu);
+
+
+
 
 function onLocationError(e) {
     alert(e.message);
