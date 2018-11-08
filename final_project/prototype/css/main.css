@@ -6,3 +6,33 @@ html, body, #map {
     height: 100%;
     width: 100vw;
 }
+
+#map {
+  z-index: -1;
+}
+
+#header {
+width: 100%;
+background-color: white;
+position: relative;
+height: 55px;
+-moz-box-shadow:0 7px 6px -6px rgba(0, 0, 0, 0.3);
+-webkit-box-shadow:0 7px 6px -6px rgba(0, 0, 0, 0.3);
+box-shadow: 0 7px 6px -6px rgba(0, 0, 0, 0.3);
+}
+
+#logo {
+margin: 0;
+position: absolute;
+top: 50%;
+left: 50%;
+transform: translate(-50%, -50%);
+width: 160px;
+}
+
+#plus {
+height: 25px;
+float: right;
+margin-right: 13px;
+transform: translate(0, 50%);
+}
