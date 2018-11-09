@@ -26,10 +26,10 @@
         <h2>NEW REQUEST</h2>
         <input type="search" name="title" placeholder="Type in your request..." id="titleBox">
         <br><br>
-        <label for="chooseColor">Color:</label><input type="color" name="color" placeholder="Choose a color" id="chooseColor">
+        <label for="colorPicker" style="float: left;">&nbsp;&nbsp;Choose your pin's color</label><input type="color" id="colorPicker">
         <br><br>
-        <input type="text" name="position" placeholder="Current location" id="locationBox"><br>
-        <p id="test">test.</p> 
+        <input type="text" name="position" placeholder="Use current location" id="locationBox"><br>
+        <p id="test">Test. This will be the picker.</p> 
       </form></div></div>
   <div id="map"></div>
 
@@ -100,7 +100,7 @@ if (e.style.display === "none") {
     e.style.display = "block";
     document.getElementById('titleBox').value = '';
     document.getElementById('locationBox').value = '';
-    document.getElementById("chooseColor").value = randomStartColor;
+    document.getElementById("colorPicker").value = randomStartColor;
 
 } else {
     e.style.display = "none";
@@ -115,18 +115,16 @@ updatePinColor();
     var color;
     var defaultColor = randomStartColor;
 
-    color = document.querySelector("#chooseColor");
+    var p = document.querySelector("#test");
+    p.style.color = defaultColor;
+
+    color = document.querySelector("#colorPicker");
     color.addEventListener("input", updateFirst, false);
     //color.addEventListener("change", updateAll, false);
     color.select();
 
   function updateFirst(event) {
-    var p = document.querySelector("#test");
-    console.log('p'+p);
-
-    if (p) {
       p.style.color = event.target.value;
-    }
 }
 
 }

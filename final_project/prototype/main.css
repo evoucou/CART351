@@ -1,6 +1,9 @@
 body {
     padding: 0;
     margin: 0;
+
+    font-family: sans-serif;
+    font-size: 13px;
 }
 html, body, #map {
     height: 100%;
@@ -95,7 +98,7 @@ color: black;
 
 }
 
-#titleBox, #chooseColor, #locationBox {
+#titleBox, #locationBox {
   color: #ccc;
   font-size: 14px;
 
@@ -109,12 +112,25 @@ color: black;
   padding-left: 7px;
 }
 
-#chooseColor {
+#colorPicker {
+  width: 80px;
+  height: 30px;
+  border: 0px;
+  background: none;
+  float: right;
+  transform: translate(0%, -25%);
 
 }
 
 #locationBox {
   background-image: url('sources/currlocactive.svg');
+  background-repeat: no-repeat;
+  padding-left: 30px;
+
+}
+
+#locationBox:focus {
+  background-image: url('sources/currlocinactive.svg');
   background-repeat: no-repeat;
   padding-left: 30px;
 
