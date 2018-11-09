@@ -7,6 +7,13 @@ html, body, #map {
     width: 100vw;
 }
 
+h2 {
+font-size: 20px;
+color: #E42320;
+font-family: sans-serif;
+font-weight: bolder;
+}
+
 #map {
   z-index: -2;
 }
@@ -75,8 +82,10 @@ width: 88%;
 background-color: rgba(255, 255, 255, 0.8);
 
 transform: translate(-50%, -50%);
+display: block;
 
   border-radius: 20px;
+
 }
 
 #newReqTextBox {
@@ -86,7 +95,7 @@ color: black;
 
 }
 
-input[type=text] {
+#titleBox, #chooseColor, #locationBox {
   color: #ccc;
   font-size: 14px;
 
@@ -101,9 +110,7 @@ input[type=text] {
 }
 
 #chooseColor {
-  background-image: url('sources/searchicon.svg');
-  background-repeat: no-repeat;
-  padding-left: 30px;
+
 }
 
 #locationBox {
