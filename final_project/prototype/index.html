@@ -32,10 +32,11 @@
         <br><br>
         <input type="text" name="position" placeholder="Use current location" id="locationBox"><br>
 
-      <br><button class="jscolor {onFineChange:'update(this)', valueElement:null, closable:true}" id="colorPicker">
+      <br><button class="jscolor {width: 280, height: 260, position:'center' , onFineChange:'update(this)', valueElement:null, closable:true}" id="colorPicker">
         Choose your pin's color
 </button><br>
-<p id="test">Test. This will be the picker.</p></form></div></div>
+<p id="test">Test. This will be the picker.</p><br><br>
+<button id="submitButton">submit</button></form></div></div>
   <div id="map"></div>
 
 
@@ -47,26 +48,44 @@
       -webkit-box-shadow: inset 0 0 3px #E6E6E6;
       box-shadow:         inset 0 0 3px #E6E6E6;-->
 <script>
-var map = L.map('map');
-//.locate({setView: true, maxZoom: 13});
+import L from 'leaflet';
+import { GeoSearchControl, OpenStreetMapProvider } from 'leaflet-geosearch';
+
+const provider = new OpenStreetMapProvider();
+
+const searchControl = new GeoSearchControl({
+  provider: provider,
+});
+
+var map = L.map('map').locate({setView: true, maxZoom: 13});
+//map.addControl(searchControl);
 //Initially we locate the user's position to load the map around
 
 /*Longitude of Montreal: -73.567256
 
 Latitude of Montreal: 45.5016889*/
 
+
 L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
-    attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+    //attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
     id: 'mapbox.streets',
     accessToken: 'pk.eyJ1IjoiZXZvdWNvdSIsImEiOiJjam83ZnJrb3UwZWI2M3FvOW0zNzIwZXRnIn0.2HBTS6fDGxp1pjp54zflnw'
 }).addTo(map);
 
-function onLocationFound(e) {
-  //CURRENTLY UNUSED
+new GeoSearchControl({
+  provider: myProvider,
+  style: 'bar',
+  autoComplete: true,
+  autoCompleteDelay: 250,
+}).addTo(map);
 
-// We then add the pin once the new location has been found
-L.marker(e.latlng).addTo(map)
-    .bindPopup("Request for Charging Station").openPopup();
+function onLocationFound(e) {
+  var radius = e.accuracy / 2;
+
+  L.marker(e.latlng).addTo(map)
+      .bindPopup("You are within " + radius + " meters from this point").openPopup();
+
+  L.circle(e.latlng, radius).addTo(map);
 }
 
 

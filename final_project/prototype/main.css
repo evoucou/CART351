@@ -24,7 +24,7 @@ font-weight: bolder;
 #header {
 width: 100%;
 background-color: white;
-position: relative;
+position: absolute;
 height: 90px;
 -moz-box-shadow:0 7px 8px -6px rgba(0, 0, 0, 0.3);
 -webkit-box-shadow:0 7px 8px -6px rgba(0, 0, 0, 0.3);
@@ -134,4 +134,12 @@ color: black;
   background-repeat: no-repeat;
   padding-left: 30px;
 
+}
+
+#submitButton {
+
+width: 90%;
+height: 40px;
+background-color: white;
+  border-radius: 15px;
 }
