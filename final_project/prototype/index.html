@@ -15,13 +15,11 @@
   integrity="sha512-nMMmRyTVoLYqjP9hrbed9S+FzjZHW5gY1TWCHA5ckwXZBadntCNs8kEqAWdrb9O7rxbCaA4lKTIWjDXZxflOcA=="
   crossorigin=""></script>
 
-  <!-- Load Esri Leaflet from CDN -->
-  <script src="https://unpkg.com/esri-leaflet"></script>
+  <link rel="stylesheet" href="leaflet.css" />
+<link rel="stylesheet" href="Control.BingGeocoder.css" />
 
-  <!-- Esri Leaflet Geocoder -->
-  <link rel="stylesheet" href="https://unpkg.com/esri-leaflet-geocoder/dist/esri-leaflet-geocoder.css">
-  <script src="https://unpkg.com/esri-leaflet-geocoder"></script>
-
+<script src="leaflet.js"></script>
+<script src="Control.BingGeocoder.js"></script>
 
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <script src="jscolor.js"></script>
@@ -34,7 +32,7 @@
     <img src="sources/plus.svg" id="newrequest" onclick="toggleNewReqMenu()"/>
     <img src="sources/logo.svg" id="logo"/><br>
   <input type="text" placeholder="search for a request..." name="search" id="searchbar">
-  </div>
+</div>
       <div id="newReqMenu"><div id="newReqTextBox"><form>
         <h2>NEW REQUEST</h2>
         <input type="search" name="title" placeholder="Type in your request..." id="titleBox">
@@ -50,14 +48,33 @@
   <div id="map"></div>
 
 
+
+
+    <!--   border-width: 0;
+
+      -moz-box-shadow:    inset 0 0 3px #E6E6E6;
+      -webkit-box-shadow: inset 0 0 3px #E6E6E6;
+      box-shadow:         inset 0 0 3px #E6E6E6;-->
 <script>
 
-var map = L.map('map', {
-    center: [45.50884, -73.58781],
-    setView: true,
-    zoom: 13
-});
-var tiles = L.esri.basemapLayer("Streets").addTo(map);
+var map = new L.Map('map').setView(new L.LatLng(45.50884, -73.58781), 13);
+
+var bingGeocoder =  new L.Control.BingGeocoder('AsaKzgbo2GW8wrcv0mLCyVvEx2Q8V1N54Gpmizw-fzHIKOAjAMMy4TdNfKdS71vs');
+
+map.addControl(bingGeocoder);
+
+var options = {
+    collapsed: true, /* Whether its collapsed or not */
+    position: 'topright', /* The position of the control */
+    text: 'Locate', /* The text of the submit button */
+    callback: function (results) {
+        var bbox = results.resourceSets[0].resources[0].bbox,
+            first = new L.LatLng(bbox[0], bbox[1]),
+            second = new L.LatLng(bbox[2], bbox[3]),
+            bounds = new L.LatLngBounds([first, second]);
+        this._map.fitBounds(bounds);
+    }
+};
 
 
 //).locate({setView: true, maxZoom: 13});
@@ -67,20 +84,6 @@ var tiles = L.esri.basemapLayer("Streets").addTo(map);
 /*Longitude of Montreal: -73.567256
 
 Latitude of Montreal: 45.5016889*/
-
-// create the geocoding control and add it to the map
-var searchControl = L.esri.Geocoding.geosearch().addTo(map);
-
-// create an empty layer group to store the results and add it to the map
-var results = L.layerGroup().addTo(map);
-
-// listen for the results event and add every result to the map
-searchControl.on("results", function(data) {
-    results.clearLayers();
-    for (var i = data.results.length - 1; i >= 0; i--) {
-        results.addLayer(L.marker(data.results[i].latlng));
-    }
-});
 
 
 L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
@@ -96,7 +99,7 @@ function onLocationFound(e) {
 
         L.marker(e.latlng)
     .bindPopup('Hello world!')
-    //.on('click', function() { alert('Clicked on a member of the group!'); })
+    .on('click', function() { alert('Clicked on a member of the group!'); })
     .addTo(map);
 }
 
@@ -178,6 +181,7 @@ function update(jscolor) {
 
 
 
+
 function onLocationError(e) {
     alert(e.message);
 }
@@ -185,5 +189,7 @@ function onLocationError(e) {
 map.on('locationerror', onLocationError);
 
 </script>
+
   </body>
+
   </html>
