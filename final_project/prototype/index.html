@@ -25,20 +25,8 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <script src="jscolor.js"></script>
 
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
-
-<!-- Optional theme -->
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
-<!-- <link rel="stylesheet" href="https://s3-us-west-1.amazonaws.com/patterns.esri.com/files/calcite-web/1.0.0-beta.7/css/calcite-web.min.css"> -->
-
-<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
-<script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
-
-<!-- Latest compiled and minified JavaScript -->
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-
-<!-- this demo plugin bundles the needed code from Esri Leaflet and Esri Leaflet Geocoder -->
-<script src="bootstrap-geocoder.js"></script>
+  <link  href="leaflet.css" rel="stylesheet" />
+<script src="https://unpkg.com/leaflet-geosearch@latest/dist/bundle.min.js"></script>
 
   <!-- <script type="text/javascript" src="map.js"></script> -->
   <link rel="stylesheet" href="main.css"/>
@@ -74,11 +62,19 @@ var map = L.map('map').locate({setView: true, maxZoom: 15, watch: true});
 /*Longitude of Montreal: -73.567256
 Latitude of Montreal: 45.5016889*/
 
+// instead of import {} from 'leaflet-geosearch', use the `window` global
+var GeoSearchControl = window.GeoSearch.GeoSearchControl;
+var OpenStreetMapProvider = window.GeoSearch.OpenStreetMapProvider;
 
-var search = BootstrapGeocoder.search({
-  inputTag: 'searchAdress',
-  placeholder: 'Or type in an address...'
-}).addTo(map);
+// remaining is the same as in the docs, accept for the var instead of const declarations
+var provider = new OpenStreetMapProvider();
+
+var searchControl = new GeoSearchControl({
+  provider: provider,
+  style: 'bar'
+});
+
+map.addControl(searchControl);
 
 var title;
 
