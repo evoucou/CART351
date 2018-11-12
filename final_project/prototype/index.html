@@ -25,8 +25,20 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <script src="jscolor.js"></script>
 
-  <link  href="leaflet.css" rel="stylesheet" />
-<script src="https://unpkg.com/leaflet-geosearch@latest/dist/bundle.min.js"></script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+
+<!-- Optional theme -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
+<!-- <link rel="stylesheet" href="https://s3-us-west-1.amazonaws.com/patterns.esri.com/files/calcite-web/1.0.0-beta.7/css/calcite-web.min.css"> -->
+
+<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+<script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+<!-- this demo plugin bundles the needed code from Esri Leaflet and Esri Leaflet Geocoder -->
+<script src="bootstrap-geocoder.js"></script>
 
   <!-- <script type="text/javascript" src="map.js"></script> -->
   <link rel="stylesheet" href="main.css"/>
@@ -36,25 +48,23 @@
     <div id="header">
     <img src="sources/plus.svg" id="newrequest" onclick="toggleNewReqMenu()"/>
     <img src="sources/logo.svg" id="logo"/><br>
-  <input type="text" placeholder="Enter an adress.." name="search" id="searchAdress">
+  <input type="text" placeholder="Search for places or addresses" id="searchAdress">
   </div>
       <div id="newReqMenu"><div id="newReqTextBox"><form>
-        <h2>NEW REQUEST</h2>
-        <input type="search" name="title" placeholder="Type in your request..." id="titleBox">
+        <h2>REQUEST FROM</h2>
+        <h3><p id="userLocation"></p></h3>
+        <input type="search" placeholder="Type in your request..." id="titleBox">
         <!--<input type="color" id="colorPicker">-->
-        <br><br>
-        <input type="text" name="position" placeholder="Use current location" id="locationBox"><br>
-
       <br><button class="jscolor {width: 280, height: 260, position:'center' , onFineChange:'update(this)', valueElement:null, closable:true}" id="colorPicker">
         Choose your pin's color
-</button><br>
-<p id="test">Test. This will be the picker.</p></form><br><br>
+</button>
+<p id="test">Test. This will be the picker.</p></form>
 <button id="submitButton" onclick="submitForm()">Submit</button></div></div>
   <div id="map"></div>
 
 
 <script>
-var map = L.map('map').locate({setView: true, maxZoom: 15, watch: true});
+var map = L.map('map').locate({setView: true, maxZoom: 13});
 //map.locate({setView: true, maxZoom: 16});
 
 //map.addControl(searchControl);
@@ -62,19 +72,11 @@ var map = L.map('map').locate({setView: true, maxZoom: 15, watch: true});
 /*Longitude of Montreal: -73.567256
 Latitude of Montreal: 45.5016889*/
 
-// instead of import {} from 'leaflet-geosearch', use the `window` global
-var GeoSearchControl = window.GeoSearch.GeoSearchControl;
-var OpenStreetMapProvider = window.GeoSearch.OpenStreetMapProvider;
 
-// remaining is the same as in the docs, accept for the var instead of const declarations
-var provider = new OpenStreetMapProvider();
-
-var searchControl = new GeoSearchControl({
-  provider: provider,
-  style: 'bar'
-});
-
-map.addControl(searchControl);
+var search = BootstrapGeocoder.search({
+  inputTag: 'searchAdress',
+})
+//.addTo(map);
 
 var title;
 
@@ -84,9 +86,30 @@ L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={
     accessToken: 'pk.eyJ1IjoiZXZvdWNvdSIsImEiOiJjam83ZnJrb3UwZWI2M3FvOW0zNzIwZXRnIn0.2HBTS6fDGxp1pjp54zflnw'
 }).addTo(map);
 
+var currLoc;
+
 function onLocationFound(e) {
 
+  var getCurr = L.latLng(e.latlng);
+  var myMarker = L.marker(getCurr,
+      { title: 'unselected', draggable: true})
+          .addTo(map);
 
+
+          myMarker.on('dragend', function (e) {
+  //document.getElementById('latitude').value = marker.getLatLng().lat;
+  console.log(myMarker.getLatLng().lat);
+console.log(myMarker.getLatLng().lng);
+});
+
+
+
+currLoc = myMarker.getLatLng();
+console.log(currLoc);
+
+document.getElementById("userLocation").innerHTML = currLoc;
+
+//var myMarker = L.marker(e.latlng).addTo(map).bindPopup('wtv').getLatLng();
 }
 var currentLocation;
 
@@ -97,16 +120,8 @@ function submitForm() {
     title = document.getElementById('titleBox').value;
     console.log(title);
 
-    L.marker([50.5, 30.5]).addTo(map).bindPopup('wtv').openPopup().getLatLng();
+    //L.marker([50.5, 30.5]).addTo(map).bindPopup('wtv').openPopup().getLatLng();
 
-// If user is using current loc...
-    if (currentLocation === true) {
-    //  L.marker(e.latlng).bindPopup(title).addTo(map).openPopup();
-    }
-//if user has entered another adress
-    else {
-
-    }
 
 }
 
@@ -121,8 +136,12 @@ color += letters[Math.floor(Math.random() * 16)];
 return color;
 }
 var randomStartColor;
+
+
+
 function toggleNewReqMenu() {
 
+map.locate({setView: true, maxZoom: 15, watch: true});
 
   console.log("click");
   randomStartColor = getRandomColor();
@@ -130,8 +149,6 @@ if (e.style.display === "none") {
     e.style.display = "block";
     //Initial values
     document.getElementById('titleBox').value = '';
-    document.getElementById('locationBox').value = '';
-    document.getElementById('locationBox').placeholder = 'Current Location';
     document.getElementById('colorPicker').style.backgroundColor = randomStartColor;
     document.getElementById('test').style.color = randomStartColor;
 } else {
