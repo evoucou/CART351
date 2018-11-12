@@ -19,6 +19,15 @@
   <script src="jscolor.js"></script>
   <!-- <script type="text/javascript" src="map.js"></script> -->
   <link rel="stylesheet" href="main.css"/>
+
+
+    <script type="text/javascript">
+      handleOnLoad = function() {
+        L.Icon.Default.imagePath = 'https://unpkg.com/leaflet@0.7.7/dist/images/';
+      }
+    </script>
+    <link  href="https://unpkg.com/leaflet-geosearch@latest/assets/css/leaflet.css" rel="stylesheet" />
+<script src="https://unpkg.com/leaflet-geosearch@latest/dist/bundle.min.js"></script>
 </head>
 
   <body>
@@ -51,12 +60,23 @@
       box-shadow:         inset 0 0 3px #E6E6E6;-->
 <script>
 
-var map = L.map('map', {
+var GeoSearchControl = window.GeoSearch.GeoSearchControl;
+var OpenStreetMapProvider = window.GeoSearch.OpenStreetMapProvider;
+
+// remaining is the same as in the docs, accept for the var instead of const declarations
+var provider = new OpenStreetMapProvider();
+
+var searchControl = new GeoSearchControl({
+  provider: provider,
+});
+
+const map = new L.map('map', {
     center: [45.50884, -73.58781],
     setView: true,
     zoom: 13
 });
 
+map.addControl(searchControl);
 
 //).locate({setView: true, maxZoom: 13});
 //map.addControl(searchControl);
