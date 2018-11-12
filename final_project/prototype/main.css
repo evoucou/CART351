@@ -4,12 +4,17 @@ body {
 
     font-family: sans-serif;
     font-size: 13px;
+    position: relative;
 }
+
+#map {
+  z-index: 5;
+}
+
 html, body, #map {
     height: 100%;
     width: 100vw;
 }
-
 h2 {
 font-size: 20px;
 color: #E42320;
@@ -17,26 +22,24 @@ font-family: sans-serif;
 font-weight: bolder;
 }
 
-#map {
-  z-index: -2;
-}
 
 #header {
 width: 100%;
 background-color: white;
-position: absolute;
 height: 90px;
 -moz-box-shadow:0 7px 8px -6px rgba(0, 0, 0, 0.3);
 -webkit-box-shadow:0 7px 8px -6px rgba(0, 0, 0, 0.3);
 box-shadow: 0 7px 7px -6px rgba(0, 0, 0, 0.3);
+z-index: 10;
+position: absolute;
 }
 
 #logo {
-position: absolute;
-top: 30%;
-left: 50%;
-transform: translate(-50%, 0);
-width: 170px;
+  position: absolute;
+  top: 30%;
+  left: 50%;
+  transform: translate(-50%, 0);
+  width: 170px;
 }
 
 #newrequest {
@@ -47,16 +50,8 @@ transform: translate(0, 50%);
 z-index: 2;
 }
 
-#searchicon {
-  position: absolute;
-  top: 70%;
-  left: 16%;
-  transform: translate(-50%, -50%);
-  height:25px;
-}
-
 #searchbar {
-  position: absolute;
+    position: absolute;
   top: 70%;
   left: 50%;
   transform: translate(-50%, -50%);
@@ -78,6 +73,7 @@ z-index: 2;
 
 #newReqMenu {
 position: fixed;
+z-index:11;
 top: 56%;
 left: 50%;
 height: 80%;
@@ -86,8 +82,7 @@ background-color: rgba(255, 255, 255, 0.8);
 
 transform: translate(-50%, -50%);
 display: block;
-
-  border-radius: 20px;
+border-radius: 20px;
 
 }
 
@@ -119,7 +114,6 @@ color: black;
   background: none;
   float: right;
   transform: translate(0%, -25%);
-
 }*/
 
 #locationBox {

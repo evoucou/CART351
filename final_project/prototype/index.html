@@ -15,12 +15,6 @@
   integrity="sha512-nMMmRyTVoLYqjP9hrbed9S+FzjZHW5gY1TWCHA5ckwXZBadntCNs8kEqAWdrb9O7rxbCaA4lKTIWjDXZxflOcA=="
   crossorigin=""></script>
 
-  <link rel="stylesheet" href="leaflet.css" />
-<link rel="stylesheet" href="Control.BingGeocoder.css" />
-
-<script src="leaflet.js"></script>
-<script src="Control.BingGeocoder.js"></script>
-
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <script src="jscolor.js"></script>
   <!-- <script type="text/javascript" src="map.js"></script> -->
@@ -32,7 +26,7 @@
     <img src="sources/plus.svg" id="newrequest" onclick="toggleNewReqMenu()"/>
     <img src="sources/logo.svg" id="logo"/><br>
   <input type="text" placeholder="search for a request..." name="search" id="searchbar">
-</div>
+  </div>
       <div id="newReqMenu"><div id="newReqTextBox"><form>
         <h2>NEW REQUEST</h2>
         <input type="search" name="title" placeholder="Type in your request..." id="titleBox">
@@ -57,24 +51,11 @@
       box-shadow:         inset 0 0 3px #E6E6E6;-->
 <script>
 
-var map = new L.Map('map').setView(new L.LatLng(45.50884, -73.58781), 13);
-
-var bingGeocoder =  new L.Control.BingGeocoder('AsaKzgbo2GW8wrcv0mLCyVvEx2Q8V1N54Gpmizw-fzHIKOAjAMMy4TdNfKdS71vs');
-
-map.addControl(bingGeocoder);
-
-var options = {
-    collapsed: true, /* Whether its collapsed or not */
-    position: 'topright', /* The position of the control */
-    text: 'Locate', /* The text of the submit button */
-    callback: function (results) {
-        var bbox = results.resourceSets[0].resources[0].bbox,
-            first = new L.LatLng(bbox[0], bbox[1]),
-            second = new L.LatLng(bbox[2], bbox[3]),
-            bounds = new L.LatLngBounds([first, second]);
-        this._map.fitBounds(bounds);
-    }
-};
+var map = L.map('map', {
+    center: [45.50884, -73.58781],
+    setView: true,
+    zoom: 13
+});
 
 
 //).locate({setView: true, maxZoom: 13});
@@ -138,6 +119,7 @@ function toggleNewReqMenu() {
 
 if (e.style.display === "none") {
     e.style.display = "block";
+    e.style.position = "fixed";
     //Initial values
     document.getElementById('titleBox').value = '';
     document.getElementById('locationBox').value = '';
