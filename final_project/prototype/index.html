@@ -26,7 +26,7 @@
         L.Icon.Default.imagePath = 'https://unpkg.com/leaflet@0.7.7/dist/images/';
       }
     </script>
-    <link  href="https://unpkg.com/leaflet-geosearch@latest/assets/css/leaflet.css" rel="stylesheet" />
+  <link  href="leaflet.css" rel="stylesheet" />
 <script src="https://unpkg.com/leaflet-geosearch@latest/dist/bundle.min.js"></script>
 </head>
 
@@ -66,14 +66,41 @@ var OpenStreetMapProvider = window.GeoSearch.OpenStreetMapProvider;
 // remaining is the same as in the docs, accept for the var instead of const declarations
 var provider = new OpenStreetMapProvider();
 
-var searchControl = new GeoSearchControl({
-  provider: provider,
-});
 
-const map = new L.map('map', {
+
+var map = new L.map('map', {
     center: [45.50884, -73.58781],
     setView: true,
     zoom: 13
+});
+
+var pinIcon = L.Icon.extend({
+    options: {
+        iconUrl: 'sources/pin.svg',
+        iconSize:     [38, 95],
+        shadowSize:   [50, 64],
+        iconAnchor:   [22, 94],
+        shadowAnchor: [4, 62],
+        popupAnchor:  [-3, -76]
+    }
+});
+
+var searchControl = new GeoSearchControl({
+  provider: provider,                               // required
+  showMarker: true,                                   // optional: true|false  - default true
+  showPopup: false,
+  style: 'bar',                                // optional: true|false  - default false
+  marker: {                                           // optional: L.Marker    - default L.Icon.Default
+    icon: new pinIcon(),
+    draggable: false,
+  },
+  popupFormat: ({ query, result }) => result.label,   // optional: function    - default returns result label
+  maxMarkers: 5,                                      // optional: number      - default 1
+  retainZoomLevel: false,                             // optional: true|false  - default false
+  animateZoom: true,                                  // optional: true|false  - default true
+  autoClose: true,                                   // optional: true|false  - default false
+  searchLabel: 'Enter address',                       // optional: string      - default 'Enter address'
+  keepResult: false                                   // optional: true|false  - default false
 });
 
 map.addControl(searchControl);
@@ -105,20 +132,24 @@ function onLocationFound(e) {
 }
 
       map.on('locationfound', onLocationFound);
+
 var reqTitle;
 
 function createPinCurLoc() {
   reqTitle = document.getElementById('titleBox').value;
   console.log(reqTitle);
 
-    map.locate({setView: true, maxZoom: 16});
+    map.locate({setView: true, maxZoom: 17});
     console.log("create pin");
 
     e.style.display="none";
 }
 
 var e = document.getElementById("newReqMenu");
+var geosearchBox = document.getElementById("leaflet-bar-part");
 e.style.display="none";
+
+console.log(geosearchBox);
 
 
 function getRandomColor() {
