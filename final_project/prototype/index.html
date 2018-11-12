@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html>
 
@@ -15,26 +14,41 @@
   integrity="sha512-nMMmRyTVoLYqjP9hrbed9S+FzjZHW5gY1TWCHA5ckwXZBadntCNs8kEqAWdrb9O7rxbCaA4lKTIWjDXZxflOcA=="
   crossorigin=""></script>
 
+  <!-- Load Esri Leaflet from CDN -->
+  <script src="https://unpkg.com/esri-leaflet"></script>
+
+  <!-- Esri Leaflet Geocoder -->
+  <link rel="stylesheet" href="https://unpkg.com/esri-leaflet-geocoder/dist/esri-leaflet-geocoder.css">
+  <script src="https://unpkg.com/esri-leaflet-geocoder"></script>
+
+
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <script src="jscolor.js"></script>
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+
+<!-- Optional theme -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
+<!-- <link rel="stylesheet" href="https://s3-us-west-1.amazonaws.com/patterns.esri.com/files/calcite-web/1.0.0-beta.7/css/calcite-web.min.css"> -->
+
+<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+<script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+<!-- this demo plugin bundles the needed code from Esri Leaflet and Esri Leaflet Geocoder -->
+<script src="bootstrap-geocoder.js"></script>
+
   <!-- <script type="text/javascript" src="map.js"></script> -->
   <link rel="stylesheet" href="main.css"/>
-
-
-    <script type="text/javascript">
-      handleOnLoad = function() {
-        L.Icon.Default.imagePath = 'https://unpkg.com/leaflet@0.7.7/dist/images/';
-      }
-    </script>
-  <link  href="leaflet.css" rel="stylesheet" />
-<script src="https://unpkg.com/leaflet-geosearch@latest/dist/bundle.min.js"></script>
 </head>
 
   <body>
     <div id="header">
     <img src="sources/plus.svg" id="newrequest" onclick="toggleNewReqMenu()"/>
     <img src="sources/logo.svg" id="logo"/><br>
-  <input type="text" placeholder="search for a request..." name="search" id="searchbar">
+  <input type="text" placeholder="Enter an adress.." name="search" id="searchAdress">
   </div>
       <div id="newReqMenu"><div id="newReqTextBox"><form>
         <h2>NEW REQUEST</h2>
@@ -47,72 +61,26 @@
         Choose your pin's color
 </button><br>
 <p id="test">Test. This will be the picker.</p></form><br><br>
-<button id="submitButton" onclick="createPinCurLoc()">Submit</button></div></div>
+<button id="submitButton" onclick="submitForm()">Submit</button></div></div>
   <div id="map"></div>
 
 
-
-
-    <!--   border-width: 0;
-
-      -moz-box-shadow:    inset 0 0 3px #E6E6E6;
-      -webkit-box-shadow: inset 0 0 3px #E6E6E6;
-      box-shadow:         inset 0 0 3px #E6E6E6;-->
 <script>
+var map = L.map('map').locate({setView: true, maxZoom: 15, watch: true});
+//map.locate({setView: true, maxZoom: 16});
 
-var GeoSearchControl = window.GeoSearch.GeoSearchControl;
-var OpenStreetMapProvider = window.GeoSearch.OpenStreetMapProvider;
-
-// remaining is the same as in the docs, accept for the var instead of const declarations
-var provider = new OpenStreetMapProvider();
-
-
-
-var map = new L.map('map', {
-    center: [45.50884, -73.58781],
-    setView: true,
-    zoom: 13
-});
-
-var pinIcon = L.Icon.extend({
-    options: {
-        iconUrl: 'sources/pin.svg',
-        iconSize:     [38, 95],
-        shadowSize:   [50, 64],
-        iconAnchor:   [22, 94],
-        shadowAnchor: [4, 62],
-        popupAnchor:  [-3, -76]
-    }
-});
-
-var searchControl = new GeoSearchControl({
-  provider: provider,                               // required
-  showMarker: true,                                   // optional: true|false  - default true
-  showPopup: false,
-  style: 'bar',                                // optional: true|false  - default false
-  marker: {                                           // optional: L.Marker    - default L.Icon.Default
-    icon: new pinIcon(),
-    draggable: false,
-  },
-  popupFormat: ({ query, result }) => result.label,   // optional: function    - default returns result label
-  maxMarkers: 5,                                      // optional: number      - default 1
-  retainZoomLevel: false,                             // optional: true|false  - default false
-  animateZoom: true,                                  // optional: true|false  - default true
-  autoClose: true,                                   // optional: true|false  - default false
-  searchLabel: 'Enter address',                       // optional: string      - default 'Enter address'
-  keepResult: false                                   // optional: true|false  - default false
-});
-
-map.addControl(searchControl);
-
-//).locate({setView: true, maxZoom: 13});
 //map.addControl(searchControl);
 //Initially we locate the user's position to load the map around
-
 /*Longitude of Montreal: -73.567256
-
 Latitude of Montreal: 45.5016889*/
 
+
+var search = BootstrapGeocoder.search({
+  inputTag: 'searchAdress',
+  placeholder: 'Or type in an address...'
+}).addTo(map);
+
+var title;
 
 L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
     //attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
@@ -121,37 +89,33 @@ L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={
 }).addTo(map);
 
 function onLocationFound(e) {
-  // We then zoom the position of the user and add a pin.
-        //map.locate({setView: true, maxZoom: 18, watch: true});
-        //map.zoomIn(2, true);
 
-        L.marker(e.latlng)
-    .bindPopup('Hello world!')
-    .on('click', function() { alert('Clicked on a member of the group!'); })
-    .addTo(map);
+
 }
+var currentLocation;
 
-      map.on('locationfound', onLocationFound);
+    map.on('locationfound', onLocationFound);
 
-var reqTitle;
-
-function createPinCurLoc() {
-  reqTitle = document.getElementById('titleBox').value;
-  console.log(reqTitle);
-
-    map.locate({setView: true, maxZoom: 17});
-    console.log("create pin");
-
+function submitForm() {
     e.style.display="none";
+    title = document.getElementById('titleBox').value;
+    console.log(title);
+
+    L.marker([50.5, 30.5]).addTo(map).bindPopup('wtv').openPopup().getLatLng();
+
+// If user is using current loc...
+    if (currentLocation === true) {
+    //  L.marker(e.latlng).bindPopup(title).addTo(map).openPopup();
+    }
+//if user has entered another adress
+    else {
+
+    }
+
 }
 
 var e = document.getElementById("newReqMenu");
-var geosearchBox = document.getElementById("leaflet-bar-part");
 e.style.display="none";
-
-console.log(geosearchBox);
-
-
 function getRandomColor() {
 var letters = '0123456789ABCDEF';
 var color = '#';
@@ -160,69 +124,48 @@ color += letters[Math.floor(Math.random() * 16)];
 }
 return color;
 }
-
 var randomStartColor;
-
 function toggleNewReqMenu() {
+
+
   console.log("click");
-
   randomStartColor = getRandomColor();
-
 if (e.style.display === "none") {
     e.style.display = "block";
-    e.style.position = "fixed";
     //Initial values
     document.getElementById('titleBox').value = '';
     document.getElementById('locationBox').value = '';
+    document.getElementById('locationBox').placeholder = 'Current Location';
     document.getElementById('colorPicker').style.backgroundColor = randomStartColor;
     document.getElementById('test').style.color = randomStartColor;
-
-
 } else {
     e.style.display = "none";
 }
-
 //updatePinColor();
-
 }
-
 function update(jscolor) {
     // 'jscolor' instance can be used as a string
     document.getElementById('test').style.color = '#' + jscolor
 }
-
 //OLD COLOR PICKER
   /* function updatePinColor() {
     var color;
     var defaultColor = randomStartColor;
-
     var p = document.querySelector("#test");
     p.style.color = defaultColor;
-
-    color = document.querySelector("#colorPicker");
-    color.addEventListener("input", updateFirst, false);
-    //color.addEventListener("change", updateAll, false);
+    color = document.querySelector("#colorPicker");
+    color.addEventListener("input", updateFirst, false);
+    //color.addEventListener("change", updateAll, false);
     color.select();
-
   function updateFirst(event) {
       p.style.color = event.target.value;
 }
-
 }*/
-
 //document.getElementById("newrequest").addEventListener("click", toggleNewReqMenu);
-
-
-
-
 function onLocationError(e) {
     alert(e.message);
 }
-
 map.on('locationerror', onLocationError);
-
 </script>
-
   </body>
-
   </html>
