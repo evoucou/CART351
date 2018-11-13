@@ -55,7 +55,24 @@ height: 25px;
 float: right;
 margin-right: 13px;
 transform: translate(0, 50%);
-z-index: 2;
+}
+
+#finduser {
+  top: 110px;
+  left: 2px;
+  width: 40px;
+  background-color: white;
+  height: 40px;
+  -moz-box-shadow:0 7px 8px -6px rgba(0, 0, 0, 0.3);
+  -webkit-box-shadow:0 7px 8px -6px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 7px 7px -6px rgba(0, 0, 0, 0.3);
+  z-index: 11;
+  position: absolute;
+
+  box-sizing: border-box;
+  border: 0.5px solid #ccc;
+  border-radius: 5px;
+
 }
 
 #searchAdress {

@@ -50,6 +50,7 @@
     <img src="sources/logo.svg" id="logo"/><br>
   <input type="text" placeholder="Search for places or addresses" id="searchAdress">
   </div>
+  <button id="finduser"></button>
       <div id="newReqMenu"><div id="newReqTextBox"><form>
         <h2>REQUEST FROM</h2>
         <h3><p id="userLocation"></p></h3>
@@ -64,7 +65,11 @@
 
 
 <script>
-var map = L.map('map').locate({setView: true, maxZoom: 13});
+var state = 1 ;
+var map = L.map('map').locate({setView: true, maxZoom: 16});
+var s = document.getElementById("newReqMenu");
+s.style.display="none";
+var recenter = false;
 //map.locate({setView: true, maxZoom: 16});
 
 //map.addControl(searchControl);
@@ -76,7 +81,7 @@ Latitude of Montreal: 45.5016889*/
 var search = BootstrapGeocoder.search({
   inputTag: 'searchAdress',
 })
-//.addTo(map);
+.addTo(map);
 
 var title;
 // placeholders for the L.marker and L.circle representing user's current position and accuracy
@@ -91,65 +96,73 @@ L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={
 var current_location;
 var myMarker;
 
-
-
 function onLocationFound(e) {
 
-
   current_location = L.latLng(e.latlng);
-  myMarker = L.marker(current_location).addTo(map);
+  myMarker = L.marker(current_location);
 
-          console.log("mymarker : " + myMarker.getLatLng());
-          console.log("curr_loc : " + current_location);
+    document.getElementById("newrequest").addEventListener("click", function(){
+          centerOnMarker(map, myMarker);
+    });
 
+    document.getElementById("finduser").addEventListener("click", function(){
+          map.locate({setView: true});
+    });
+
+//document.getElementById("newrequest").addEventListener("click", toggleNewReqMenu(e,myMarker,current_location));
+  map.on("click", function (event) {
+  	if (myMarker) {
+          myMarker._icon.style.transition = "transform 0.3s ease-out";
+          myMarker._shadow.style.transition = "transform 0.3s ease-out";
+
+      	myMarker.setLatLng(event.latlng);
+
+          setTimeout(function () {
+              myMarker._icon.style.transition = null;
+              myMarker._shadow.style.transition = null;
+          }, 300);
+          return;
+      }
+
+      // myMarker = L.marker(event.latlng, {
+      // 	draggable: false
+      // }).addTo(map).on("click", function () {
+      // 	event.originalEvent.stopPropagation();
+      // });
+  });
 
               // if marker is back to user's loc, do not draw a new one
-                        if (myMarker.getLatLng() === current_location) {
-                                map.removeLayer(myMarker);
-                                console.log("true");
-                                  myMarker = L.marker(current_location).addTo(map);
-                                  }
+              if (myMarker.getLatLng() === current_location) {
+                      //map.removeLayer(myMarker);
+                      console.log("true");
+                        myMarker.addTo(map);
 
-                                //   map.on('click',function(e){
-                                //     map.removeLayer(myMarker);
-                                //     console.log("map clicked");
-                                //
-                                // myMarker = L.marker(e.latlng).addTo(map);
+                        // myMarker = L.marker(event.latlng, {
+                        // 	draggable: false
+                        // }).addTo(map).on("click", function () {
+                        // 	event.originalEvent.stopPropagation();
+                        // });
+                        }
 
-                                    // myMarker = L.marker(current_location,
-                                    //     { title: 'unselected', draggable: false})
-                                    //         .addTo(map);
-
-//           myMarker.on('dragend', function (e) {
-//   //document.getElementById('latitude').value = marker.getLatLng().lat;
-//   console.log(myMarker.getLatLng().lat);
-// console.log(myMarker.getLatLng().lng);
-// //NEW MENU WINDOW WILL POP UP
-
-
-map.on("click", function (event) {
-	if (myMarker) {
-        myMarker._icon.style.transition = "transform 0.3s ease-out";
-        myMarker._shadow.style.transition = "transform 0.3s ease-out";
-
-    	myMarker.setLatLng(event.latlng);
-
-        setTimeout(function () {
-            myMarker._icon.style.transition = null;
-            myMarker._shadow.style.transition = null;
-        }, 300);
-        return;
-    }
-
-    myMarker = L.marker(event.latlng, {
-    	draggable: false
-    }).addTo(map).on("click", function () {
-    	event.originalEvent.stopPropagation();
-    });
-});
 }
 
 
+function centerOnMarker(map, marker) {
+  var latLngs = [ marker.getLatLng() ];
+  var markerBounds = L.latLngBounds(latLngs);
+  map.fitBounds(markerBounds);
+}
+
+
+// CODE TO TRY FOR REMOVING MARKER BEFORE A NEW ONE
+// leafletData.getMap().then(function (map) {
+// map.eachLayer(function(layer) {
+//   // Remove all layers except the background (tilelayer)
+//   // EDIT: and the main marker with the custom property
+//   if (!(layer instanceof L.TileLayer) && layer.options.myCustomProperty != 'myMainMarker')) {
+//     map.removeLayer(layer);
+//   }
+// });
 
 
 //document.getElementById("userLocation").innerHTML = current_location;
@@ -160,17 +173,14 @@ map.on("click", function (event) {
     map.on('locationfound', onLocationFound);
 
 function submitForm() {
-    e.style.display="none";
+    s.style.display="none";
     title = document.getElementById('titleBox').value;
     console.log(title);
-
+    state = 1;
     //L.marker([50.5, 30.5]).addTo(map).bindPopup('wtv').openPopup().getLatLng();
-
-
 }
 
-var e = document.getElementById("newReqMenu");
-e.style.display="none";
+
 function getRandomColor() {
 var letters = '0123456789ABCDEF';
 var color = '#';
@@ -181,24 +191,21 @@ return color;
 }
 var randomStartColor;
 
-
-
+  console.log("recenter : "+recenter);
 function toggleNewReqMenu() {
-
 
   console.log("click");
 
-
   randomStartColor = getRandomColor();
-if (e.style.display === "none") {
-    e.style.display = "block";
+if (s.style.display === "none") {
+    s.style.display = "block";
     //Initial values
-      map.locate({setView: true});
+      //map.locate({setView: true});
     document.getElementById('titleBox').value = '';
     document.getElementById('colorPicker').style.backgroundColor = randomStartColor;
     document.getElementById('test').style.color = randomStartColor;
 } else {
-    e.style.display = "none";
+    s.style.display = "none";
 }
 //updatePinColor();
 }
