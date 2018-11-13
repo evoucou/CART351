@@ -79,6 +79,8 @@ var search = BootstrapGeocoder.search({
 //.addTo(map);
 
 var title;
+// placeholders for the L.marker and L.circle representing user's current position and accuracy
+   var current_position, current_accuracy;
 
 L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
     //attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
@@ -86,32 +88,74 @@ L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={
     accessToken: 'pk.eyJ1IjoiZXZvdWNvdSIsImEiOiJjam83ZnJrb3UwZWI2M3FvOW0zNzIwZXRnIn0.2HBTS6fDGxp1pjp54zflnw'
 }).addTo(map);
 
-var currLoc;
+var current_location;
+var myMarker;
+
+
 
 function onLocationFound(e) {
 
-  var getCurr = L.latLng(e.latlng);
-  var myMarker = L.marker(getCurr,
-      { title: 'unselected', draggable: true})
-          .addTo(map);
+
+  current_location = L.latLng(e.latlng);
+  myMarker = L.marker(current_location).addTo(map);
+
+          console.log("mymarker : " + myMarker.getLatLng());
+          console.log("curr_loc : " + current_location);
 
 
-          myMarker.on('dragend', function (e) {
-  //document.getElementById('latitude').value = marker.getLatLng().lat;
-  console.log(myMarker.getLatLng().lat);
-console.log(myMarker.getLatLng().lng);
+              // if marker is back to user's loc, do not draw a new one
+                        if (myMarker.getLatLng() === current_location) {
+                                map.removeLayer(myMarker);
+                                console.log("true");
+                                  myMarker = L.marker(current_location).addTo(map);
+                                  }
+
+                                //   map.on('click',function(e){
+                                //     map.removeLayer(myMarker);
+                                //     console.log("map clicked");
+                                //
+                                // myMarker = L.marker(e.latlng).addTo(map);
+
+                                    // myMarker = L.marker(current_location,
+                                    //     { title: 'unselected', draggable: false})
+                                    //         .addTo(map);
+
+//           myMarker.on('dragend', function (e) {
+//   //document.getElementById('latitude').value = marker.getLatLng().lat;
+//   console.log(myMarker.getLatLng().lat);
+// console.log(myMarker.getLatLng().lng);
+// //NEW MENU WINDOW WILL POP UP
+
+
+map.on("click", function (event) {
+	if (myMarker) {
+        myMarker._icon.style.transition = "transform 0.3s ease-out";
+        myMarker._shadow.style.transition = "transform 0.3s ease-out";
+
+    	myMarker.setLatLng(event.latlng);
+
+        setTimeout(function () {
+            myMarker._icon.style.transition = null;
+            myMarker._shadow.style.transition = null;
+        }, 300);
+        return;
+    }
+
+    myMarker = L.marker(event.latlng, {
+    	draggable: false
+    }).addTo(map).on("click", function () {
+    	event.originalEvent.stopPropagation();
+    });
 });
+}
 
 
 
-currLoc = myMarker.getLatLng();
-console.log(currLoc);
 
-document.getElementById("userLocation").innerHTML = currLoc;
+//document.getElementById("userLocation").innerHTML = current_location;
+
 
 //var myMarker = L.marker(e.latlng).addTo(map).bindPopup('wtv').getLatLng();
-}
-var currentLocation;
 
     map.on('locationfound', onLocationFound);
 
@@ -141,13 +185,15 @@ var randomStartColor;
 
 function toggleNewReqMenu() {
 
-map.locate({setView: true, maxZoom: 15, watch: true});
 
   console.log("click");
+
+
   randomStartColor = getRandomColor();
 if (e.style.display === "none") {
     e.style.display = "block";
     //Initial values
+      map.locate({setView: true});
     document.getElementById('titleBox').value = '';
     document.getElementById('colorPicker').style.backgroundColor = randomStartColor;
     document.getElementById('test').style.color = randomStartColor;
