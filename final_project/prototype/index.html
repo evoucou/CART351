@@ -50,7 +50,9 @@
     <img src="sources/logo.svg" id="logo"/><br>
   <input type="text" placeholder="Search for places or addresses" id="searchAdress">
   </div>
-  <button id="finduser"></button>
+  <button id="finduser" onclick="relocate()">locate</button>
+        <button id="newPin" onclick="addNewPin()">new</button>
+
       <div id="newReqMenu"><div id="newReqTextBox"><form>
         <h2>REQUEST FROM</h2>
         <h3><p id="userLocation"></p></h3>
@@ -70,6 +72,15 @@ var map = L.map('map').locate({setView: true, maxZoom: 16});
 var s = document.getElementById("newReqMenu");
 s.style.display="none";
 var recenter = false;
+var current_location;
+var markerBon;
+var allMarker = [];
+var allLayer  = [];
+var oldmarker;
+var counter = 1;
+
+ //document.getElementById("newPin").addEventListener("click", AddNewPin())
+//map.on('locationfound', onLocationFound);
 //map.locate({setView: true, maxZoom: 16});
 
 //map.addControl(searchControl);
@@ -80,12 +91,8 @@ Latitude of Montreal: 45.5016889*/
 
 var search = BootstrapGeocoder.search({
   inputTag: 'searchAdress',
-})
-.addTo(map);
-
-var title;
+}).addTo(map);
 // placeholders for the L.marker and L.circle representing user's current position and accuracy
-   var current_position, current_accuracy;
 
 L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
     //attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
@@ -93,60 +100,9 @@ L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={
     accessToken: 'pk.eyJ1IjoiZXZvdWNvdSIsImEiOiJjam83ZnJrb3UwZWI2M3FvOW0zNzIwZXRnIn0.2HBTS6fDGxp1pjp54zflnw'
 }).addTo(map);
 
-var current_location;
-var myMarker;
-
-function onLocationFound(e) {
-
-  current_location = L.latLng(e.latlng);
-  myMarker = L.marker(current_location);
-
-    document.getElementById("newrequest").addEventListener("click", function(){
-          centerOnMarker(map, myMarker);
-    });
-
-    document.getElementById("finduser").addEventListener("click", function(){
-          map.locate({setView: true});
-    });
-
-//document.getElementById("newrequest").addEventListener("click", toggleNewReqMenu(e,myMarker,current_location));
-  map.on("click", function (event) {
-  	if (myMarker) {
-          myMarker._icon.style.transition = "transform 0.3s ease-out";
-          myMarker._shadow.style.transition = "transform 0.3s ease-out";
-
-      	myMarker.setLatLng(event.latlng);
-
-          setTimeout(function () {
-              myMarker._icon.style.transition = null;
-              myMarker._shadow.style.transition = null;
-          }, 300);
-          return;
-      }
-
-      // myMarker = L.marker(event.latlng, {
-      // 	draggable: false
-      // }).addTo(map).on("click", function () {
-      // 	event.originalEvent.stopPropagation();
-      // });
-  });
-
-              // if marker is back to user's loc, do not draw a new one
-              if (myMarker.getLatLng() === current_location) {
-                      //map.removeLayer(myMarker);
-                      console.log("true");
-                        myMarker.addTo(map);
-
-                        // myMarker = L.marker(event.latlng, {
-                        // 	draggable: false
-                        // }).addTo(map).on("click", function () {
-                        // 	event.originalEvent.stopPropagation();
-                        // });
-                        }
-
-}
 
 
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 function centerOnMarker(map, marker) {
   var latLngs = [ marker.getLatLng() ];
   var markerBounds = L.latLngBounds(latLngs);
@@ -170,17 +126,11 @@ function centerOnMarker(map, marker) {
 
 //var myMarker = L.marker(e.latlng).addTo(map).bindPopup('wtv').getLatLng();
 
-    map.on('locationfound', onLocationFound);
 
-function submitForm() {
-    s.style.display="none";
-    title = document.getElementById('titleBox').value;
-    console.log(title);
-    state = 1;
-    //L.marker([50.5, 30.5]).addTo(map).bindPopup('wtv').openPopup().getLatLng();
-}
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 function getRandomColor() {
 var letters = '0123456789ABCDEF';
 var color = '#';
@@ -192,10 +142,11 @@ return color;
 var randomStartColor;
 
   console.log("recenter : "+recenter);
+
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 function toggleNewReqMenu() {
-
-  console.log("click");
-
+    state = 2;
+    centerOnMarker(map,markerBon);
   randomStartColor = getRandomColor();
 if (s.style.display === "none") {
     s.style.display = "block";
@@ -209,6 +160,7 @@ if (s.style.display === "none") {
 }
 //updatePinColor();
 }
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 function update(jscolor) {
     // 'jscolor' instance can be used as a string
     document.getElementById('test').style.color = '#' + jscolor
@@ -228,10 +180,163 @@ function update(jscolor) {
 }
 }*/
 //document.getElementById("newrequest").addEventListener("click", toggleNewReqMenu);
+
+function instantiatePin(myMarker)
+    {
+      var myMarker = new L.marker();
+      return myMarker;
+
+
+    }
+
+ function addNewPin()
+    {
+
+         state = 1;
+        console.log("lop");
+        map.on('click',addNewPin2);
+    }
+function addNewPin2(ev)
+{
+var marker;
+  instantiatePin(marker);
+
+        var latlng = map.mouseEventToLatLng(ev.originalEvent);
+        console.log(latlng.lat + ', ' + latlng.lng);
+
+            var layer;
+            counter++;
+            marker = L.marker(latlng).addTo(map);
+            markerBon = marker;
+            StopAddingPin();
+            map.on('click',function(e){Dragpin(e,marker);});
+
+           //relocate(e, marker);
+
+}
+function StopAddingPin ()
+ {
+   map.off('click',addNewPin2);
+
+ }
+
+function Dragpin(e,myMarker)
+    {
+        if(state==1)
+            {
+        var latlng = map.mouseEventToLatLng(e.originalEvent);
+          myMarker._icon.style.transition = "transform 0.3s ease-out";
+          myMarker._shadow.style.transition = "transform 0.3s ease-out";
+      	myMarker.setLatLng(latlng);
+
+          setTimeout(function () {
+              myMarker._icon.style.transition = null;
+              myMarker._shadow.style.transition = null;
+          }, 300);
+               markerBon = myMarker;
+            }
+
+
+
+
+
+      // myMarker = L.marker(event.latlng, {
+      // 	draggable: false
+      // }).addTo(map).on("click", function () {
+      // 	event.originalEvent.stopPropagation();
+      // });
+
+    }
+
+function UserAddDescripton(e)
+    {
+
+    }
+    function submitForm(marker)
+    {
+    var name;
+    s.style.display="none";
+    title = document.getElementById('titleBox').value;
+    console.log(title);
+        name =  "markerBon"+counter;
+        allMarker.push(markerBon);
+        markerBon = null;
+        L.marker(markerBon).addTo(Map);
+    //L.marker([50.5, 30.5]).addTo(map).bindPopup('wtv').openPopup().getLatLng();
+    }
+    function marketAddToMap(myMarker)
+    {
+
+    }
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 function onLocationError(e) {
     alert(e.message);
 }
-map.on('locationerror', onLocationError);
+//map.on('locationerror', onLocationError);
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    function onLocationFound(e, current_location) {
+
+        current_location = L.latLng(e.latlng);
+        return current_location;
+               //markerBon = myMarker;
+
+    //document.getElementById("newrequest").addEventListener("click", function(){
+          //centerOnMarker(map, myMarker);
+    //});
+  }
+
+
+
+function relocate(myMarker) {
+    map.locate({setView: true})
+    .on('locationfound', function(e){
+      instantiatePin(myMarker);
+      myMarker = L.marker(e.latlng);
+            });
+
+
+
+
+      //map.on('locationfound', onLocationFound);
+
+}
+
+//document.getElementById("newrequest").addEventListener("click", toggleNewReqMenu(e,myMarker,current_location));
+//  map.on("click", function (event) {
+//  	if (myMarker) {
+//          myMarker._icon.style.transition = "transform 0.3s ease-out";
+//          myMarker._shadow.style.transition = "transform 0.3s ease-out";
+//
+//      	myMarker.setLatLng(event.latlng);
+//
+//          setTimeout(function () {
+//              myMarker._icon.style.transition = null;
+//              myMarker._shadow.style.transition = null;
+//          }, 300);
+//          return;
+//      }
+
+      // myMarker = L.marker(event.latlng, {
+      // 	draggable: false
+      // }).addTo(map).on("click", function () {
+      // 	event.originalEvent.stopPropagation();
+      // });
+ // });
+
+              // if marker is back to user's loc, do not draw a new one
+//              if (myMarker.getLatLng() === current_location) {
+//                      //map.removeLayer(myMarker);
+//                      console.log("true");
+//                        myMarker.addTo(map);
+//
+//                         myMarker = L.marker(event.latlng, {
+//                         	draggable: false
+//                         }).addTo(map).on("click", function () {
+//                         	event.originalEvent.stopPropagation();
+//                         });
+//                        }
+
+
 </script>
   </body>
   </html>
