@@ -67,7 +67,7 @@
 
 
 <script>
-var state = 1 ;
+var state = 0 ;
 var map = L.map('map').locate({setView: true, maxZoom: 16});
 var s = document.getElementById("newReqMenu");
 s.style.display="none";
@@ -77,8 +77,9 @@ var markerBon;
 var allMarker = [];
 var allLayer  = [];
 var oldmarker;
-var counter = 1;
+var counter = 0;
 var marker = new L.marker;
+var formSubmitted = false;
 
  //document.getElementById("newPin").addEventListener("click", AddNewPin())
 //map.on('locationfound', onLocationFound);
@@ -142,10 +143,11 @@ return color;
 }
 var randomStartColor;
 
-  console.log("recenter : "+recenter);
+console.log(state);
 
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 function toggleNewReqMenu() {
+  if (state != 0) {
     state = 2;
     centerOnMarker(map,markerBon);
   randomStartColor = getRandomColor();
@@ -161,6 +163,7 @@ if (s.style.display === "none") {
     state = 1;
 }
 //updatePinColor();
+}
 }
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 function update(jscolor) {
@@ -187,38 +190,38 @@ function update(jscolor) {
 function createPin() {
 }
 
+console.log("counter : " + counter);
+
  function addNewPin()
 
     {
 
          state = 1;
-        console.log("lop");
         map.on('click',addNewPin2);
+
     }
 
 function addNewPin2(ev)
 {
 
-  state = 1;
+        state = 1;
         latlng = map.mouseEventToLatLng(ev.originalEvent);
-        console.log(latlng.lat + ', ' + latlng.lng);
-        map.removeLayer(marker);
+        //console.log(latlng.lat + ', ' + latlng.lng);
+
+// if (!formSubmitted){
+//         map.removeLayer(marker);
+//         formSubmitted = false;
+//       }
+  map.removeLayer(marker);
+      console.log("form + " + formSubmitted);
             var layer;
-            counter++;
             marker = L.marker(latlng).addTo(map);
             markerBon = marker;
 
             map.off('click',addNewPin2);
-map.on('click',function(e){Dragpin(e,marker);});
+            map.on('click',function(e){Dragpin(e,marker);});
             }
 
-
-
-function StopAddingPin ()
- {
-   map.off('click',addNewPin2);
-
- }
 
 function Dragpin(e,myMarker)
     {
@@ -252,18 +255,18 @@ function UserAddDescripton(e)
     {
 
     }
-    function submitForm(marker)
-    {
-    var name;
+
+    function submitForm() {
+    //var name;
     s.style.display="none";
     title = document.getElementById('titleBox').value;
     console.log(title);
-        name =  "markerBon"+counter;
-        allMarker.push(markerBon);
-        markerBon = null;
-        L.marker(markerBon).addTo(Map);
-    //L.marker([50.5, 30.5]).addTo(map).bindPopup('wtv').openPopup().getLatLng();
+
+    formSubmitted = true;
+    counter += 1;
+
     }
+
     function marketAddToMap(myMarker)
     {
 
