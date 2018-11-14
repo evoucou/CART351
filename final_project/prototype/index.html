@@ -78,6 +78,7 @@ var allMarker = [];
 var allLayer  = [];
 var oldmarker;
 var counter = 1;
+var marker = new L.marker;
 
  //document.getElementById("newPin").addEventListener("click", AddNewPin())
 //map.on('locationfound', onLocationFound);
@@ -157,6 +158,7 @@ if (s.style.display === "none") {
     document.getElementById('test').style.color = randomStartColor;
 } else {
     s.style.display = "none";
+    state = 1;
 }
 //updatePinColor();
 }
@@ -181,39 +183,37 @@ function update(jscolor) {
 }*/
 //document.getElementById("newrequest").addEventListener("click", toggleNewReqMenu);
 
-function instantiatePin(myMarker)
-    {
-      var myMarker = new L.marker();
-      return myMarker;
 
-
-    }
+function createPin() {
+}
 
  function addNewPin()
+
     {
 
          state = 1;
         console.log("lop");
         map.on('click',addNewPin2);
     }
+
 function addNewPin2(ev)
 {
-var marker;
-  instantiatePin(marker);
 
-        var latlng = map.mouseEventToLatLng(ev.originalEvent);
+  state = 1;
+        latlng = map.mouseEventToLatLng(ev.originalEvent);
         console.log(latlng.lat + ', ' + latlng.lng);
-
+        map.removeLayer(marker);
             var layer;
             counter++;
             marker = L.marker(latlng).addTo(map);
             markerBon = marker;
-            StopAddingPin();
-            map.on('click',function(e){Dragpin(e,marker);});
 
-           //relocate(e, marker);
+            map.off('click',addNewPin2);
+map.on('click',function(e){Dragpin(e,marker);});
+            }
 
-}
+
+
 function StopAddingPin ()
  {
    map.off('click',addNewPin2);
@@ -280,19 +280,21 @@ function onLocationError(e) {
         return current_location;
                //markerBon = myMarker;
 
-    //document.getElementById("newrequest").addEventListener("click", function(){
+    //var circle = document.getElementById("newrequest").addEventListener("click", function(){
           //centerOnMarker(map, myMarker);
     //});
   }
 
 
 
-function relocate(myMarker) {
+function relocate() {
+  var marker;
+    //instantiatePin(marker);
+    //console.log(myMarker.latlng);
     map.locate({setView: true})
-    .on('locationfound', function(e){
-      instantiatePin(myMarker);
-      myMarker = L.marker(e.latlng);
-            });
+    // .on('locationfound', function(e){
+    //   //myMarker = new L.marker(e.latlng);
+    //         });
 
 
 
