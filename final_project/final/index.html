@@ -267,7 +267,7 @@ function UserAddDescripton(e)
 
     }
 
-    function marketAddToMap(myMarker)
+    function markerAddToMap(myMarker)
     {
 
     }
@@ -291,18 +291,16 @@ function onLocationError(e) {
 
 
 function relocate() {
-  var marker;
     //instantiatePin(marker);
     //console.log(myMarker.latlng);
     map.locate({setView: true})
-    // .on('locationfound', function(e){
-    //   //myMarker = new L.marker(e.latlng);
-    //         });
-
-
-
-
-      //map.on('locationfound', onLocationFound);
+    map.on('locationfound', function(ev){
+        if (!marker) {
+            marker = L.marker(ev.latlng).addTo(map);
+        } else {
+            marker.setLatLng(ev.latlng);
+        }
+    })
 
 }
 
