@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html>
+
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.4/dist/leaflet.css"
+  integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA=="
+  crossorigin=""/>
+
+  <script src="https://unpkg.com/leaflet@1.3.4/dist/leaflet.js"
+  integrity="sha512-nMMmRyTVoLYqjP9hrbed9S+FzjZHW5gY1TWCHA5ckwXZBadntCNs8kEqAWdrb9O7rxbCaA4lKTIWjDXZxflOcA=="
+  crossorigin=""></script>
+
+  <!-- Load Esri Leaflet from CDN -->
+  <script src="https://unpkg.com/esri-leaflet"></script>
+
+  <!-- Esri Leaflet Geocoder -->
+  <link rel="stylesheet" href="https://unpkg.com/esri-leaflet-geocoder/dist/esri-leaflet-geocoder.css">
+  <script src="https://unpkg.com/esri-leaflet-geocoder"></script>
+
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="jscolor.js"></script>
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+
+<!-- Optional theme -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
+<!-- <link rel="stylesheet" href="https://s3-us-west-1.amazonaws.com/patterns.esri.com/files/calcite-web/1.0.0-beta.7/css/calcite-web.min.css"> -->
+
+<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+<script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+<!-- this demo plugin bundles the needed code from Esri Leaflet and Esri Leaflet Geocoder -->
+<script src="bootstrap-geocoder.js"></script>
+
+  <!-- <script type="text/javascript" src="map.js"></script> -->
+  <link rel="stylesheet" href="main.css"/>
+</head>
+
+  <body>
+    <div id="header">
+    <img src="sources/plus.svg" id="newrequest" onclick="toggleNewReqMenu()"/>
+    <img src="sources/logo.svg" id="logo"/><br>
+  <input type="text" placeholder="Search for places or addresses" id="searchAdress">
+  </div>
+  <button id="finduser" onclick="relocate()">locate</button>
+        <button id="newPin" onclick="addNewPin()">new</button>
+
+      <div id="newReqMenu"><div id="newReqTextBox"><form>
+        <h2>REQUEST FROM</h2>
+        <h3><p id="userLocation"></p></h3>
+        <input type="search" placeholder="Type in your request..." id="titleBox">
+        <!--<input type="color" id="colorPicker">-->
+      <br><button class="jscolor {width: 280, height: 260, position:'center' , onFineChange:'update(this)', valueElement:null, closable:true}" id="colorPicker">
+        Choose your pin's color
+</button>
+<p id="test">Test. This will be the picker.</p></form>
+<button id="submitButton" onclick="submitForm()">Submit</button></div></div>
+  <div id="map"></div>
+
+
+<script>
+var state = 0 ;
+var map = L.map('map').locate({setView: true, maxZoom: 16});
+var s = document.getElementById("newReqMenu");
+s.style.display="none";
+var recenter = false;
+var current_location;
+var markerBon;
+var allMarker = [];
+var allLayer  = [];
+var oldmarker;
+var counter = 0;
+var marker = new L.marker;
+var formSubmitted = false;
+
+ //document.getElementById("newPin").addEventListener("click", AddNewPin())
+//map.on('locationfound', onLocationFound);
+//map.locate({setView: true, maxZoom: 16});
+
+//map.addControl(searchControl);
+//Initially we locate the user's position to load the map around
+/*Longitude of Montreal: -73.567256
+Latitude of Montreal: 45.5016889*/
+
+
+var search = BootstrapGeocoder.search({
+  inputTag: 'searchAdress',
+}).addTo(map);
+// placeholders for the L.marker and L.circle representing user's current position and accuracy
+
+L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
+    //attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+    id: 'mapbox.streets',
+    accessToken: 'pk.eyJ1IjoiZXZvdWNvdSIsImEiOiJjam83ZnJrb3UwZWI2M3FvOW0zNzIwZXRnIn0.2HBTS6fDGxp1pjp54zflnw'
+}).addTo(map);
+
+
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+function centerOnMarker(map, marker) {
+  var latLngs = [ marker.getLatLng() ];
+  var markerBounds = L.latLngBounds(latLngs);
+  map.fitBounds(markerBounds);
+}
+
+
+// CODE TO TRY FOR REMOVING MARKER BEFORE A NEW ONE
+// leafletData.getMap().then(function (map) {
+// map.eachLayer(function(layer) {
+//   // Remove all layers except the background (tilelayer)
+//   // EDIT: and the main marker with the custom property
+//   if (!(layer instanceof L.TileLayer) && layer.options.myCustomProperty != 'myMainMarker')) {
+//     map.removeLayer(layer);
+//   }
+// });
+
+
+//document.getElementById("userLocation").innerHTML = current_location;
+
+
+//var myMarker = L.marker(e.latlng).addTo(map).bindPopup('wtv').getLatLng();
+
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+function getRandomColor() {
+var letters = '0123456789ABCDEF';
+var color = '#';
+for (var i = 0; i < 6; i++) {
+color += letters[Math.floor(Math.random() * 16)];
+}
+return color;
+}
+var randomStartColor;
+
+console.log(state);
+
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+function toggleNewReqMenu() {
+  if (state != 0) {
+    state = 2;
+    centerOnMarker(map,markerBon);
+  randomStartColor = getRandomColor();
+if (s.style.display === "none") {
+    s.style.display = "block";
+    //Initial values
+      //map.locate({setView: true});
+    document.getElementById('titleBox').value = '';
+    document.getElementById('colorPicker').style.backgroundColor = randomStartColor;
+    document.getElementById('test').style.color = randomStartColor;
+} else {
+    s.style.display = "none";
+    state = 1;
+}
+//updatePinColor();
+}
+}
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+function update(jscolor) {
+    // 'jscolor' instance can be used as a string
+    document.getElementById('test').style.color = '#' + jscolor
+}
+//OLD COLOR PICKER
+  /* function updatePinColor() {
+    var color;
+    var defaultColor = randomStartColor;
+    var p = document.querySelector("#test");
+    p.style.color = defaultColor;
+    color = document.querySelector("#colorPicker");
+    color.addEventListener("input", updateFirst, false);
+    //color.addEventListener("change", updateAll, false);
+    color.select();
+  function updateFirst(event) {
+      p.style.color = event.target.value;
+}
+}*/
+//document.getElementById("newrequest").addEventListener("click", toggleNewReqMenu);
+
+
+function createPin() {
+}
+
+console.log("counter : " + counter);
+
+ function addNewPin()
+
+    {
+
+         state = 1;
+        map.on('click',addNewPin2);
+
+    }
+
+function addNewPin2(ev)
+{
+
+        state = 1;
+        latlng = map.mouseEventToLatLng(ev.originalEvent);
+        //console.log(latlng.lat + ', ' + latlng.lng);
+
+// if (!formSubmitted){
+//         map.removeLayer(marker);
+//         formSubmitted = false;
+//       }
+  map.removeLayer(marker);
+      console.log("form + " + formSubmitted);
+            var layer;
+            marker = L.marker(latlng).addTo(map);
+            markerBon = marker;
+
+            map.off('click',addNewPin2);
+            map.on('click',function(e){Dragpin(e,marker);});
+            }
+
+
+function Dragpin(e,myMarker)
+    {
+        if(state==1)
+            {
+        var latlng = map.mouseEventToLatLng(e.originalEvent);
+          myMarker._icon.style.transition = "transform 0.3s ease-out";
+          myMarker._shadow.style.transition = "transform 0.3s ease-out";
+      	myMarker.setLatLng(latlng);
+
+          setTimeout(function () {
+              myMarker._icon.style.transition = null;
+              myMarker._shadow.style.transition = null;
+          }, 300);
+               markerBon = myMarker;
+            }
+
+
+
+
+
+      // myMarker = L.marker(event.latlng, {
+      // 	draggable: false
+      // }).addTo(map).on("click", function () {
+      // 	event.originalEvent.stopPropagation();
+      // });
+
+    }
+
+function UserAddDescripton(e)
+    {
+
+    }
+
+    function submitForm() {
+    //var name;
+    s.style.display="none";
+    title = document.getElementById('titleBox').value;
+    console.log(title);
+
+    formSubmitted = true;
+    counter += 1;
+
+    }
+
+    function marketAddToMap(myMarker)
+    {
+
+    }
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+function onLocationError(e) {
+    alert(e.message);
+}
+//map.on('locationerror', onLocationError);
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    function onLocationFound(e, current_location) {
+
+        current_location = L.latLng(e.latlng);
+        return current_location;
+               //markerBon = myMarker;
+
+    //var circle = document.getElementById("newrequest").addEventListener("click", function(){
+          //centerOnMarker(map, myMarker);
+    //});
+  }
+
+
+
+function relocate() {
+  var marker;
+    //instantiatePin(marker);
+    //console.log(myMarker.latlng);
+    map.locate({setView: true})
+    // .on('locationfound', function(e){
+    //   //myMarker = new L.marker(e.latlng);
+    //         });
+
+
+
+
+      //map.on('locationfound', onLocationFound);
+
+}
+
+//document.getElementById("newrequest").addEventListener("click", toggleNewReqMenu(e,myMarker,current_location));
+//  map.on("click", function (event) {
+//  	if (myMarker) {
+//          myMarker._icon.style.transition = "transform 0.3s ease-out";
+//          myMarker._shadow.style.transition = "transform 0.3s ease-out";
+//
+//      	myMarker.setLatLng(event.latlng);
+//
+//          setTimeout(function () {
+//              myMarker._icon.style.transition = null;
+//              myMarker._shadow.style.transition = null;
+//          }, 300);
+//          return;
+//      }
+
+      // myMarker = L.marker(event.latlng, {
+      // 	draggable: false
+      // }).addTo(map).on("click", function () {
+      // 	event.originalEvent.stopPropagation();
+      // });
+ // });
+
+              // if marker is back to user's loc, do not draw a new one
+//              if (myMarker.getLatLng() === current_location) {
+//                      //map.removeLayer(myMarker);
+//                      console.log("true");
+//                        myMarker.addTo(map);
+//
+//                         myMarker = L.marker(event.latlng, {
+//                         	draggable: false
+//                         }).addTo(map).on("click", function () {
+//                         	event.originalEvent.stopPropagation();
+//                         });
+//                        }
+
+
+</script>
+  </body>
+  </html>
