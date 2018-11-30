@@ -57,6 +57,16 @@ margin-right: 13px;
 transform: translate(0, 50%);
 }
 
+#noPinDetected {
+  text-align: center;
+  top: 100px;
+  left: 50%;
+  transform: translate(-50%, 0);
+  z-index: 10;
+  position: absolute;
+
+}
+
 #finduser {
   top: 110px;
   left: 2px;
@@ -158,7 +168,6 @@ color: black;
   float: right;
   transform: translate(0%, -25%);
 }*/
-
 
 #submitButton {
 margin-top: -9px;

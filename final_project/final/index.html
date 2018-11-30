@@ -50,6 +50,8 @@
     <img src="sources/logo.svg" id="logo"/><br>
   <input type="text" placeholder="Search for places or addresses" id="searchAdress">
   </div>
+  <p id="noPinDetected">No pin has been detected.<br>
+  You first need to create a new pin and choose its location.</p>
   <button id="finduser" onclick="relocate()">locate</button>
         <button id="newPin" onclick="addNewPin()">new</button>
 
@@ -67,9 +69,11 @@
 
 
 <script>
-var state = 0 ;
+var state = 0;
 var map = L.map('map').locate({setView: true, maxZoom: 16});
 var s = document.getElementById("newReqMenu");
+var a = document.getElementById("noPinDetected");
+a.style.display="none";
 s.style.display="none";
 var recenter = false;
 var current_location;
@@ -147,10 +151,12 @@ console.log(state);
 
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 function toggleNewReqMenu() {
+
   if (state != 0) {
     state = 2;
     centerOnMarker(map,markerBon);
   randomStartColor = getRandomColor();
+
 if (s.style.display === "none") {
     s.style.display = "block";
     //Initial values
@@ -163,6 +169,9 @@ if (s.style.display === "none") {
     state = 1;
 }
 //updatePinColor();
+} else {
+      console.log('Nop');
+      a.style.display = "block";
 }
 }
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -195,8 +204,8 @@ console.log("counter : " + counter);
  function addNewPin()
 
     {
-
          state = 1;
+         a.style.display = "none";
         map.on('click',addNewPin2);
 
     }
@@ -295,11 +304,8 @@ function relocate() {
     //console.log(myMarker.latlng);
     map.locate({setView: true})
     map.on('locationfound', function(ev){
-        if (!marker) {
-            marker = L.marker(ev.latlng).addTo(map);
-        } else {
             marker.setLatLng(ev.latlng);
-        }
+
     })
 
 }
