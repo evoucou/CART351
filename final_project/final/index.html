@@ -127,16 +127,6 @@ function centerOnMarker(map, marker) {
 // });
 
 
-//document.getElementById("userLocation").innerHTML = current_location;
-
-
-//var myMarker = L.marker(e.latlng).addTo(map).bindPopup('wtv').getLatLng();
-
-
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 function getRandomColor() {
 var letters = '0123456789ABCDEF';
 var color = '#';
@@ -179,21 +169,6 @@ function update(jscolor) {
     // 'jscolor' instance can be used as a string
     document.getElementById('test').style.color = '#' + jscolor
 }
-//OLD COLOR PICKER
-  /* function updatePinColor() {
-    var color;
-    var defaultColor = randomStartColor;
-    var p = document.querySelector("#test");
-    p.style.color = defaultColor;
-    color = document.querySelector("#colorPicker");
-    color.addEventListener("input", updateFirst, false);
-    //color.addEventListener("change", updateAll, false);
-    color.select();
-  function updateFirst(event) {
-      p.style.color = event.target.value;
-}
-}*/
-//document.getElementById("newrequest").addEventListener("click", toggleNewReqMenu);
 
 
 function createPin() {
@@ -205,15 +180,15 @@ console.log("counter : " + counter);
 
     {
          state = 1;
+         //If there was one, the error message disappears.
          a.style.display = "none";
-        map.on('click',addNewPin2);
+        map.on('click',movePin);
 
     }
 
-function addNewPin2(ev)
+function movePin(ev)
 {
 
-        state = 1;
         latlng = map.mouseEventToLatLng(ev.originalEvent);
         //console.log(latlng.lat + ', ' + latlng.lng);
 
@@ -227,7 +202,7 @@ function addNewPin2(ev)
             marker = L.marker(latlng).addTo(map);
             markerBon = marker;
 
-            map.off('click',addNewPin2);
+            map.off('click',movePin);
             map.on('click',function(e){Dragpin(e,marker);});
             }
 
@@ -247,23 +222,8 @@ function Dragpin(e,myMarker)
           }, 300);
                markerBon = myMarker;
             }
-
-
-
-
-
-      // myMarker = L.marker(event.latlng, {
-      // 	draggable: false
-      // }).addTo(map).on("click", function () {
-      // 	event.originalEvent.stopPropagation();
-      // });
-
     }
 
-function UserAddDescripton(e)
-    {
-
-    }
 
     function submitForm() {
     //var name;
@@ -276,10 +236,6 @@ function UserAddDescripton(e)
 
     }
 
-    function markerAddToMap(myMarker)
-    {
-
-    }
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 function onLocationError(e) {
     alert(e.message);
@@ -298,7 +254,6 @@ function onLocationError(e) {
   }
 
 
-
 function relocate() {
     //instantiatePin(marker);
     //console.log(myMarker.latlng);
@@ -307,43 +262,7 @@ function relocate() {
             marker.setLatLng(ev.latlng);
 
     })
-
 }
-
-//document.getElementById("newrequest").addEventListener("click", toggleNewReqMenu(e,myMarker,current_location));
-//  map.on("click", function (event) {
-//  	if (myMarker) {
-//          myMarker._icon.style.transition = "transform 0.3s ease-out";
-//          myMarker._shadow.style.transition = "transform 0.3s ease-out";
-//
-//      	myMarker.setLatLng(event.latlng);
-//
-//          setTimeout(function () {
-//              myMarker._icon.style.transition = null;
-//              myMarker._shadow.style.transition = null;
-//          }, 300);
-//          return;
-//      }
-
-      // myMarker = L.marker(event.latlng, {
-      // 	draggable: false
-      // }).addTo(map).on("click", function () {
-      // 	event.originalEvent.stopPropagation();
-      // });
- // });
-
-              // if marker is back to user's loc, do not draw a new one
-//              if (myMarker.getLatLng() === current_location) {
-//                      //map.removeLayer(myMarker);
-//                      console.log("true");
-//                        myMarker.addTo(map);
-//
-//                         myMarker = L.marker(event.latlng, {
-//                         	draggable: false
-//                         }).addTo(map).on("click", function () {
-//                         	event.originalEvent.stopPropagation();
-//                         });
-//                        }
 
 
 </script>
