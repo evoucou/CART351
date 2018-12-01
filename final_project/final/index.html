@@ -42,10 +42,13 @@
 
   <!-- <script type="text/javascript" src="map.js"></script> -->
   <link rel="stylesheet" href="main.css"/>
+
 </head>
 
   <body>
     <div id="header">
+    <!--  <object data="sources/pin.svg" type="image/svg+xml"
+               id="pinsvg" width="20p"></object> -->
     <img src="sources/plus.svg" id="newrequest" onclick="toggleNewReqMenu()"/>
     <img src="sources/logo.svg" id="logo"/><br>
   <input type="text" placeholder="Search for places or addresses" id="searchAdress">
@@ -62,8 +65,7 @@
         <!--<input type="color" id="colorPicker">-->
       <br><button class="jscolor {width: 280, height: 260, position:'center' , onFineChange:'update(this)', valueElement:null, closable:true}" id="colorPicker">
         Choose your pin's color
-</button>
-<p id="test">Test. This will be the picker.</p></form>
+</button></form>
 <button id="submitButton" onclick="submitForm()">Submit</button></div></div>
   <div id="map"></div>
 
@@ -73,8 +75,11 @@ var state = 0;
 var map = L.map('map').locate({setView: true, maxZoom: 16});
 var s = document.getElementById("newReqMenu");
 var a = document.getElementById("noPinDetected");
+var y = document.getElementById("finduser");
+var title = document.getElementById("titleBox").value;
 a.style.display="none";
 s.style.display="none";
+y.style.display="none";
 var recenter = false;
 var current_location;
 var markerBon;
@@ -82,8 +87,20 @@ var allMarker = [];
 var allLayer  = [];
 var oldmarker;
 var counter = 0;
-var marker = new L.marker;
 var formSubmitted = false;
+
+var markerIcon = L.icon({
+    iconUrl: 'sources/pin.svg',
+    shadowUrl: 'sources/shadow.png',
+
+    iconSize:     [19, 40], // size of the icon
+    shadowSize:   [30, 30], // size of the shadow
+    iconAnchor:   [12, 30], // point of the icon which will correspond to marker's location
+    shadowAnchor: [10, 23],  // the same for the shadow
+    popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
+});
+
+var marker = new L.marker;
 
  //document.getElementById("newPin").addEventListener("click", AddNewPin())
 //map.on('locationfound', onLocationFound);
@@ -93,6 +110,23 @@ var formSubmitted = false;
 //Initially we locate the user's position to load the map around
 /*Longitude of Montreal: -73.567256
 Latitude of Montreal: 45.5016889*/
+/*
+var a = document.getElementById("pinsvg");
+
+ // It's important to add an load event listener to the object,
+ // as it will load the svg doc asynchronously
+ a.addEventListener("load",function(){
+   console.log("loaded");
+
+     // get the inner DOM of alpha.svg
+     var svgDoc = a.contentDocument;
+     // get the inner element by id
+     var delta = svgDoc.getElementById("delta");
+     // add behaviour
+     delta.addEventListener("mousedown",function(){
+             alert('hello world!')
+     }, false);
+ }, false);*/
 
 
 var search = BootstrapGeocoder.search({
@@ -105,8 +139,6 @@ L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={
     id: 'mapbox.streets',
     accessToken: 'pk.eyJ1IjoiZXZvdWNvdSIsImEiOiJjam83ZnJrb3UwZWI2M3FvOW0zNzIwZXRnIn0.2HBTS6fDGxp1pjp54zflnw'
 }).addTo(map);
-
-
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 function centerOnMarker(map, marker) {
@@ -139,6 +171,38 @@ var randomStartColor;
 
 console.log(state);
 
+/*
+  * Replace all SVG images with inline SVG
+  */
+    /* jQuery('sources/pin.svg').each(function(){
+         var $img = jQuery(this);
+         var imgID = $img.attr('id');
+         var imgClass = $img.attr('class');
+         var imgURL = $img.attr('src');
+
+         jQuery.get(imgURL, function(data) {
+             // Get the SVG tag, ignore the rest
+             var $svg = jQuery(data).find('svg');
+
+             // Add replaced image's ID to the new SVG
+             if(typeof imgID !== 'undefined') {
+                 $svg = $svg.attr('id', imgID);
+             }
+             // Add replaced image's classes to the new SVG
+             if(typeof imgClass !== 'undefined') {
+                 $svg = $svg.attr('class', imgClass+' replaced-svg');
+             }
+
+             // Remove any invalid XML tags as per http://validator.w3.org
+             $svg = $svg.removeAttr('xmlns:a');
+
+             // Replace image with new SVG
+             $img.replaceWith($svg);
+
+         }, 'xml');
+
+     });*/
+
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 function toggleNewReqMenu() {
 
@@ -153,14 +217,13 @@ if (s.style.display === "none") {
       //map.locate({setView: true});
     document.getElementById('titleBox').value = '';
     document.getElementById('colorPicker').style.backgroundColor = randomStartColor;
-    document.getElementById('test').style.color = randomStartColor;
+//CODE FOR COLOR
+    //document.getElementById('test').path.style.fill = randomStartColor;
 } else {
     s.style.display = "none";
     state = 1;
 }
-//updatePinColor();
 } else {
-      console.log('Nop');
       a.style.display = "block";
 }
 }
@@ -171,14 +234,8 @@ function update(jscolor) {
 }
 
 
-function createPin() {
-}
+ function addNewPin() {
 
-console.log("counter : " + counter);
-
- function addNewPin()
-
-    {
          state = 1;
          //If there was one, the error message disappears.
          a.style.display = "none";
@@ -188,6 +245,7 @@ console.log("counter : " + counter);
 
 function movePin(ev)
 {
+   y.style.display="block";
 
         latlng = map.mouseEventToLatLng(ev.originalEvent);
         //console.log(latlng.lat + ', ' + latlng.lng);
@@ -199,7 +257,9 @@ function movePin(ev)
   map.removeLayer(marker);
       console.log("form + " + formSubmitted);
             var layer;
-            marker = L.marker(latlng).addTo(map);
+            //(latlng, {icon: markerIcon})
+            marker = L.marker(latlng, {icon: markerIcon}).addTo(map);
+
             markerBon = marker;
 
             map.off('click',movePin);
