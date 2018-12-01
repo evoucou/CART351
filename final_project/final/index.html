@@ -100,8 +100,9 @@ var markerIcon = L.icon({
     shadowAnchor: [10, 23],  // the same for the shadow
     popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
 });
-
-var marker = new L.marker;
+//tempMarker is the marker before it is submitted
+var tempMarker;
+var marker;
 
 
  //document.getElementById("newPin").addEventListener("click", AddNewPin())
@@ -143,8 +144,8 @@ L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={
 }).addTo(map);
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-function centerOnMarker(map, marker) {
-  var latLngs = [ marker.getLatLng() ];
+function centerOnMarker(map, tempMarker) {
+  var latLngs = [ tempMarker.getLatLng() ];
   var markerBounds = L.latLngBounds(latLngs);
   map.fitBounds(markerBounds);
 }
@@ -210,7 +211,7 @@ function toggleNewReqMenu() {
 
   if (state != 0) {
     state = 2;
-    centerOnMarker(map,markerBon);
+    centerOnMarker(map,tempMarker);
   randomStartColor = getRandomColor();
 
 if (s.style.display === "none") {
@@ -232,7 +233,7 @@ if (s.style.display === "none") {
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 function update(jscolor) {
     // 'jscolor' instance can be used as a string
-    document.getElementById('test').style.color = '#' + jscolor
+    document.getElementById('test').style.color = '#' + jscolor;
 }
 
 
@@ -241,9 +242,15 @@ function update(jscolor) {
          state = 1;
          //If there was one, the error message disappears.
          a.style.display = "none";
-        map.on('click',createPin);
+        map.once('click',createPin);
 
     }
+
+
+function createPin() {
+  tempMarker = new L.marker({icon: markerIcon})
+}
+
 
 function createPin(ev)
 {
@@ -256,26 +263,23 @@ function createPin(ev)
 //         map.removeLayer(marker);
 //         formSubmitted = false;
 //       }
-  map.removeLayer(marker);
+  map.removeLayer(tempMarker);
       console.log("form + " + formSubmitted);
             var layer;
             //(latlng, {icon: markerIcon})
-            marker = L.marker(latlng, {icon: markerIcon}).addTo(map);
-
-            markerBon = marker;
+            tempMarker = L.marker(latlng, {icon: markerIcon}).addTo(map);
 
             map.off('click',createPin);
-            map.on('click',function(e){Dragpin(e,marker);});
+            map.on('click',function(e){Dragpin(e,tempMarker);});
             }
 
 
-function Dragpin(e,myMarker) {
-        if(state==1)
-            {
+function Dragpin(e,tempMarker) {
+        if(state==1) {
         var latlng = map.mouseEventToLatLng(e.originalEvent);
-          myMarker._icon.style.transition = "transform 0.3s ease-out";
-          myMarker._shadow.style.transition = "transform 0.3s ease-out";
-      	myMarker.setLatLng(latlng);
+          tempMarker._icon.style.transition = "transform 0.3s ease-out";
+          tempMarker._shadow.style.transition = "transform 0.3s ease-out";
+      	tempMarker.setLatLng(latlng);
 
         var geojsonFeature = {
         "type": "Feature",
@@ -290,7 +294,7 @@ function Dragpin(e,myMarker) {
 
         pointToLayer: function(feature, latlng){
 
-            myMarker = L.marker(latlng, {
+            tempMarker = L.marker(latlng, {
 
                 title: "Resource Location",
                 alt: "Resource Location",
@@ -298,26 +302,26 @@ function Dragpin(e,myMarker) {
 
             }).bindPopup(title);
 
-            marker.on("popupopen", onPopupOpen);
+            tempMarker.on("popupopen", onPopupOpen);
 
-            return marker;
+            return tempMarker;
         }
     }).addTo(map);
 
       }
 
           setTimeout(function () {
-              myMarker._icon.style.transition = null;
-              myMarker._shadow.style.transition = null;
+              tempMarker._icon.style.transition = null;
+              tempMarker._shadow.style.transition = null;
           }, 300);
-               markerBon = myMarker;
+
+                   function onPopupOpen() {
+
+                tempMarker.openPopup();
+                   }
             }
 
 
-    function onPopupOpen() {
-
-  myMarker.openPopup();
-    }
 
 
 
@@ -328,6 +332,8 @@ function Dragpin(e,myMarker) {
 
     formSubmitted = true;
     counter += 1;
+
+    tempMarker = marker;
 
 
     }
@@ -355,7 +361,7 @@ function relocate() {
     //console.log(myMarker.latlng);
     map.locate({setView: true})
     map.on('locationfound', function(ev){
-            marker.setLatLng(ev.latlng);
+            tempMarker.setLatLng(ev.latlng);
 
     })
 }
