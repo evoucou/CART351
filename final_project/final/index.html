@@ -47,6 +47,7 @@
 
   <body>
     <div id="header">
+         <input class="get-markers" type="button" value="Get all the Markers" />
     <!--  <object data="sources/pin.svg" type="image/svg+xml"
                id="pinsvg" width="20p"></object> -->
     <img src="sources/plus.svg" id="newrequest" onclick="toggleNewReqMenu()"/>
@@ -101,6 +102,7 @@ var markerIcon = L.icon({
 });
 
 var marker = new L.marker;
+
 
  //document.getElementById("newPin").addEventListener("click", AddNewPin())
 //map.on('locationfound', onLocationFound);
@@ -239,11 +241,11 @@ function update(jscolor) {
          state = 1;
          //If there was one, the error message disappears.
          a.style.display = "none";
-        map.on('click',movePin);
+        map.on('click',createPin);
 
     }
 
-function movePin(ev)
+function createPin(ev)
 {
    y.style.display="block";
 
@@ -262,13 +264,12 @@ function movePin(ev)
 
             markerBon = marker;
 
-            map.off('click',movePin);
+            map.off('click',createPin);
             map.on('click',function(e){Dragpin(e,marker);});
             }
 
 
-function Dragpin(e,myMarker)
-    {
+function Dragpin(e,myMarker) {
         if(state==1)
             {
         var latlng = map.mouseEventToLatLng(e.originalEvent);
@@ -276,23 +277,58 @@ function Dragpin(e,myMarker)
           myMarker._shadow.style.transition = "transform 0.3s ease-out";
       	myMarker.setLatLng(latlng);
 
+        var geojsonFeature = {
+        "type": "Feature",
+            "properties": {},
+            "geometry": {
+                "type": "Point",
+                "coordinates": [latlng.lat, latlng.lng]
+        }
+    }
+
+    L.geoJson(geojsonFeature, {
+
+        pointToLayer: function(feature, latlng){
+
+            myMarker = L.marker(latlng, {
+
+                title: "Resource Location",
+                alt: "Resource Location",
+                draggable: false,
+
+            }).bindPopup(title);
+
+            marker.on("popupopen", onPopupOpen);
+
+            return marker;
+        }
+    }).addTo(map);
+
+      }
+
           setTimeout(function () {
               myMarker._icon.style.transition = null;
               myMarker._shadow.style.transition = null;
           }, 300);
                markerBon = myMarker;
             }
+
+
+    function onPopupOpen() {
+
+  myMarker.openPopup();
     }
+
 
 
     function submitForm() {
     //var name;
     s.style.display="none";
-    title = document.getElementById('titleBox').value;
     console.log(title);
 
     formSubmitted = true;
     counter += 1;
+
 
     }
 
@@ -323,6 +359,26 @@ function relocate() {
 
     })
 }
+
+function getAllMarkers() {
+
+    var allMarkersObjArray = [];//new Array();
+    var allMarkersGeoJsonArray = [];//new Array();
+
+    $.each(map._layers, function (ml) {
+        //console.log(map._layers)
+        if (map._layers[ml].feature) {
+
+            allMarkersObjArray.push(this)
+                                    allMarkersGeoJsonArray.push(JSON.stringify(this.toGeoJSON()))
+        }
+    })
+
+    console.log(allMarkersObjArray);
+    alert("total Markers : " + allMarkersGeoJsonArray.length + "\n\n" + allMarkersGeoJsonArray + "\n\n Also see your console for object view of this array" );
+}
+
+$(".get-markers").on("click", getAllMarkers);
 
 
 </script>
