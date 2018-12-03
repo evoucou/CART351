@@ -181,9 +181,6 @@ background-color: white;
   margin-bottom: 30px;
 }
 
-.logo-img {
-filter: hue-rotate(90deg);
-}
 
 #pinsvg {
   z-index: 10;
