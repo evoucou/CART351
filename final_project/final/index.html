@@ -89,38 +89,32 @@ var allLayer  = [];
 var oldmarker;
 var counter = 0;
 var formSubmitted = false;
-
 var markerIcon = L.icon({
     iconUrl: 'sources/pin.svg',
     shadowUrl: 'sources/shadow.png',
-
     iconSize:     [19, 40], // size of the icon
     shadowSize:   [30, 30], // size of the shadow
     iconAnchor:   [12, 30], // point of the icon which will correspond to marker's location
     shadowAnchor: [10, 23],  // the same for the shadow
     popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
 });
-//tempMarker is the marker before it is submitted
-var tempMarker;
-var marker;
+var tempMarker = new L.marker;
+
 
 
  //document.getElementById("newPin").addEventListener("click", AddNewPin())
 //map.on('locationfound', onLocationFound);
 //map.locate({setView: true, maxZoom: 16});
-
 //map.addControl(searchControl);
 //Initially we locate the user's position to load the map around
 /*Longitude of Montreal: -73.567256
 Latitude of Montreal: 45.5016889*/
 /*
 var a = document.getElementById("pinsvg");
-
  // It's important to add an load event listener to the object,
  // as it will load the svg doc asynchronously
  a.addEventListener("load",function(){
    console.log("loaded");
-
      // get the inner DOM of alpha.svg
      var svgDoc = a.contentDocument;
      // get the inner element by id
@@ -130,27 +124,21 @@ var a = document.getElementById("pinsvg");
              alert('hello world!')
      }, false);
  }, false);*/
-
-
 var search = BootstrapGeocoder.search({
   inputTag: 'searchAdress',
 }).addTo(map);
 // placeholders for the L.marker and L.circle representing user's current position and accuracy
-
 L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
     //attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
     id: 'mapbox.streets',
     accessToken: 'pk.eyJ1IjoiZXZvdWNvdSIsImEiOiJjam83ZnJrb3UwZWI2M3FvOW0zNzIwZXRnIn0.2HBTS6fDGxp1pjp54zflnw'
 }).addTo(map);
-
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 function centerOnMarker(map, tempMarker) {
   var latLngs = [ tempMarker.getLatLng() ];
   var markerBounds = L.latLngBounds(latLngs);
   map.fitBounds(markerBounds);
 }
-
-
 // CODE TO TRY FOR REMOVING MARKER BEFORE A NEW ONE
 // leafletData.getMap().then(function (map) {
 // map.eachLayer(function(layer) {
@@ -160,8 +148,6 @@ function centerOnMarker(map, tempMarker) {
 //     map.removeLayer(layer);
 //   }
 // });
-
-
 function getRandomColor() {
 var letters = '0123456789ABCDEF';
 var color = '#';
@@ -171,48 +157,21 @@ color += letters[Math.floor(Math.random() * 16)];
 return color;
 }
 var randomStartColor;
-
 console.log(state);
 
-/*
-  * Replace all SVG images with inline SVG
-  */
-    /* jQuery('sources/pin.svg').each(function(){
-         var $img = jQuery(this);
-         var imgID = $img.attr('id');
-         var imgClass = $img.attr('class');
-         var imgURL = $img.attr('src');
-
-         jQuery.get(imgURL, function(data) {
-             // Get the SVG tag, ignore the rest
-             var $svg = jQuery(data).find('svg');
-
-             // Add replaced image's ID to the new SVG
-             if(typeof imgID !== 'undefined') {
-                 $svg = $svg.attr('id', imgID);
-             }
-             // Add replaced image's classes to the new SVG
-             if(typeof imgClass !== 'undefined') {
-                 $svg = $svg.attr('class', imgClass+' replaced-svg');
-             }
-
-             // Remove any invalid XML tags as per http://validator.w3.org
-             $svg = $svg.removeAttr('xmlns:a');
-
-             // Replace image with new SVG
-             $img.replaceWith($svg);
-
-         }, 'xml');
-
-     });*/
 
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 function toggleNewReqMenu() {
-
-  if (state != 0) {
+  if (state == 1) {
     state = 2;
+      map.off('click',function(e){Dragpin(e,tempMarker);});
+
     centerOnMarker(map,tempMarker);
   randomStartColor = getRandomColor();
+
+
+  //document.getElementById("st0Id").style.fill = "rgb(255,30,0)";
+  //console.log(st0Id);
 
 if (s.style.display === "none") {
     s.style.display = "block";
@@ -233,111 +192,76 @@ if (s.style.display === "none") {
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 function update(jscolor) {
     // 'jscolor' instance can be used as a string
-    document.getElementById('test').style.color = '#' + jscolor;
+    document.getElementById('test').style.color = '#' + jscolor
 }
-
-
  function addNewPin() {
-
          state = 1;
          //If there was one, the error message disappears.
          a.style.display = "none";
-        map.once('click',createPin);
-
+        map.on('click',createPin);
     }
-
-
-function createPin() {
-  tempMarker = new L.marker({icon: markerIcon})
-}
-
-
 function createPin(ev)
 {
    y.style.display="block";
-
         latlng = map.mouseEventToLatLng(ev.originalEvent);
         //console.log(latlng.lat + ', ' + latlng.lng);
-
 // if (!formSubmitted){
 //         map.removeLayer(marker);
 //         formSubmitted = false;
 //       }
   map.removeLayer(tempMarker);
-      console.log("form + " + formSubmitted);
             var layer;
             //(latlng, {icon: markerIcon})
             tempMarker = L.marker(latlng, {icon: markerIcon}).addTo(map);
-
             map.off('click',createPin);
             map.on('click',function(e){Dragpin(e,tempMarker);});
             }
-
-
 function Dragpin(e,tempMarker) {
-        if(state==1) {
+        if(state==1)
+            {
         var latlng = map.mouseEventToLatLng(e.originalEvent);
           tempMarker._icon.style.transition = "transform 0.3s ease-out";
           tempMarker._shadow.style.transition = "transform 0.3s ease-out";
       	tempMarker.setLatLng(latlng);
-
-        var geojsonFeature = {
-        "type": "Feature",
-            "properties": {},
-            "geometry": {
-                "type": "Point",
-                "coordinates": [latlng.lat, latlng.lng]
-        }
-    }
-
-    L.geoJson(geojsonFeature, {
-
-        pointToLayer: function(feature, latlng){
-
-            tempMarker = L.marker(latlng, {
-
-                title: "Resource Location",
-                alt: "Resource Location",
-                draggable: false,
-
-            }).bindPopup(title);
-
-            tempMarker.on("popupopen", onPopupOpen);
-
-            return tempMarker;
-        }
-    }).addTo(map);
-
       }
 
-          setTimeout(function () {
-              tempMarker._icon.style.transition = null;
-              tempMarker._shadow.style.transition = null;
-          }, 300);
-
-                   function onPopupOpen() {
-
-                tempMarker.openPopup();
-                   }
             }
-
-
-
-
+    function onPopupOpen() {
+  tempMarker.openPopup();
+    }
 
     function submitForm() {
+
+      var geojsonFeature = {
+      "type": "Feature",
+          "properties": {},
+          "geometry": {
+              "type": "Point",
+              "coordinates": [latlng.lat, latlng.lng]
+      }
+  }
+  L.geoJson(geojsonFeature, {
+      pointToLayer: function(feature, latlng){
+        tempMarker = L.marker(latlng, {
+              title: "Resource Location",
+              alt: "Resource Location",
+              draggable: false,
+          });
+          //tempMarker.on("popupopen", onPopupOpen);
+          return tempMarker;
+      }
+  });
+
+var marker = tempMarker;
+
     //var name;
     s.style.display="none";
     console.log(title);
-
     formSubmitted = true;
     counter += 1;
 
-    tempMarker = marker;
-
-
+    map.addLayer(marker);
     }
-
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 function onLocationError(e) {
     alert(e.message);
@@ -345,48 +269,35 @@ function onLocationError(e) {
 //map.on('locationerror', onLocationError);
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     function onLocationFound(e, current_location) {
-
         current_location = L.latLng(e.latlng);
         return current_location;
                //markerBon = myMarker;
-
     //var circle = document.getElementById("newrequest").addEventListener("click", function(){
           //centerOnMarker(map, myMarker);
     //});
   }
-
-
 function relocate() {
     //instantiatePin(marker);
     //console.log(myMarker.latlng);
     map.locate({setView: true})
     map.on('locationfound', function(ev){
             tempMarker.setLatLng(ev.latlng);
-
     })
 }
-
 function getAllMarkers() {
-
     var allMarkersObjArray = [];//new Array();
     var allMarkersGeoJsonArray = [];//new Array();
-
     $.each(map._layers, function (ml) {
         //console.log(map._layers)
         if (map._layers[ml].feature) {
-
             allMarkersObjArray.push(this)
                                     allMarkersGeoJsonArray.push(JSON.stringify(this.toGeoJSON()))
         }
     })
-
     console.log(allMarkersObjArray);
     alert("total Markers : " + allMarkersGeoJsonArray.length + "\n\n" + allMarkersGeoJsonArray + "\n\n Also see your console for object view of this array" );
 }
-
 $(".get-markers").on("click", getAllMarkers);
-
-
 </script>
   </body>
   </html>
