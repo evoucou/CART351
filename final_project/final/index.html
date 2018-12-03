@@ -200,8 +200,8 @@ function update(jscolor) {
          a.style.display = "none";
         map.on('click',createPin);
     }
-function createPin(ev)
-{
+function createPin(ev) {
+
    y.style.display="block";
         latlng = map.mouseEventToLatLng(ev.originalEvent);
         //console.log(latlng.lat + ', ' + latlng.lng);
@@ -210,7 +210,6 @@ function createPin(ev)
 //         formSubmitted = false;
 //       }
   map.removeLayer(tempMarker);
-            var layer;
             //(latlng, {icon: markerIcon})
             tempMarker = L.marker(latlng, {icon: markerIcon}).addTo(map);
             map.off('click',createPin);
@@ -230,7 +229,15 @@ function Dragpin(e,tempMarker) {
   tempMarker.openPopup();
     }
 
+
+
+
     function submitForm() {
+      y.style.display="none";
+
+      var marker = tempMarker;
+// if tempMarker becomes marker, then GEOJSON counts it. But if it stays tempMarker, then GeoJSON
+// does not count it, but marker stays the same...
 
       var geojsonFeature = {
       "type": "Feature",
@@ -242,25 +249,22 @@ function Dragpin(e,tempMarker) {
   }
   L.geoJson(geojsonFeature, {
       pointToLayer: function(feature, latlng){
-        tempMarker = L.marker(latlng, {
+      marker = L.marker(latlng, {
               title: "Resource Location",
               alt: "Resource Location",
               draggable: false,
           });
           //tempMarker.on("popupopen", onPopupOpen);
-          return tempMarker;
+          return marker;
       }
-  });
+  }).addTo(map);
 
-var marker = tempMarker;
+
 
     //var name;
     s.style.display="none";
     console.log(title);
-    formSubmitted = true;
-    counter += 1;
 
-    map.addLayer(marker);
     }
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 function onLocationError(e) {
@@ -284,6 +288,7 @@ function relocate() {
             tempMarker.setLatLng(ev.latlng);
     })
 }
+
 function getAllMarkers() {
     var allMarkersObjArray = [];//new Array();
     var allMarkersGeoJsonArray = [];//new Array();
