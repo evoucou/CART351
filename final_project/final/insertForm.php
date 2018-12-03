@@ -59,15 +59,33 @@
   <button id="finduser" onclick="relocate()">locate</button>
         <button id="newPin" onclick="addNewPin()">new</button>
 
-      <div id="newReqMenu"><div id="newReqTextBox"><form>
-        <h2>REQUEST FROM</h2>
-        <h3><p id="userLocation"></p></h3>
-        <input type="search" placeholder="Type in your request..." id="titleBox">
-        <!--<input type="color" id="colorPicker">-->
-      <br><button class="jscolor {width: 280, height: 260, position:'center' , onFineChange:'update(this)', valueElement:null, closable:true}" id="colorPicker">
-        Choose your pin's color
-</button></form>
-<button id="submitButton" onclick="submitForm()">Submit</button></div></div>
+        <?php
+        //check if there has been something posted to the server to be processed
+        if($_SERVER['REQUEST_METHOD'] == 'POST')
+        {
+        // need to process
+$title = $_POST['title'];
+$username = $_POST['username'];
+$color = $_POST['color'];
+
+    echo "<p> Title:: ".$title."</p>";
+    echo "<p> Username:: ".$username."</p>";
+    echo "<p> Color:: ".$color."</p>";
+        }
+        ?>
+
+      <div id="newReqMenu">
+        <form action=”insertForm.php” method=”post” enctype =”multipart/form-data”>
+          <div id="newReqTextBox">
+        <h2>CREATE A REQUEST</h2>
+        <input type="text" placeholder="Type in your request..." id="titleBox" maxlength = "40" name = "title" required>
+        <input type="text" placeholder="What's your name?" id="nameBox" maxlength = "40" name = "username" required>
+      <button class="jscolor {width: 280, height: 260, position:'center' , onFineChange:'update(this)', valueElement:null, closable:true}" id="colorPicker" name ="color">
+        Choose your pin's color</button>
+<button type="submit" name = "submit" id="submitButton" onclick="submitForm()">Submit</button><br><br>
+</div></form>
+</div>
+
   <div id="map"></div>
 
   <?php

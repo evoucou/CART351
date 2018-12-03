@@ -59,14 +59,18 @@
   <button id="finduser" onclick="relocate()">locate</button>
         <button id="newPin" onclick="addNewPin()">new</button>
 
-      <div id="newReqMenu"><div id="newReqTextBox"><form>
-        <h2>REQUEST FROM</h2>
-        <h3><p id="userLocation"></p></h3>
-        <input type="search" placeholder="Type in your request..." id="titleBox">
+        <form action=”insertForm.php” method=”post” enctype =”multipart/form-data”>
+          <fieldset>
+      <div id="newReqMenu"><div id="newReqTextBox">
+        <h2>CREATE A REQUEST</h2>
+        <input type="text" placeholder="Type in your request..." id="titleBox" maxlength = "40" name = "a_title" required>
         <!--<input type="color" id="colorPicker">-->
       <br><button class="jscolor {width: 280, height: 260, position:'center' , onFineChange:'update(this)', valueElement:null, closable:true}" id="colorPicker">
         Choose your pin's color
-</button></form>
+</button>
+</fieldset>
+</form>
+
 <button id="submitButton" onclick="submitForm()">Submit</button></div></div>
   <div id="map"></div>
 
