@@ -136,28 +136,32 @@ var titleInput;
 var nameInput;
 //var allMarkersObjArray = [];//new Array();
 //var allMarkersGeoJsonArray = [];//new Array();
-displayAllMarkers();
-
-// We determine a random beginning color for the pin before the submit menu is called
-// var possibleColors = ["red","blue","purple","orange","green"];
-// var beginningColor = possibleColors[Math.floor(Math.random()*possibleColors.length)];
-// console.log(beginningColor);
-
-var icon = "<svg version='1.1' id='Capa_1' xmlns='http://www.w3.org/2000/svg' x='0px' y='0px' viewBox='0 0 30 51' style='enable-background:new 0 0 30 51;' xml:space='preserve'> <path fill='"+markerColor+"' d='M15,0.8C6.9,0.8,0.3,7.4,0.3,15.5c0,7.4,5.5,13.4,12.6,14.5v21h4.2V29.9c7.1-1,12.6-7.1,12.6-14.5 C29.7,7.4,23.1,0.8,15,0.8z M10.8,13.4c-2.3,0-4.2-1.9-4.2-4.2C6.6,6.9,8.5,5,10.8,5S15,6.9,15,9.2S13.1,13.4,10.8,13.4z'/><path fill = 'white' d='M15,9.2c0,2.3-1.9,4.2-4.2,4.2s-4.2-1.9-4.2-4.2C6.6,6.9,8.5,5,10.8,5S15,6.9,15,9.2z'/></svg>";
-var svgURL = "data:image/svg+xml;base64," + btoa(icon);
-
-
-var markerIcon = L.icon({
-    iconUrl: svgURL,
-    shadowUrl: 'sources/shadow.png',
-    iconSize:     [19, 40], // size of the icon
-    shadowSize:   [30, 30], // size of the shadow
-    iconAnchor:   [12, 30], // point of the icon which will correspond to marker's location
-    shadowAnchor: [10, 23],  // the same for the shadow
-    popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
-});
 
 var tempMarker = new L.marker;
+
+function update(jscolor) {
+    // Marker has color that user choses
+    markerColor = '#' + jscolor;
+    console.log('markerColor in update : '+markerColor);
+    //setIcon();
+}
+
+   function setIcon(){
+  var icon = "<svg version='1.1' id='Capa_1' xmlns='http://www.w3.org/2000/svg' x='0px' y='0px' viewBox='0 0 30 51' style='enable-background:new 0 0 30 51;' xml:space='preserve'> <path fill='"+markerColor+"' d='M15,0.8C6.9,0.8,0.3,7.4,0.3,15.5c0,7.4,5.5,13.4,12.6,14.5v21h4.2V29.9c7.1-1,12.6-7.1,12.6-14.5 C29.7,7.4,23.1,0.8,15,0.8z M10.8,13.4c-2.3,0-4.2-1.9-4.2-4.2C6.6,6.9,8.5,5,10.8,5S15,6.9,15,9.2S13.1,13.4,10.8,13.4z'/><path fill = 'white' d='M15,9.2c0,2.3-1.9,4.2-4.2,4.2s-4.2-1.9-4.2-4.2C6.6,6.9,8.5,5,10.8,5S15,6.9,15,9.2z'/></svg>";
+  var svgURL = "data:image/svg+xml;base64," + btoa(icon);
+       // create icon
+       var markerIcon = L.icon({
+           iconUrl: svgURL,
+           shadowUrl: 'sources/shadow.png',
+           iconSize:     [19, 40], // size of the icon
+           shadowSize:   [30, 30], // size of the shadow
+           iconAnchor:   [12, 30], // point of the icon which will correspond to marker's location
+           shadowAnchor: [10, 23],  // the same for the shadow
+           popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
+       });
+    L.marker([51.5, -0.09],{icon: markerIcon}).addTo(map);
+
+}
 
 
  //document.getElementById("newPin").addEventListener("click", AddNewPin())
@@ -216,6 +220,7 @@ return color;
 }
 
 
+displayAllMarkers();
 
 
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -246,12 +251,6 @@ if (s.style.display === "none") {
 }
 }
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-function update(jscolor) {
-    // Marker has color that user choses
-    markerColor = '#' + jscolor;
-    console.log('markerColor in update : '+markerColor);
-}
-
 
  function addNewPin() {
          state = 1;
@@ -272,6 +271,21 @@ function createPin(ev) {
 //       }
   map.removeLayer(tempMarker);
             //(latlng, {icon: markerIcon})
+
+            var icon = "<svg version='1.1' id='Capa_1' xmlns='http://www.w3.org/2000/svg' x='0px' y='0px' viewBox='0 0 30 51' style='enable-background:new 0 0 30 51;' xml:space='preserve'> <path fill='"+markerColor+"' d='M15,0.8C6.9,0.8,0.3,7.4,0.3,15.5c0,7.4,5.5,13.4,12.6,14.5v21h4.2V29.9c7.1-1,12.6-7.1,12.6-14.5 C29.7,7.4,23.1,0.8,15,0.8z M10.8,13.4c-2.3,0-4.2-1.9-4.2-4.2C6.6,6.9,8.5,5,10.8,5S15,6.9,15,9.2S13.1,13.4,10.8,13.4z'/><path fill = 'white' d='M15,9.2c0,2.3-1.9,4.2-4.2,4.2s-4.2-1.9-4.2-4.2C6.6,6.9,8.5,5,10.8,5S15,6.9,15,9.2z'/></svg>";
+            var svgURL = "data:image/svg+xml;base64," + btoa(icon);
+                 // create icon
+                 var markerIcon = L.icon({
+                     iconUrl: svgURL,
+                     shadowUrl: 'sources/shadow.png',
+                     iconSize:     [19, 40], // size of the icon
+                     shadowSize:   [30, 30], // size of the shadow
+                     iconAnchor:   [12, 30], // point of the icon which will correspond to marker's location
+                     shadowAnchor: [10, 23],  // the same for the shadow
+                     popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
+                 });
+              //L.marker([51.5, -0.09],{icon: markerIcon}).addTo(map);
+
             tempMarker = L.marker(latlng, {icon: markerIcon}).addTo(map);
             map.off('click',createPin);
             map.on('click',function(e){Dragpin(e,tempMarker);});
@@ -360,7 +374,6 @@ function submitForm() {
        });
 }
 
-
 function displayAllMarkers() {
 
   $.getJSON('markers.json',function(data) {
@@ -369,13 +382,33 @@ function displayAllMarkers() {
             console.log(data);
             //set boolean to true
             loaded=true;
+
+            var coordinates = data["coordinates"];
+            console.log("latlng : "+coordinates.lat);
+
+                for (i = 0; i < coordinates.length; i++) {
+                  var icon = "<svg version='1.1' id='Capa_1' xmlns='http://www.w3.org/2000/svg' x='0px' y='0px' viewBox='0 0 30 51' style='enable-background:new 0 0 30 51;' xml:space='preserve'> <path fill='"+markerColor+"' d='M15,0.8C6.9,0.8,0.3,7.4,0.3,15.5c0,7.4,5.5,13.4,12.6,14.5v21h4.2V29.9c7.1-1,12.6-7.1,12.6-14.5 C29.7,7.4,23.1,0.8,15,0.8z M10.8,13.4c-2.3,0-4.2-1.9-4.2-4.2C6.6,6.9,8.5,5,10.8,5S15,6.9,15,9.2S13.1,13.4,10.8,13.4z'/><path fill = 'white' d='M15,9.2c0,2.3-1.9,4.2-4.2,4.2s-4.2-1.9-4.2-4.2C6.6,6.9,8.5,5,10.8,5S15,6.9,15,9.2z'/></svg>";
+                  var svgURL = "data:image/svg+xml;base64," + btoa(icon);
+                       // create icon
+                       var markerIcon = L.icon({
+                           iconUrl: svgURL,
+                           shadowUrl: 'sources/shadow.png',
+                           iconSize:     [19, 40], // size of the icon
+                           shadowSize:   [30, 30], // size of the shadow
+                           iconAnchor:   [12, 30], // point of the icon which will correspond to marker's location
+                           shadowAnchor: [10, 23],  // the same for the shadow
+                           popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
+                       });
+                  //var marker = L.marker([-73.5703754425049,45.490607239870464], {icon: markerIcon}).bindPopup("<b>Hello world!</b><br>I am a popup.").openPopup().addTo(map);
+                    var marker = L.marker([coordinates[i][0], coordinates[i][1]], {icon: markerIcon}).bindPopup("<b>Hello world!</b><br>I am a popup.").openPopup().addTo(map);
+                    map.addLayer(marker);
+                }
           })
           //fail
           .fail(function() {
             console.log( "error" );
           });
 
-marker = new L.marker
 
       // var allMarkersObjArray = [];//new Array();
       // var allMarkersGeoJsonArray = [];//new Array();
