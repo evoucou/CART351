@@ -3,6 +3,7 @@
 
 <?php
 
+
  class MyDB extends SQLite3
  {
     function __construct()
@@ -44,7 +45,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
   //  $locLat_es = $db->escapeString($locLat);
 
 
-    $queryInsert ="INSERT INTO markerTable ( title , username , color , locLng , locLat ) VALUES ('{$title_es}', '{$username_es}', 'bleu', '23', '45')";
+    $queryInsert ="INSERT INTO markerTable(title, username, color, locLng, locLat)VALUES ('$title_es', '$username_es', 'bleu', '23', '45')";
     // again we do error checking when we try to execute our SQL statement on the db
   	$ok1 = $db->exec($queryInsert);
     // NOTE:: error messages WILL be sent back to JQUERY success function .....
@@ -53,7 +54,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
       exit;
       }
       //send back success...
-      echo 'success';
+      echo "success";
       exit;
 
  }//FILES
@@ -136,6 +137,8 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 <script>
 
 var markerColor;
+var titleInput;
+var nameInput;
 
 $(document).ready (function(){
     $("#insertMarkers").submit(function(event) {
@@ -143,7 +146,22 @@ $(document).ready (function(){
      state = 0;
      y.style.display="none";
 
-     var marker = tempMarker;
+     // This code allows us to get the information
+     titleInput = document.getElementById("titleBox").value;
+     nameInput = document.getElementById("nameBox").value;
+
+//console.log(JSON.stringify(obj));
+
+       var latLngs = [ tempMarker.getLatLng() ];
+       //console.log(latLngsString);
+
+       //console.log('markerColor : '+markerColor);
+
+       var myJSON = { "title": titleInput, "name": nameInput, "color": markerColor, "coordinates": latLngs };
+       var markerData = JSON.stringify(myJSON);
+       console.log(markerData);
+
+     //var marker = tempMarker;
 // if tempMarker becomes marker, then GEOJSON counts it. But if it stays tempMarker, then GeoJSON
 // does not count it, but marker stays the same...
 
@@ -157,13 +175,13 @@ $(document).ready (function(){
  }
  L.geoJson(geojsonFeature, {
      pointToLayer: function(feature, latlng){
-     marker = L.marker(latlng, {
+     tempMarker = L.marker(latlng, {
              title: "Resource Location",
              alt: "Resource Location",
              draggable: false,
          });
          //tempMarker.on("popupopen", onPopupOpen);
-         return marker;
+         return tempMarker;
      }
  }).addTo(map);
 
@@ -201,7 +219,6 @@ var map = L.map('map').locate({setView: true, maxZoom: 16});
 var s = document.getElementById("newReqMenuContainer");
 var a = document.getElementById("noPinDetected");
 var y = document.getElementById("finduser");
-var title = document.getElementById("titleBox").value;
 a.style.display="none";
 s.style.display="none";
 y.style.display="none";
@@ -328,6 +345,7 @@ if (s.style.display === "none") {
 function update(jscolor) {
     // Marker has color that user choses
     markerColor = '#' + jscolor;
+    console.log('markerColor in update : '+markerColor);
 }
 
 
@@ -368,7 +386,6 @@ function Dragpin(e,tempMarker) {
   tempMarker.openPopup();
     }
 
-
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 function onLocationError(e) {
     alert(e.message);
@@ -392,6 +409,11 @@ function relocate() {
     })
 }
 
+$('#titleBox').on('input', function() {
+    //console.log("title : "+titleInput);
+});
+
+
 function getAllMarkers() {
     var allMarkersObjArray = [];//new Array();
     var allMarkersGeoJsonArray = [];//new Array();
@@ -402,7 +424,7 @@ function getAllMarkers() {
                                     allMarkersGeoJsonArray.push(JSON.stringify(this.toGeoJSON()))
         }
     })
-    console.log(allMarkersObjArray);
+    //console.log(allMarkersObjArray);
     alert("total Markers : " + allMarkersGeoJsonArray.length + "\n\n" + allMarkersGeoJsonArray + "\n\n Also see your console for object view of this array" );
 }
 $(".get-markers").on("click", getAllMarkers);
