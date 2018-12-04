@@ -1,6 +1,33 @@
 <!DOCTYPE html>
 <html>
 
+<?php
+//check if there has been something posted to the server to be processed
+if($_SERVER['REQUEST_METHOD'] == 'POST')
+{
+// need to process
+ $title = $_POST['a_title'];
+ $username = $_POST['a_username'];
+// $color = $_GET['PHP_markerColor'];
+ //$marker_loc = $_GET['PHP_markerColor'];
+
+    //echo "done";
+    //package the data and echo back...
+    $myPackagedData=new stdClass();
+    $myPackagedData->title = $title ;
+    $myPackagedData->username = $username ;
+    //$myPackagedData->color = $color;
+    //$myPackagedData->location = $marker_loc;
+
+     // Now we want to JSON encode these values to send them to $.ajax success.
+    $myJSONObj = json_encode($myPackagedData);
+    echo $myJSONObj;
+    exit;
+
+}//POST
+
+?>
+
 
 <head>
 <meta charset="UTF-8">
@@ -59,43 +86,93 @@
   <button id="finduser" onclick="relocate()">locate</button>
         <button id="newPin" onclick="addNewPin()">new</button>
 
-        <?php
-        //check if there has been something posted to the server to be processed
-        if($_SERVER['REQUEST_METHOD'] == 'POST')
-        {
-        // need to process
-$title = $_POST['title'];
-$username = $_POST['username'];
-$color = $_POST['color'];
 
-    echo "<p> Title:: ".$title."</p>";
-    echo "<p> Username:: ".$username."</p>";
-    echo "<p> Color:: ".$color."</p>";
-        }
-        ?>
-
-      <div id="newReqMenu">
-        <form action=”insertForm.php” method=”post” enctype =”multipart/form-data”>
-          <div id="newReqTextBox">
-        <h2>CREATE A REQUEST</h2>
-        <input type="text" placeholder="Type in your request..." id="titleBox" maxlength = "40" name = "title" required>
-        <input type="text" placeholder="What's your name?" id="nameBox" maxlength = "40" name = "username" required>
-      <button class="jscolor {width: 280, height: 260, position:'center' , onFineChange:'update(this)', valueElement:null, closable:true}" id="colorPicker" name ="color">
-        Choose your pin's color</button>
-<button type="submit" name = "submit" id="submitButton" onclick="submitForm()">Submit</button><br><br>
-</div></form>
-</div>
+        <div id="newReqMenuContainer">
+          <form action=”” enctype =”multipart/form-data” id="insertMarkers">
+            <div id="newReqTextBox">
+          <h2>CREATE A REQUEST</h2>
+          <input type="text" placeholder="Type in your request..." id="titleBox" maxlength = "40" name = "a_title" required>
+          <input type="text" placeholder="What's your name?" id="nameBox" maxlength = "40" name = "a_username" required>
+        <button class="jscolor {width: 280, height: 260, position:'center' , onFineChange:'update(this)', valueElement:null, closable:true}" id="colorPicker">
+          Choose your pin's color</button>
+  <button type="submit" name = "submit" id="submitButton">Submit</button><br><br>
+  </div></form>
+  </div>
 
   <div id="map"></div>
-
-  <?php
-  echo "Hello World!";
-  ?>
-
 <script>
+
+
+
+var markerColor;
+
+$(document).ready (function(){
+    $("#insertMarkers").submit(function(event) {
+
+     state = 0;
+     y.style.display="none";
+
+     var marker = tempMarker;
+// if tempMarker becomes marker, then GEOJSON counts it. But if it stays tempMarker, then GeoJSON
+// does not count it, but marker stays the same...
+
+     var geojsonFeature = {
+     "type": "Feature",
+         "properties": {},
+         "geometry": {
+             "type": "Point",
+             "coordinates": [latlng.lat, latlng.lng]
+     }
+ }
+ L.geoJson(geojsonFeature, {
+     pointToLayer: function(feature, latlng){
+     marker = L.marker(latlng, {
+             title: "Resource Location",
+             alt: "Resource Location",
+             draggable: false,
+         });
+         //tempMarker.on("popupopen", onPopupOpen);
+         return marker;
+     }
+ }).addTo(map);
+
+   s.style.display="none";
+
+   //stop submit the form, we will post it manually. PREVENT THE DEFAULT behaviour ...
+  event.preventDefault();
+ console.log("submitted");
+
+ let form = $('#insertMarkers')[0];
+ let data = new FormData(form);
+
+ $.ajax({
+             type: "POST",
+             enctype: 'multipart/form-data',
+             url: "insertForm.php",
+             data: data,
+             processData: false,//prevents from converting into a query string
+             contentType: false,
+             cache: false,
+             timeout: 600000,
+             success: function (response) {
+             //reponse is a STRING (not a JavaScript object -> so we need to convert)
+             //use the JSON .parse function to convert the JSON string into a Javascript object
+             //let parsedJSON = JSON.parse(response);
+             console.log(response);
+             //displayResponse(parsedJSON);
+            },
+            error:function(){
+           console.log("error occurred");
+         }
+       });
+
+   });
+});
+
+
 var state = 0;
 var map = L.map('map').locate({setView: true, maxZoom: 16});
-var s = document.getElementById("newReqMenu");
+var s = document.getElementById("newReqMenuContainer");
 var a = document.getElementById("noPinDetected");
 var y = document.getElementById("finduser");
 var title = document.getElementById("titleBox").value;
@@ -110,7 +187,6 @@ var allLayer  = [];
 var oldmarker;
 var counter = 0;
 var formSubmitted = false;
-var markerColor;
 
 // We determine a random beginning color for the pin before the submit menu is called
 // var possibleColors = ["red","blue","purple","orange","green"];
@@ -190,6 +266,11 @@ return color;
 }
 
 
+
+function displayResponse(theResult){
+//display results..
+}
+
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 function toggleNewReqMenu() {
   if (state != 0) {
@@ -262,46 +343,6 @@ function Dragpin(e,tempMarker) {
     }
 
 
-
-
-    function submitForm() {
-
-console.log('markerColor : '+markerColor);
-
-      state = 0;
-      y.style.display="none";
-
-      var marker = tempMarker;
-// if tempMarker becomes marker, then GEOJSON counts it. But if it stays tempMarker, then GeoJSON
-// does not count it, but marker stays the same...
-
-      var geojsonFeature = {
-      "type": "Feature",
-          "properties": {},
-          "geometry": {
-              "type": "Point",
-              "coordinates": [latlng.lat, latlng.lng]
-      }
-  }
-  L.geoJson(geojsonFeature, {
-      pointToLayer: function(feature, latlng){
-      marker = L.marker(latlng, {
-              title: "Resource Location",
-              alt: "Resource Location",
-              draggable: false,
-          });
-          //tempMarker.on("popupopen", onPopupOpen);
-          return marker;
-      }
-  }).addTo(map);
-
-
-
-    //var name;
-    s.style.display="none";
-    console.log(title);
-
-    }
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 function onLocationError(e) {
     alert(e.message);
