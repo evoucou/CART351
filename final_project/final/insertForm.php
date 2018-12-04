@@ -136,7 +136,7 @@ var titleInput;
 var nameInput;
 //var allMarkersObjArray = [];//new Array();
 //var allMarkersGeoJsonArray = [];//new Array();
-
+displayAllMarkers();
 
 // We determine a random beginning color for the pin before the submit menu is called
 // var possibleColors = ["red","blue","purple","orange","green"];
@@ -361,7 +361,22 @@ function submitForm() {
 }
 
 
-function getAllMarkers() {
+function displayAllMarkers() {
+
+  $.getJSON('markers.json',function(data) {
+          //success
+            //step 1: console.log the result
+            console.log(data);
+            //set boolean to true
+            loaded=true;
+          })
+          //fail
+          .fail(function() {
+            console.log( "error" );
+          });
+
+marker = new L.marker
+
       // var allMarkersObjArray = [];//new Array();
       // var allMarkersGeoJsonArray = [];//new Array();
       // $.each(map._layers, function (ml) {
@@ -391,7 +406,6 @@ function getAllMarkers() {
 //     var overlay = {'markers': layerGroup};
 //     L.control.layers(null, overlay).addTo(map);
 }
-$(".get-markers").on("click", getAllMarkers);
 </script>
   </body>
   </html>
