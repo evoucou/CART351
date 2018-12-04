@@ -122,7 +122,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 
 
         <div id="newReqMenuContainer">
-          <form action=”” enctype =”multipart/form-data” id="insertMarkers">
+          <!-- <form action=”” enctype =”multipart/form-data”> -->
             <div id="newReqTextBox">
           <h2>CREATE A REQUEST</h2>
           <input type="text" placeholder="Type in your request..." id="titleBox" maxlength = "40" name = "a_title" required>
@@ -130,36 +130,40 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
         <button class="jscolor {width: 280, height: 260, position:'center' , onFineChange:'update(this)', valueElement:null, closable:true}" id="colorPicker">
           Choose your pin's color</button>
   <button type="submit" name = "submit" id="submitButton">Submit</button><br><br>
-  </div></form>
+  </div>
   </div>
 
   <div id="map"></div>
 <script>
 
+var state = 0;
+var map = L.map('map').locate({setView: true, maxZoom: 16});
+var s = document.getElementById("newReqMenuContainer");
+var a = document.getElementById("noPinDetected");
+var y = document.getElementById("finduser");
+a.style.display="none";
+s.style.display="none";
+y.style.display="none";
+var recenter = false;
+var allMarker = [];
+var allLayer  = [];
+var counter = 0;
+var formSubmitted = false;
+var layerGroup = new L.layerGroup().addTo(map);
 var markerColor;
 var titleInput;
 var nameInput;
+//var allMarkersObjArray = [];//new Array();
+//var allMarkersGeoJsonArray = [];//new Array();
 
-$(document).ready (function(){
-    $("#insertMarkers").submit(function(event) {
+
+// $(document).ready (function(){
+//     $("#insertMarkers").submit(function(event) {
+
+$('#submitButton').click(function(){
 
      state = 0;
      y.style.display="none";
-
-     // This code allows us to get the information
-     titleInput = document.getElementById("titleBox").value;
-     nameInput = document.getElementById("nameBox").value;
-
-//console.log(JSON.stringify(obj));
-
-       var latLngs = [ tempMarker.getLatLng() ];
-       //console.log(latLngsString);
-
-       //console.log('markerColor : '+markerColor);
-
-       var myJSON = { "title": titleInput, "name": nameInput, "color": markerColor, "coordinates": latLngs };
-       var markerData = JSON.stringify(myJSON);
-       console.log(markerData);
 
      //var marker = tempMarker;
 // if tempMarker becomes marker, then GEOJSON counts it. But if it stays tempMarker, then GeoJSON
@@ -185,10 +189,12 @@ $(document).ready (function(){
      }
  }).addTo(map);
 
+getAllMarkers(tempMarker);
+
    s.style.display="none";
 
    //stop submit the form, we will post it manually. PREVENT THE DEFAULT behaviour ...
-  event.preventDefault();
+ event.preventDefault();
 
  let form = $('#insertMarkers')[0];
  let data = new FormData(form);
@@ -209,27 +215,8 @@ $(document).ready (function(){
            console.log("error occurred");
          }
        });
+   // });
 
-   });
-});
-
-
-var state = 0;
-var map = L.map('map').locate({setView: true, maxZoom: 16});
-var s = document.getElementById("newReqMenuContainer");
-var a = document.getElementById("noPinDetected");
-var y = document.getElementById("finduser");
-a.style.display="none";
-s.style.display="none";
-y.style.display="none";
-var recenter = false;
-var current_location;
-var markerBon;
-var allMarker = [];
-var allLayer  = [];
-var oldmarker;
-var counter = 0;
-var formSubmitted = false;
 
 // We determine a random beginning color for the pin before the submit menu is called
 // var possibleColors = ["red","blue","purple","orange","green"];
@@ -310,9 +297,6 @@ return color;
 
 
 
-function displayResponse(theResult){
-//display results..
-}
 
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 function toggleNewReqMenu() {
@@ -390,16 +374,7 @@ function Dragpin(e,tempMarker) {
 function onLocationError(e) {
     alert(e.message);
 }
-//map.on('locationerror', onLocationError);
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    function onLocationFound(e, current_location) {
-        current_location = L.latLng(e.latlng);
-        return current_location;
-               //markerBon = myMarker;
-    //var circle = document.getElementById("newrequest").addEventListener("click", function(){
-          //centerOnMarker(map, myMarker);
-    //});
-  }
+
 function relocate() {
     //instantiatePin(marker);
     //console.log(myMarker.latlng);
@@ -415,17 +390,45 @@ $('#titleBox').on('input', function() {
 
 
 function getAllMarkers() {
-    var allMarkersObjArray = [];//new Array();
-    var allMarkersGeoJsonArray = [];//new Array();
-    $.each(map._layers, function (ml) {
-        //console.log(map._layers)
-        if (map._layers[ml].feature) {
-            allMarkersObjArray.push(this)
-                                    allMarkersGeoJsonArray.push(JSON.stringify(this.toGeoJSON()))
-        }
-    })
+      // var allMarkersObjArray = [];//new Array();
+      // var allMarkersGeoJsonArray = [];//new Array();
+      // $.each(map._layers, function (ml) {
+      //     //console.log(map._layers);
+      //     if (map._layers[ml].feature) {
+      //         allMarkersObjArray.push(this)
+      //                                 allMarkersGeoJsonArray.push(JSON.stringify(this.toGeoJSON()))
+      //     }
+      // })
+
+          latlng = tempMarker.getLatLng();
+
+           // This code allows us to get the information
+           titleInput = document.getElementById("titleBox").value;
+           nameInput = document.getElementById("nameBox").value;
+
+
+             //console.log('markerColor : '+markerColor);
+
+             var myJSON = { "title": titleInput, "name": nameInput, "color": markerColor, "coordinates": latlng};
+             var markerData = JSON.stringify(myJSON);
+             console.log(markerData);
+             //console.log("how many markers : "+allMarkersGeoJsonArray.length);
+
     //console.log(allMarkersObjArray);
-    alert("total Markers : " + allMarkersGeoJsonArray.length + "\n\n" + allMarkersGeoJsonArray + "\n\n Also see your console for object view of this array" );
+    //alert("total Markers : " + allMarkersGeoJsonArray.length + "\n\n" + allMarkersGeoJsonArray + "\n\n Also see your console for object view of this array" );
+
+// var coordinates = [
+//   [],
+//   []
+// ]
+//
+//     for (i = 0; i < coordinates.length; i++) {
+//         marker = L.marker([coordinates[i][0], coordinates[i][1]]);
+//         layerGroup.addLayer(marker);
+//     }
+//
+//     var overlay = {'markers': layerGroup};
+//     L.control.layers(null, overlay).addTo(map);
 }
 $(".get-markers").on("click", getAllMarkers);
 </script>
