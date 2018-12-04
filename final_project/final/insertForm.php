@@ -2,28 +2,61 @@
 <html>
 
 <?php
+
+ class MyDB extends SQLite3
+ {
+    function __construct()
+    {
+        $this->open('../db/markerDatabase.db');
+    }
+ }
+ try
+ {
+    $db = new MyDB();
+ }
+ catch(Exception $e)
+ {
+     die($e);
+ }
+
 //check if there has been something posted to the server to be processed
 if($_SERVER['REQUEST_METHOD'] == 'POST')
 {
 // need to process
  $title = $_POST['a_title'];
  $username = $_POST['a_username'];
-// $color = $_GET['PHP_markerColor'];
- //$marker_loc = $_GET['PHP_markerColor'];
+ //$color = $_GET['PHP_markerColor'];
+ //$locLng = $_GET['PHP_markerColor'];
+ //$locLat = $_GET['PHP_markerColor'];
 
-    //echo "done";
-    //package the data and echo back...
-    $myPackagedData=new stdClass();
-    $myPackagedData->title = $title ;
-    $myPackagedData->username = $username ;
-    //$myPackagedData->color = $color;
-    //$myPackagedData->location = $marker_loc;
 
-     // Now we want to JSON encode these values to send them to $.ajax success.
-    $myJSONObj = json_encode($myPackagedData);
-    echo $myJSONObj;
-    exit;
+ if($_FILES) {
 
+   // NEW:: add into our db ....
+     //The data from the text box is potentially unsafe; 'tainted'.
+  	 //We use the sqlite_escape_string.
+  	 //It escapes a string for use as a query parameter.
+  	//This is common practice to avoid malicious sql injection attacks.
+  	$title_es =$db->escapeString($title);
+  	$username_es = $db->escapeString($username);
+  //  $color_es = $db->escapeString($color);
+  //  $locLng_es = $db->escapeString($locLng);
+  //  $locLat_es = $db->escapeString($locLat);
+
+
+    $queryInsert ="INSERT INTO markerTable ( title , username , color , locLng , locLat ) VALUES ('{$title_es}', '{$username_es}', 'bleu', '23', '45')";
+    // again we do error checking when we try to execute our SQL statement on the db
+  	$ok1 = $db->exec($queryInsert);
+    // NOTE:: error messages WILL be sent back to JQUERY success function .....
+  	if (!$ok1) {
+      die("Cannot execute statement.");
+      exit;
+      }
+      //send back success...
+      echo 'success';
+      exit;
+
+ }//FILES
 }//POST
 
 ?>
@@ -102,8 +135,6 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
   <div id="map"></div>
 <script>
 
-
-
 var markerColor;
 
 $(document).ready (function(){
@@ -140,7 +171,6 @@ $(document).ready (function(){
 
    //stop submit the form, we will post it manually. PREVENT THE DEFAULT behaviour ...
   event.preventDefault();
- console.log("submitted");
 
  let form = $('#insertMarkers')[0];
  let data = new FormData(form);
@@ -155,11 +185,7 @@ $(document).ready (function(){
              cache: false,
              timeout: 600000,
              success: function (response) {
-             //reponse is a STRING (not a JavaScript object -> so we need to convert)
-             //use the JSON .parse function to convert the JSON string into a Javascript object
-             //let parsedJSON = JSON.parse(response);
-             console.log(response);
-             //displayResponse(parsedJSON);
+             console.log('success');
             },
             error:function(){
            console.log("error occurred");

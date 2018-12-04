@@ -13,7 +13,7 @@ try
    $db = new MyDB();
    echo ("Opened or created map data base successfully<br \>");
 
-   $countMarkersStatement= "SELECT COUNT (*) FROM markerDB";
+   $countMarkersStatement= "SELECT COUNT (*) FROM markerTable";
 
    $countMarkers = $db->query($countMarkersStatement);
 if (!$countMarkers) die("Cannot execute query.");
