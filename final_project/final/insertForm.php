@@ -3,62 +3,45 @@
 
 <?php
 
-
- class MyDB extends SQLite3
- {
-    function __construct()
-    {
-        $this->open('../db/markerDatabase.db');
-    }
- }
- try
- {
-    $db = new MyDB();
- }
- catch(Exception $e)
- {
-     die($e);
- }
-
-//check if there has been something posted to the server to be processed
-if($_SERVER['REQUEST_METHOD'] == 'POST')
-{
-// need to process
- $title = $_POST['a_title'];
- $username = $_POST['a_username'];
- //$color = $_GET['PHP_markerColor'];
- //$locLng = $_GET['PHP_markerColor'];
- //$locLat = $_GET['PHP_markerColor'];
-
-
- if($_FILES) {
-
-   // NEW:: add into our db ....
-     //The data from the text box is potentially unsafe; 'tainted'.
-  	 //We use the sqlite_escape_string.
-  	 //It escapes a string for use as a query parameter.
-  	//This is common practice to avoid malicious sql injection attacks.
-  	$title_es =$db->escapeString($title);
-  	$username_es = $db->escapeString($username);
-  //  $color_es = $db->escapeString($color);
-  //  $locLng_es = $db->escapeString($locLng);
-  //  $locLat_es = $db->escapeString($locLat);
-
-
-    $queryInsert ="INSERT INTO markerTable(title, username, color, locLng, locLat)VALUES ('$title_es', '$username_es', 'bleu', '23', '45')";
-    // again we do error checking when we try to execute our SQL statement on the db
-  	$ok1 = $db->exec($queryInsert);
-    // NOTE:: error messages WILL be sent back to JQUERY success function .....
-  	if (!$ok1) {
-      die("Cannot execute statement.");
-      exit;
-      }
-      //send back success...
-      echo "success";
-      exit;
-
- }//FILES
-}//POST
+// //check if there has been something posted to the server to be processed
+// if($_SERVER['REQUEST_METHOD'] == 'POST')
+// {
+// // need to process
+//  $title = $_POST['a_title'];
+//  $username = $_POST['a_username'];
+//  //$color = $_GET['PHP_markerColor'];
+//  //$locLng = $_GET['PHP_markerColor'];
+//  //$locLat = $_GET['PHP_markerColor'];
+//
+//
+//  if($_FILES) {
+//
+//    // NEW:: add into our db ....
+//      //The data from the text box is potentially unsafe; 'tainted'.
+//   	 //We use the sqlite_escape_string.
+//   	 //It escapes a string for use as a query parameter.
+//   	//This is common practice to avoid malicious sql injection attacks.
+//   	$title_es =$db->escapeString($title);
+//   	$username_es = $db->escapeString($username);
+//   //  $color_es = $db->escapeString($color);
+//   //  $locLng_es = $db->escapeString($locLng);
+//   //  $locLat_es = $db->escapeString($locLat);
+//
+//
+//     $queryInsert ="INSERT INTO markerTable(title, username, color, locLng, locLat)VALUES ('$title_es', '$username_es', 'bleu', '23', '45')";
+//     // again we do error checking when we try to execute our SQL statement on the db
+//   	$ok1 = $db->exec($queryInsert);
+//     // NOTE:: error messages WILL be sent back to JQUERY success function .....
+//   	if (!$ok1) {
+//       die("Cannot execute statement.");
+//       exit;
+//       }
+//       //send back success...
+//       echo "success";
+//       exit;
+//
+//  }//FILES
+// }//POST
 
 ?>
 
@@ -108,7 +91,6 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 
   <body>
     <div id="header">
-         <input class="get-markers" type="button" value="Get all the Markers" />
     <!--  <object data="sources/pin.svg" type="image/svg+xml"
                id="pinsvg" width="20p"></object> -->
     <img src="sources/plus.svg" id="newrequest" onclick="toggleNewReqMenu()"/>
@@ -122,14 +104,13 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 
 
         <div id="newReqMenuContainer">
-          <!-- <form action=”” enctype =”multipart/form-data”> -->
             <div id="newReqTextBox">
           <h2>CREATE A REQUEST</h2>
           <input type="text" placeholder="Type in your request..." id="titleBox" maxlength = "40" name = "a_title" required>
           <input type="text" placeholder="What's your name?" id="nameBox" maxlength = "40" name = "a_username" required>
         <button class="jscolor {width: 280, height: 260, position:'center' , onFineChange:'update(this)', valueElement:null, closable:true}" id="colorPicker">
           Choose your pin's color</button>
-  <button type="submit" name = "submit" id="submitButton">Submit</button><br><br>
+  <button type="submit" name = "submit" onclick="submitForm()">Submit</button><br><br>
   </div>
   </div>
 
@@ -155,67 +136,6 @@ var titleInput;
 var nameInput;
 //var allMarkersObjArray = [];//new Array();
 //var allMarkersGeoJsonArray = [];//new Array();
-
-
-// $(document).ready (function(){
-//     $("#insertMarkers").submit(function(event) {
-
-$('#submitButton').click(function(){
-
-     state = 0;
-     y.style.display="none";
-
-     //var marker = tempMarker;
-// if tempMarker becomes marker, then GEOJSON counts it. But if it stays tempMarker, then GeoJSON
-// does not count it, but marker stays the same...
-
-     var geojsonFeature = {
-     "type": "Feature",
-         "properties": {},
-         "geometry": {
-             "type": "Point",
-             "coordinates": [latlng.lat, latlng.lng]
-     }
- }
- L.geoJson(geojsonFeature, {
-     pointToLayer: function(feature, latlng){
-     tempMarker = L.marker(latlng, {
-             title: "Resource Location",
-             alt: "Resource Location",
-             draggable: false,
-         });
-         //tempMarker.on("popupopen", onPopupOpen);
-         return tempMarker;
-     }
- }).addTo(map);
-
-getAllMarkers(tempMarker);
-
-   s.style.display="none";
-
-   //stop submit the form, we will post it manually. PREVENT THE DEFAULT behaviour ...
- event.preventDefault();
-
- let form = $('#insertMarkers')[0];
- let data = new FormData(form);
-
- $.ajax({
-             type: "POST",
-             enctype: 'multipart/form-data',
-             url: "insertForm.php",
-             data: data,
-             processData: false,//prevents from converting into a query string
-             contentType: false,
-             cache: false,
-             timeout: 600000,
-             success: function (response) {
-             console.log('success');
-            },
-            error:function(){
-           console.log("error occurred");
-         }
-       });
-   // });
 
 
 // We determine a random beginning color for the pin before the submit menu is called
@@ -389,6 +309,58 @@ $('#titleBox').on('input', function() {
 });
 
 
+function submitForm() {
+
+     state = 0;
+     y.style.display="none";
+
+     //var marker = tempMarker;
+// if tempMarker becomes marker, then GEOJSON counts it. But if it stays tempMarker, then GeoJSON
+// does not count it, but marker stays the same...
+
+     var geojsonFeature = {
+     "type": "Feature",
+         "properties": {},
+         "geometry": {
+             "type": "Point",
+             "coordinates": [latlng.lat, latlng.lng]
+     }
+ }
+ L.geoJson(geojsonFeature, {
+     pointToLayer: function(feature, latlng){
+     tempMarker = L.marker(latlng, {
+             title: "Resource Location",
+             alt: "Resource Location",
+             draggable: false,
+         });
+         //tempMarker.on("popupopen", onPopupOpen);
+         return tempMarker;
+     }
+ }).addTo(map);
+
+
+   s.style.display="none";
+
+
+   latlng = tempMarker.getLatLng();
+    titleInput = document.getElementById("titleBox").value;
+    nameInput = document.getElementById("nameBox").value;
+
+      var myJSON = { "title": titleInput, "name": nameInput, "color": markerColor, "coordinates": latlng};
+      var markerData = JSON.stringify(myJSON);
+      console.log(markerData);
+
+     $.ajax
+       ({
+           type: 'POST',
+           url: 'handleJSON.php',
+           data: { data: markerData },
+           success: function (response) {console.log(response)},
+           failure: function(response) {console.log(response)}
+       });
+}
+
+
 function getAllMarkers() {
       // var allMarkersObjArray = [];//new Array();
       // var allMarkersGeoJsonArray = [];//new Array();
@@ -400,18 +372,7 @@ function getAllMarkers() {
       //     }
       // })
 
-          latlng = tempMarker.getLatLng();
 
-           // This code allows us to get the information
-           titleInput = document.getElementById("titleBox").value;
-           nameInput = document.getElementById("nameBox").value;
-
-
-             //console.log('markerColor : '+markerColor);
-
-             var myJSON = { "title": titleInput, "name": nameInput, "color": markerColor, "coordinates": latlng};
-             var markerData = JSON.stringify(myJSON);
-             console.log(markerData);
              //console.log("how many markers : "+allMarkersGeoJsonArray.length);
 
     //console.log(allMarkersObjArray);
