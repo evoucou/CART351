@@ -6,7 +6,7 @@
     //$myFile = "markers.json";
   //  $fh = fopen($myFile, 'w') or die("can't open file");
     $stringData = $_POST["data"];
-    $addArray[] = array('entry:' => $stringData);
+    $addArray[] = array('marker' => $stringData);
     //fwrite($fh, $stringData);
     //fclose($fh);
     //echo("success");

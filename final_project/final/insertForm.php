@@ -97,17 +97,16 @@
     <img src="sources/logo.svg" id="logo"/><br>
   <input type="text" placeholder="Search for places or addresses" id="searchAdress">
   </div>
-  <p id="noPinDetected">No pin has been detected.<br>
-  You first need to create a new pin and choose its location.</p>
-  <button id="finduser" onclick="relocate()">locate</button>
-        <button id="newPin" onclick="addNewPin()">new</button>
+  <div id="errorMsg"></div>
+  <button id="newPin" onclick="addNewPin()"><img src="sources/addPin.svg"/></button>
+        <button id="finduser" onclick="relocate()"><img src="sources/userLoc.svg"/></button>
 
 
         <div id="newReqMenuContainer">
             <div id="newReqTextBox">
           <h2>CREATE A REQUEST</h2>
-          <input type="text" placeholder="Type in your request..." id="titleBox" maxlength = "40" name = "a_title" required>
-          <input type="text" placeholder="What's your name?" id="nameBox" maxlength = "40" name = "a_username" required>
+          <input type="text" placeholder="Type in your request..." onfocus="this.style.color='black';" id="titleBox" maxlength = "40" name = "a_title" required>
+          <input type="text" placeholder="What's your name?" onfocus="this.style.color='black';" id="nameBox" maxlength = "40" name = "a_username" required>
         <button class="jscolor {width: 280, height: 260, position:'center' , onFineChange:'update(this)', valueElement:null, closable:true}" id="colorPicker">
           Choose your pin's color</button>
   <button type="submit" name = "submit" onclick="submitForm()">Submit</button><br><br>
@@ -120,11 +119,12 @@
 var state = 0;
 var map = L.map('map').locate({setView: true, maxZoom: 16});
 var s = document.getElementById("newReqMenuContainer");
-var a = document.getElementById("noPinDetected");
+var a = document.getElementById("errorMsg");
 var y = document.getElementById("finduser");
-a.style.display="none";
+//a.style.display="none";
+a.innerHTML = "";
 s.style.display="none";
-y.style.display="none";
+y.style.opacity="0.3";
 var recenter = false;
 var allMarker = [];
 var allLayer  = [];
@@ -213,6 +213,7 @@ displayAllMarkers();
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 function toggleNewReqMenu() {
   if (state != 0) {
+    a.innerHTML = "";
     state = 2;
       map.off('click',function(e){Dragpin(e,tempMarker);});
 
@@ -226,6 +227,7 @@ if (s.style.display === "none") {
     //Initial values
       //map.locate({setView: true});
     document.getElementById('titleBox').value = '';
+    document.getElementById('nameBox').value = '';
     document.getElementById('colorPicker').style.backgroundColor = markerColor;
 //CODE FOR COLOR
     //document.getElementById('test').path.style.fill = randomStartColor;
@@ -234,7 +236,7 @@ if (s.style.display === "none") {
     state = 1;
 }
 } else {
-      a.style.display = "block";
+  a.innerHTML = "No pin has been detected. You first need to create a pin and choose its location on the map.";
 }
 }
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -260,16 +262,21 @@ function createSVG(markerColor) {
 }
 
  function addNewPin() {
+   if (state == 0) {
          state = 1;
          //If there was one, the error message disappears.
-         a.style.display = "none";
         map.on('click',createPin);
+        a.innerHTML = "";
 // Create a new random color for each new pin
           markerColor = getRandomColor();
+        } else {
+a.innerHTML = "Please submit your pin before creating a new one.";
+console.log("cannot create pin");
+        }
     }
 function createPin(ev) {
 
-   y.style.display="block";
+   y.style.opacity="1";
         latlng = map.mouseEventToLatLng(ev.originalEvent);
         //console.log(latlng.lat + ', ' + latlng.lng);
 // if (!formSubmitted){
@@ -286,6 +293,7 @@ function createPin(ev) {
 function Dragpin(e,tempMarker) {
         if(state==1)
             {
+                a.innerHTML = "";
         var latlng = map.mouseEventToLatLng(e.originalEvent);
           tempMarker._icon.style.transition = "transform 0.3s ease-out";
           tempMarker._shadow.style.transition = "transform 0.3s ease-out";
@@ -317,9 +325,10 @@ $('#titleBox').on('input', function() {
 
 
 function submitForm() {
+  console.log(state);
 
      state = 0;
-     y.style.display="none";
+     y.style.opacity="0.3";
 
      //var marker = tempMarker;
 // if tempMarker becomes marker, then GEOJSON counts it. But if it stays tempMarker, then GeoJSON
@@ -349,7 +358,7 @@ function submitForm() {
    s.style.display="none";
 
 
-   latlng = tempMarker.getLatLng();
+    latlng = tempMarker.getLatLng();
     titleInput = document.getElementById("titleBox").value;
     nameInput = document.getElementById("nameBox").value;
 
@@ -375,16 +384,31 @@ function displayAllMarkers() {
             console.log(data);
             //set boolean to true
             loaded=true;
+            //
+            // var coordinates = data["coordinates"];
+            // console.log("latlng : "+coordinates);
+            // var color = data["color"];
+            // console.log("loaded color : "+color);
 
-            var coordinates = data["coordinates"];
-            console.log("latlng : "+coordinates);
-            var color = data["color"];
-            console.log("loaded color : "+color);
+            //var markers = [];
 
-                for (i = 0; i < color.length; i++) {
-                  var icon = "<svg version='1.1' id='Capa_1' xmlns='http://www.w3.org/2000/svg' x='0px' y='0px' viewBox='0 0 30 51' style='enable-background:new 0 0 30 51;' xml:space='preserve'> <path fill='"+color+"' d='M15,0.8C6.9,0.8,0.3,7.4,0.3,15.5c0,7.4,5.5,13.4,12.6,14.5v21h4.2V29.9c7.1-1,12.6-7.1,12.6-14.5 C29.7,7.4,23.1,0.8,15,0.8z M10.8,13.4c-2.3,0-4.2-1.9-4.2-4.2C6.6,6.9,8.5,5,10.8,5S15,6.9,15,9.2S13.1,13.4,10.8,13.4z'/><path fill = 'white' d='M15,9.2c0,2.3-1.9,4.2-4.2,4.2s-4.2-1.9-4.2-4.2C6.6,6.9,8.5,5,10.8,5S15,6.9,15,9.2z'/></svg>";
+            let markers = data["marker"];
+
+            // let color=data["color"];
+            // let name=data["name"];
+                for (i = 0; i < data.length; i++) {
+            let mLocLat = markers[i].coordinates.lat;
+            let mLocLng = markers[i].coordinates.lng;
+            let mColor = markers[i].color;
+            let mTitle = markers[i].title;
+            let username = markers[i].name;
+
+
+                  var icon = "<svg version='1.1' id='Capa_1' xmlns='http://www.w3.org/2000/svg' x='0px' y='0px' viewBox='0 0 30 51' style='enable-background:new 0 0 30 51;' xml:space='preserve'> <path fill='"+mColor+"' d='M15,0.8C6.9,0.8,0.3,7.4,0.3,15.5c0,7.4,5.5,13.4,12.6,14.5v21h4.2V29.9c7.1-1,12.6-7.1,12.6-14.5 C29.7,7.4,23.1,0.8,15,0.8z M10.8,13.4c-2.3,0-4.2-1.9-4.2-4.2C6.6,6.9,8.5,5,10.8,5S15,6.9,15,9.2S13.1,13.4,10.8,13.4z'/><path fill = 'white' d='M15,9.2c0,2.3-1.9,4.2-4.2,4.2s-4.2-1.9-4.2-4.2C6.6,6.9,8.5,5,10.8,5S15,6.9,15,9.2z'/></svg>";
                   var svgURL = "data:image/svg+xml;base64," + btoa(icon);
                        // create icon
+                        //console.log(color[i]);
+
                        var markerIcon = L.icon({
                            iconUrl: svgURL,
                            shadowUrl: 'sources/shadow.png',
@@ -393,10 +417,12 @@ function displayAllMarkers() {
                            iconAnchor:   [12, 30], // point of the icon which will correspond to marker's location
                            shadowAnchor: [10, 23],  // the same for the shadow
                            popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
+
                        });
                   //var marker = L.marker([-73.5703754425049,45.490607239870464], {icon: markerIcon}).bindPopup("<b>Hello world!</b><br>I am a popup.").openPopup().addTo(map);
-                    var marker = L.marker([coordinates[i][0], coordinates[i][1]], {icon: markerIcon}).bindPopup("<b>Hello world!</b><br>I am a popup.").openPopup().addTo(map);
-                    map.addLayer(marker);
+
+                    itemMarkers = new L.marker(mLocLat, mLocLng, {icon: markerIcon}).bindPopup("<b>Hello world!</b><br>I am a popup.").openPopup().addTo(map);
+                    map.addLayer(itemMarkers);
                 }
           })
           //fail
