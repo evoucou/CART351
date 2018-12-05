@@ -39,6 +39,15 @@
 <!-- this demo plugin bundles the needed code from Esri Leaflet and Esri Leaflet Geocoder -->
 <script src="bootstrap-geocoder.js"></script>
 
+<!-- JS file -->
+<script src="jquery.easy-autocomplete.min.js"></script>
+
+<!-- CSS file -->
+<link rel="stylesheet" href="easy-autocomplete.min.css">
+
+<!-- Additional CSS Themes file - not required-->
+<link rel="stylesheet" href="easy-autocomplete.themes.min.css">
+
   <!-- <script type="text/javascript" src="map.js"></script> -->
   <link rel="stylesheet" href="main.css"/>
 
@@ -46,8 +55,6 @@
 
   <body>
     <div id="header">
-    <!--  <object data="sources/pin.svg" type="image/svg+xml"
-               id="pinsvg" width="20p"></object> -->
     <img src="sources/plus.svg" id="newrequest" onclick="toggleNewReqMenu()"/>
     <img src="sources/logo.svg" id="logo"/><br>
   <input type="text" placeholder="Search for places or addresses" onfocus="Search for places or addresses" id="searchAdress">
@@ -56,13 +63,11 @@
   <button id="newPin" onclick="addNewPin()"><img src="sources/addPin.svg"/></button>
         <button id="finduser" onclick="relocate()"><img src="sources/userLoc.svg"/></button>
 
-
         <div id="newReqMenuContainer"><form id="reqForm">
             <div id="newReqTextBox">
           <h2>CREATE A REQUEST</h2>
           <input type="text" placeholder="Type in your request..." onfocus="this.style.color='black';" id="titleBox" maxlength = "40" name = "a_title" required>
           <input type="text" placeholder="What's your name?" onfocus="this.style.color='black';" id="nameBox" maxlength = "40" name = "a_username" required>
-          <input type="text" id="test">
         <button class="jscolor {width: 280, height: 260, position:'center' , onFineChange:'update(this)', valueElement:null, closable:true}" id="colorPicker">
           Choose your pin's color</button>
   <button type="submit" name = "submit">Submit</button><br><br>
@@ -275,19 +280,61 @@ function relocate() {
 
 });
 
+//
+// var options = {
+// 	data: marker.title;
+// };
+
+
 
 
 function loadData() {
 
+
+  var options = {
+    url: "markers.json",
+
+    listLocation: "marker",
+
+    getValue: "title",
+
+    list: {
+      onSelectItemEvent: function() {
+  			var value = $("#titleBox").getSelectedItemData().color;
+
+  			$("#colorPicker").val(value).trigger("change");
+  		},
+  		match: {
+  			enabled: true
+  		},
+      showAnimation: {
+  type: "slide", //normal|slide|fade
+  time: 400,
+  callback: function() {}
+},
+
+hideAnimation: {
+  type: "slide", //normal|slide|fade
+  time: 400,
+  callback: function() {}
+}
+  	}
+  };
+
+  $("#titleBox").easyAutocomplete(options);
+
+
   $.getJSON('markers.json',function(data) {
+
+
 
 for(let i = 0; i<data.length;i++){
 for(let property in data[i]){
   let obj = data[i][property];
   let marker = JSON.parse(obj.marker);
 
-  $('a_title').val(marker.title);
-  console.log(marker.title);
+  // $('#titleBox').val(marker.title);
+  // console.log(marker.title);
 
   var icon = "<svg version='1.1' id='Capa_1' xmlns='http://www.w3.org/2000/svg' x='0px' y='0px' viewBox='0 0 30 51' style='enable-background:new 0 0 30 51;' xml:space='preserve'> <path fill='"+marker.color+"' d='M15,0.8C6.9,0.8,0.3,7.4,0.3,15.5c0,7.4,5.5,13.4,12.6,14.5v21h4.2V29.9c7.1-1,12.6-7.1,12.6-14.5 C29.7,7.4,23.1,0.8,15,0.8z M10.8,13.4c-2.3,0-4.2-1.9-4.2-4.2C6.6,6.9,8.5,5,10.8,5S15,6.9,15,9.2S13.1,13.4,10.8,13.4z'/><path fill = 'white' d='M15,9.2c0,2.3-1.9,4.2-4.2,4.2s-4.2-1.9-4.2-4.2C6.6,6.9,8.5,5,10.8,5S15,6.9,15,9.2z'/></svg>";
   var svgURL = "data:image/svg+xml;base64," + btoa(icon);
@@ -312,21 +359,21 @@ for(let property in data[i]){
   // Set popup wrapper to marker color
     document.documentElement.style.setProperty(`--color`, marker.color);
 
-    var countries = [
-       { value: 'Andorra', data: 'AD' },
-       // ...
-       { value: 'Zimbabwe', data: 'ZZ' }
-    ];
-
-    $('#a_title').autocomplete({
-        lookup: countries,
-        onSelect: function (suggestion) {
-            alert('You selected: ' + suggestion.value + ', ' + suggestion.data);
-        }
-    });
-
 }// second for loop
 } //first for loop
+
+
+// var options = {
+// 	url: "markers.json",
+//
+// 	getValue: "title",
+//
+// 	list: {
+// 		match: {
+// 			enabled: true
+// 		}
+// 	}
+// };
 
           loaded=true;
         })
