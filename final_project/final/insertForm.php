@@ -134,6 +134,7 @@ var layerGroup = new L.layerGroup().addTo(map);
 var markerColor;
 var titleInput;
 var nameInput;
+var bla = new L.marker;
 //var allMarkersObjArray = [];//new Array();
 //var allMarkersGeoJsonArray = [];//new Array();
 
@@ -256,18 +257,7 @@ function createSVG(markerColor) {
            popupAnchor:  [-3, -24] // point from which the popup should open relative to the iconAnchor
        });
 
-var title = 'Love';
-var name ='stacy';
-    //L.marker([51.5, -0.09],{icon: markerIcon}).addTo(map);
- var customPopup ="<b>"+title+"</b><br>Requested by "+name+".";
-
-  tempMarker = L.marker(latlng, {icon: markerIcon}).bindPopup(customPopup).addTo(map);
-
-// Set popup wrapper to marker color
-  document.documentElement.style.setProperty(`--color`, markerColor);
-//
-//customPopup.setAttribute('style');
-//var popup = document.getElementById('popupWrapper');
+  tempMarker = L.marker(latlng, {icon: markerIcon}).addTo(map);
 }
 
  function addNewPin() {
@@ -383,58 +373,115 @@ function submitForm() {
 }
 
 function displayAllMarkers() {
+  console.log("called");
+
+  var keyData = [];
+var valData = [];
 
   $.getJSON('markers.json',function(data) {
-          //success
-            //step 1: console.log the result
-            console.log(data);
-            //set boolean to true
-            loaded=true;
-            //
-            // var coordinates = data["coordinates"];
-            // console.log("latlng : "+coordinates);
-            // var color = data["color"];
-            // console.log("loaded color : "+color);
 
-            //var markers = [];
-
-            let markers = data["marker"];
-
-            // let color=data["color"];
-            // let name=data["name"];
-                for (i = 0; i < data.length; i++) {
-            let mLocLat = markers[i].coordinates.lat;
-            let mLocLng = markers[i].coordinates.lng;
-            let mColor = markers[i].color;
-            let mTitle = markers[i].title;
-            let username = markers[i].name;
+//     $.each(data, function(k, v){
+//     alert(v["name"]);
+// });
+$.each( data, function( key, val ) {
+  keyData.push(key);
+  valData.push(val);
+});
 
 
-                  var icon = "<svg version='1.1' id='Capa_1' xmlns='http://www.w3.org/2000/svg' x='0px' y='0px' viewBox='0 0 30 51' style='enable-background:new 0 0 30 51;' xml:space='preserve'> <path fill='"+mColor+"' d='M15,0.8C6.9,0.8,0.3,7.4,0.3,15.5c0,7.4,5.5,13.4,12.6,14.5v21h4.2V29.9c7.1-1,12.6-7.1,12.6-14.5 C29.7,7.4,23.1,0.8,15,0.8z M10.8,13.4c-2.3,0-4.2-1.9-4.2-4.2C6.6,6.9,8.5,5,10.8,5S15,6.9,15,9.2S13.1,13.4,10.8,13.4z'/><path fill = 'white' d='M15,9.2c0,2.3-1.9,4.2-4.2,4.2s-4.2-1.9-4.2-4.2C6.6,6.9,8.5,5,10.8,5S15,6.9,15,9.2z'/></svg>";
-                  var svgURL = "data:image/svg+xml;base64," + btoa(icon);
-                       // create icon
-                        //console.log(color[i]);
+   for (i = 0; i < data.length; i++) {
+ alert(keyData[i]+' = '+valData[i]);
+}
 
-                       var markerIcon = L.icon({
-                           iconUrl: svgURL,
-                           shadowUrl: 'sources/shadow.png',
-                           iconSize:     [19, 40], // size of the icon
-                           shadowSize:   [30, 30], // size of the shadow
-                           iconAnchor:   [12, 30], // point of the icon which will correspond to marker's location
-                           shadowAnchor: [10, 23],  // the same for the shadow
-                           popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
+      //   var availableTags = [];
+      //
+      // data = data[0];
+      // availableTags[0] = data["title"];
+      // availableTags[1] = data["name"];
+      // availableTags[2] = data["color"];
+     //console.log(availableTags[0]);
 
-                       });
-                  //var marker = L.marker([-73.5703754425049,45.490607239870464], {icon: markerIcon}).bindPopup("<b>Hello world!</b><br>I am a popup.").openPopup().addTo(map);
+     //console.log(data[0].name);
 
-                    itemMarkers = new L.marker(mLocLat, mLocLng, {icon: markerIcon}).bindPopup("<b>Hello world!</b><br>I am a popup.").addTo(map);
-                    map.addLayer(itemMarkers);
-                }
-          })
-          //fail
-          .fail(function() {
-            console.log( "error" );
-          });
+      //console.log( "JSON Data received, name is " + data.name);
+
+
+          //step 1: console.log the result
+         //console.log('name : '+data["name"]);
+          //set boolean to true
+          loaded=true;
+
+//console.log(obj);
+
+    //console.log(data.title);
+
+          var myObj = {
+            "title":"Fix pothole please",
+            "name":"Marie-Eve",
+            "color":"#5d81ff",
+            "coordinates":{"lat":-73.56318712234498,"lng":45.49554844820246}
+          }
+          var x = data.coordinates;
+          var col = data.color;
+          var tit = data.title;
+          var nam = data.name;
+          console.log(col);
+
+          //var x = data[0].title;
+          //console.log(x);
+
+          var markersData=data;
+          //console.log(markersData);
+          //console.log(markersData[1].title);
+
+        //   for (var i in markersData) {
+        //     console.log(markersData[i].name);
+        //     console.log(markersData[i].title);
+        //     console.log(markersData[i].color);
+        // }
+
+          for (i = 0; i < markersData.length; i++) {
+         //         marker = L.marker([coordinates[i][0], coordinates[i][1]]);
+         //         layerGroup.addLayer(marker);
+
+          }
+
+//           var mTitle ='Sauce';
+//           var username = 'Bro';
+// var markerColor ='red';
+
+                var icon = "<svg version='1.1' id='Capa_1' xmlns='http://www.w3.org/2000/svg' x='0px' y='0px' viewBox='0 0 30 51' style='enable-background:new 0 0 30 51;' xml:space='preserve'> <path fill='"+col+"' d='M15,0.8C6.9,0.8,0.3,7.4,0.3,15.5c0,7.4,5.5,13.4,12.6,14.5v21h4.2V29.9c7.1-1,12.6-7.1,12.6-14.5 C29.7,7.4,23.1,0.8,15,0.8z M10.8,13.4c-2.3,0-4.2-1.9-4.2-4.2C6.6,6.9,8.5,5,10.8,5S15,6.9,15,9.2S13.1,13.4,10.8,13.4z'/><path fill = 'white' d='M15,9.2c0,2.3-1.9,4.2-4.2,4.2s-4.2-1.9-4.2-4.2C6.6,6.9,8.5,5,10.8,5S15,6.9,15,9.2z'/></svg>";
+                var svgURL = "data:image/svg+xml;base64," + btoa(icon);
+                     //create icon
+                      //console.log(color[i]);
+
+                     var markerIcon = L.icon({
+                         iconUrl: svgURL,
+                         shadowUrl: 'sources/shadow.png',
+                         iconSize:     [19, 40], // size of the icon
+                         shadowSize:   [30, 30], // size of the shadow
+                         iconAnchor:   [12, 30], // point of the icon which will correspond to marker's location
+                         shadowAnchor: [10, 23],  // the same for the shadow
+                         popupAnchor:  [-3, -24] // point from which the popup should open relative to the iconAnchor
+
+                     });
+                //var marker = L.marker([-73.5703754425049,45.490607239870464], {icon: markerIcon}).bindPopup("<b>Hello world!</b><br>I am a popup.").openPopup().addTo(map);
+
+
+                 var customPopup ="<b>"+tit+"</b><br>Requested by "+nam+".";
+
+                bla = L.marker(x, {icon: markerIcon}).bindPopup(customPopup).addTo(map);
+
+                // Set popup wrapper to marker color
+                  document.documentElement.style.setProperty(`--color`, col);
+
+        })
+        //fail
+        .fail(function() {
+          console.log( "error" );
+        });
+      }
+
 
 
       // var allMarkersObjArray = [];//new Array();
@@ -465,7 +512,7 @@ function displayAllMarkers() {
 //
 //     var overlay = {'markers': layerGroup};
 //     L.control.layers(null, overlay).addTo(map);
-}
+
 </script>
   </body>
   </html>
