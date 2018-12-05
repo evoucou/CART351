@@ -1,51 +1,6 @@
 <!DOCTYPE html>
 <html>
 
-<?php
-
-// //check if there has been something posted to the server to be processed
-// if($_SERVER['REQUEST_METHOD'] == 'POST')
-// {
-// // need to process
-//  $title = $_POST['a_title'];
-//  $username = $_POST['a_username'];
-//  //$color = $_GET['PHP_markerColor'];
-//  //$locLng = $_GET['PHP_markerColor'];
-//  //$locLat = $_GET['PHP_markerColor'];
-//
-//
-//  if($_FILES) {
-//
-//    // NEW:: add into our db ....
-//      //The data from the text box is potentially unsafe; 'tainted'.
-//   	 //We use the sqlite_escape_string.
-//   	 //It escapes a string for use as a query parameter.
-//   	//This is common practice to avoid malicious sql injection attacks.
-//   	$title_es =$db->escapeString($title);
-//   	$username_es = $db->escapeString($username);
-//   //  $color_es = $db->escapeString($color);
-//   //  $locLng_es = $db->escapeString($locLng);
-//   //  $locLat_es = $db->escapeString($locLat);
-//
-//
-//     $queryInsert ="INSERT INTO markerTable(title, username, color, locLng, locLat)VALUES ('$title_es', '$username_es', 'bleu', '23', '45')";
-//     // again we do error checking when we try to execute our SQL statement on the db
-//   	$ok1 = $db->exec($queryInsert);
-//     // NOTE:: error messages WILL be sent back to JQUERY success function .....
-//   	if (!$ok1) {
-//       die("Cannot execute statement.");
-//       exit;
-//       }
-//       //send back success...
-//       echo "success";
-//       exit;
-//
-//  }//FILES
-// }//POST
-
-?>
-
-
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
@@ -84,6 +39,9 @@
 <!-- this demo plugin bundles the needed code from Esri Leaflet and Esri Leaflet Geocoder -->
 <script src="bootstrap-geocoder.js"></script>
 
+
+
+
   <!-- <script type="text/javascript" src="map.js"></script> -->
   <link rel="stylesheet" href="main.css"/>
 
@@ -95,22 +53,23 @@
                id="pinsvg" width="20p"></object> -->
     <img src="sources/plus.svg" id="newrequest" onclick="toggleNewReqMenu()"/>
     <img src="sources/logo.svg" id="logo"/><br>
-  <input type="text" placeholder="Search for places or addresses" id="searchAdress">
+  <input type="text" placeholder="Search for places or addresses" onfocus="Search for places or addresses" id="searchAdress">
   </div>
   <div id="errorMsg"></div>
   <button id="newPin" onclick="addNewPin()"><img src="sources/addPin.svg"/></button>
         <button id="finduser" onclick="relocate()"><img src="sources/userLoc.svg"/></button>
 
 
-        <div id="newReqMenuContainer">
+        <div id="newReqMenuContainer"><form id="reqForm">
             <div id="newReqTextBox">
           <h2>CREATE A REQUEST</h2>
           <input type="text" placeholder="Type in your request..." onfocus="this.style.color='black';" id="titleBox" maxlength = "40" name = "a_title" required>
           <input type="text" placeholder="What's your name?" onfocus="this.style.color='black';" id="nameBox" maxlength = "40" name = "a_username" required>
+          <input type="text" id="test">
         <button class="jscolor {width: 280, height: 260, position:'center' , onFineChange:'update(this)', valueElement:null, closable:true}" id="colorPicker">
           Choose your pin's color</button>
-  <button type="submit" name = "submit" onclick="submitForm()">Submit</button><br><br>
-  </div>
+  <button type="submit" name = "submit">Submit</button><br><br>
+</div></form>
   </div>
 
   <div id="map"></div>
@@ -121,6 +80,7 @@ var map = L.map('map').locate({setView: true, maxZoom: 16});
 var s = document.getElementById("newReqMenuContainer");
 var a = document.getElementById("errorMsg");
 var y = document.getElementById("finduser");
+
 //a.style.display="none";
 a.innerHTML = "";
 s.style.display="none";
@@ -132,12 +92,7 @@ var counter = 0;
 var formSubmitted = false;
 var layerGroup = new L.layerGroup().addTo(map);
 var markerColor;
-var titleInput;
-var nameInput;
-var bla = new L.marker;
-//var allMarkersObjArray = [];//new Array();
-//var allMarkersGeoJsonArray = [];//new Array();
-
+var permanentMarker = new L.marker;
 var tempMarker = new L.marker;
 
 function update(jscolor) {
@@ -208,7 +163,7 @@ return color;
 }
 
 
-displayAllMarkers();
+loadData();
 
 
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -293,10 +248,11 @@ function Dragpin(e,tempMarker) {
         if(state==1)
             {
                 a.innerHTML = "";
-        var latlng = map.mouseEventToLatLng(e.originalEvent);
+        latlng = map.mouseEventToLatLng(e.originalEvent);
           tempMarker._icon.style.transition = "transform 0.3s ease-out";
           tempMarker._shadow.style.transition = "transform 0.3s ease-out";
       	tempMarker.setLatLng(latlng);
+
       }
 
             }
@@ -315,12 +271,34 @@ function relocate() {
     })
 }
 
-$('#titleBox').on('input', function() {
-    //console.log("title : "+titleInput);
-});
 
 
-function submitForm() {
+
+//   var liveTitleInput;
+//   var liveNameInput;
+//
+// $('#nameBox').on('input', function() {
+//     //console.log("title : "+titleInput);
+//     //return liveTitleInput;
+//     liveTitleInput = document.getElementById("titleBox").value;
+//     return liveTitleInput;
+// });
+//
+// $('#titleBox').on('input', function() {
+//     //console.log("title : "+titleInput);
+//     liveNameInput = document.getElementById("nameBox").value;
+//     return liveNameInput;
+// });
+//
+// console.log(liveNameInput);
+
+
+ $("#reqForm").submit(function(e) {
+
+   //stop submit the form, we will post it manually.
+  event.preventDefault();
+
+  // if ((liveNameInput != "") && (liveTitleInput != "")) {
   console.log(state);
 
      state = 0;
@@ -330,6 +308,7 @@ function submitForm() {
 // if tempMarker becomes marker, then GEOJSON counts it. But if it stays tempMarker, then GeoJSON
 // does not count it, but marker stays the same...
 
+
      var geojsonFeature = {
      "type": "Feature",
          "properties": {},
@@ -338,6 +317,7 @@ function submitForm() {
              "coordinates": [latlng.lat, latlng.lng]
      }
  }
+
  L.geoJson(geojsonFeature, {
      pointToLayer: function(feature, latlng){
      tempMarker = L.marker(latlng, {
@@ -351,12 +331,14 @@ function submitForm() {
  }).addTo(map);
 
 
+
+
    s.style.display="none";
 
 
     latlng = tempMarker.getLatLng();
-    titleInput = document.getElementById("titleBox").value;
-    nameInput = document.getElementById("nameBox").value;
+    var titleInput = document.getElementById("titleBox").value;
+    var nameInput = document.getElementById("nameBox").value;
 
       var myJSON = { "title": titleInput, "name": nameInput, "color": markerColor, "coordinates": latlng};
       var markerData = JSON.stringify(myJSON);
@@ -370,18 +352,16 @@ function submitForm() {
            success: function (response) {console.log(response)},
            failure: function(response) {console.log(response)}
        });
-}
 
-function displayAllMarkers() {
-  console.log("called");
-
-
-  var keyData = [];
-var valData = [];
+       //loadData();
+// } else {
+//   alert("Please enter a title and a name.")
+// }
+});
 
 
 
-var availableTags = [];
+function loadData() {
 
   $.getJSON('markers.json',function(data) {
 
@@ -398,74 +378,65 @@ for(let property in data[i]){
   let obj = data[i][property];
   let marker = JSON.parse(obj.marker);
 
+  $('a_title').val(marker.title);
   console.log(marker.title);
-}
-  //console.log(test);
-  //console.log(obj.length);
-
-
-}
-
-
-data = data[0];
-availableTags[0] = data["title"];
-availableTags[1] = data["name"];
-availableTags[2] = data["color"];
-//console.log(availableTags[0]);
 
 
 
-   for (i = 0; i < data.length; i++) {
- //alert(keyData[i]+' = '+valData[i]);
-}
 
 
-      //console.log( "JSON Data received, name is " + data.name);
+  var icon = "<svg version='1.1' id='Capa_1' xmlns='http://www.w3.org/2000/svg' x='0px' y='0px' viewBox='0 0 30 51' style='enable-background:new 0 0 30 51;' xml:space='preserve'> <path fill='"+marker.color+"' d='M15,0.8C6.9,0.8,0.3,7.4,0.3,15.5c0,7.4,5.5,13.4,12.6,14.5v21h4.2V29.9c7.1-1,12.6-7.1,12.6-14.5 C29.7,7.4,23.1,0.8,15,0.8z M10.8,13.4c-2.3,0-4.2-1.9-4.2-4.2C6.6,6.9,8.5,5,10.8,5S15,6.9,15,9.2S13.1,13.4,10.8,13.4z'/><path fill = 'white' d='M15,9.2c0,2.3-1.9,4.2-4.2,4.2s-4.2-1.9-4.2-4.2C6.6,6.9,8.5,5,10.8,5S15,6.9,15,9.2z'/></svg>";
+  var svgURL = "data:image/svg+xml;base64," + btoa(icon);
+       //create icon
+        //console.log(color[i]);
+
+       var markerIcon = L.icon({
+           iconUrl: svgURL,
+           shadowUrl: 'sources/shadow.png',
+           iconSize:     [19, 40], // size of the icon
+           shadowSize:   [30, 30], // size of the shadow
+           iconAnchor:   [12, 30], // point of the icon which will correspond to marker's location
+           shadowAnchor: [10, 23],  // the same for the shadow
+           popupAnchor:  [-3, -24] // point from which the popup should open relative to the iconAnchor
+
+       });
+  //var marker = L.marker([-73.5703754425049,45.490607239870464], {icon: markerIcon}).bindPopup("<b>Hello world!</b><br>I am a popup.").openPopup().addTo(map);
+
+//console.log(marker.coordinates.lat);
+   var customPopup ="<b>"+marker.title+"</div></b><br>Requested by "+marker.name+".";
+
+  permanentMarker = L.marker([marker.coordinates.lng,marker.coordinates.lat], {icon: markerIcon}).bindPopup(customPopup).addTo(map);
+
+  // Set popup wrapper to marker color
+    document.documentElement.style.setProperty(`--color`, marker.color);
 
 
-          //step 1: console.log the result
-         //console.log('name : '+data["name"]);
-          //set boolean to true
+    // $('#a_title').autocomplete({
+    //     lookup: marker,
+    //     lookupLimit: 3,
+    //     onSelect: function (suggestion) {
+    //         $('#test').val(marker.title);//set zipcode textfield with the data of state clicked
+    //     }
+    // });
+
+
+    var countries = [
+       { value: 'Andorra', data: 'AD' },
+       // ...
+       { value: 'Zimbabwe', data: 'ZZ' }
+    ];
+
+    $('#a_title').autocomplete({
+        lookup: countries,
+        onSelect: function (suggestion) {
+            alert('You selected: ' + suggestion.value + ', ' + suggestion.data);
+        }
+    });
+
+}// second for loop
+} //first for loop
+
           loaded=true;
-
-//console.log(obj);
-
-    //console.log(data.title);
-
-          var myObj = {
-            "title":"Fix pothole please",
-            "name":"Marie-Eve",
-            "color":"#5d81ff",
-            "coordinates":{"lat":-73.56318712234498,"lng":45.49554844820246}
-          }
-          var x = data.coordinates;
-          var col = data.color;
-          var tit = data.title;
-          var nam = data.name;
-          console.log(col);
-
-          //var x = data[0].title;
-          //console.log(x);
-
-          var markersData=data;
-          //console.log(markersData);
-          //console.log(markersData[1].title);
-
-        //   for (var i in markersData) {
-        //     console.log(markersData[i].name);
-        //     console.log(markersData[i].title);
-        //     console.log(markersData[i].color);
-        // }
-
-          for (i = 0; i < markersData.length; i++) {
-         //         marker = L.marker([coordinates[i][0], coordinates[i][1]]);
-         //         layerGroup.addLayer(marker);
-
-          }
-
-//           var mTitle ='Sauce';
-//           var username = 'Bro';
-// var markerColor ='red';
 
         })
         //fail
