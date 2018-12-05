@@ -253,12 +253,21 @@ function createSVG(markerColor) {
            shadowSize:   [30, 30], // size of the shadow
            iconAnchor:   [12, 30], // point of the icon which will correspond to marker's location
            shadowAnchor: [10, 23],  // the same for the shadow
-           popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
+           popupAnchor:  [-3, -24] // point from which the popup should open relative to the iconAnchor
        });
+
+var title = 'Love';
+var name ='stacy';
     //L.marker([51.5, -0.09],{icon: markerIcon}).addTo(map);
+ var customPopup ="<b>"+title+"</b><br>Requested by "+name+".";
 
-  tempMarker = L.marker(latlng, {icon: markerIcon}).addTo(map);
+  tempMarker = L.marker(latlng, {icon: markerIcon}).bindPopup(customPopup).addTo(map);
 
+// Set popup wrapper to marker color
+  document.documentElement.style.setProperty(`--color`, markerColor);
+//
+//customPopup.setAttribute('style');
+//var popup = document.getElementById('popupWrapper');
 }
 
  function addNewPin() {
@@ -301,9 +310,6 @@ function Dragpin(e,tempMarker) {
       }
 
             }
-    function onPopupOpen() {
-  tempMarker.openPopup();
-    }
 
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 function onLocationError(e) {
@@ -421,7 +427,7 @@ function displayAllMarkers() {
                        });
                   //var marker = L.marker([-73.5703754425049,45.490607239870464], {icon: markerIcon}).bindPopup("<b>Hello world!</b><br>I am a popup.").openPopup().addTo(map);
 
-                    itemMarkers = new L.marker(mLocLat, mLocLng, {icon: markerIcon}).bindPopup("<b>Hello world!</b><br>I am a popup.").openPopup().addTo(map);
+                    itemMarkers = new L.marker(mLocLat, mLocLng, {icon: markerIcon}).bindPopup("<b>Hello world!</b><br>I am a popup.").addTo(map);
                     map.addLayer(itemMarkers);
                 }
           })

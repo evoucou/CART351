@@ -25,11 +25,23 @@ font-family: sans-serif;
 font-weight: bolder;
 }
 
-h3 {
-  margin-top: -9px;
-  font-size: 15px;
-  color: #E42320;
-  font-family: sans-serif;
+
+.leaflet-popup-content {
+    text-align: center;
+    padding: 10px;
+}
+
+:root {
+  --color: '----';
+}
+
+.leaflet-popup-tip,
+.leaflet-popup-content-wrapper {
+    background-color: red;
+    -moz-box-shadow:0 7px 8px -6px rgba(0, 0, 0, 0.3);
+    -webkit-box-shadow:0 7px 8px -6px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 7px 7px -6px rgba(0, 0, 0, 0.3);
+    background-color: var(--color);
 }
 
 
