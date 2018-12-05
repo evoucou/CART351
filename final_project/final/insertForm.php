@@ -39,9 +39,6 @@
 <!-- this demo plugin bundles the needed code from Esri Leaflet and Esri Leaflet Geocoder -->
 <script src="bootstrap-geocoder.js"></script>
 
-
-
-
   <!-- <script type="text/javascript" src="map.js"></script> -->
   <link rel="stylesheet" href="main.css"/>
 
@@ -102,33 +99,9 @@ function update(jscolor) {
     //setIcon();
     map.removeLayer(tempMarker);
     createSVG(markerColor);
-
 }
 
 
-
- //document.getElementById("newPin").addEventListener("click", AddNewPin())
-//map.on('locationfound', onLocationFound);
-//map.locate({setView: true, maxZoom: 16});
-//map.addControl(searchControl);
-//Initially we locate the user's position to load the map around
-/*Longitude of Montreal: -73.567256
-Latitude of Montreal: 45.5016889*/
-/*
-var a = document.getElementById("pinsvg");
- // It's important to add an load event listener to the object,
- // as it will load the svg doc asynchronously
- a.addEventListener("load",function(){
-   console.log("loaded");
-     // get the inner DOM of alpha.svg
-     var svgDoc = a.contentDocument;
-     // get the inner element by id
-     var delta = svgDoc.getElementById("delta");
-     // add behaviour
-     delta.addEventListener("mousedown",function(){
-             alert('hello world!')
-     }, false);
- }, false);*/
 var search = BootstrapGeocoder.search({
   inputTag: 'searchAdress',
 }).addTo(map);
@@ -138,21 +111,13 @@ L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={
     id: 'mapbox.streets',
     accessToken: 'pk.eyJ1IjoiZXZvdWNvdSIsImEiOiJjam83ZnJrb3UwZWI2M3FvOW0zNzIwZXRnIn0.2HBTS6fDGxp1pjp54zflnw'
 }).addTo(map);
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 function centerOnMarker(map, tempMarker) {
   var latLngs = [ tempMarker.getLatLng() ];
   var markerBounds = L.latLngBounds(latLngs);
   map.fitBounds(markerBounds);
 }
-// CODE TO TRY FOR REMOVING MARKER BEFORE A NEW ONE
-// leafletData.getMap().then(function (map) {
-// map.eachLayer(function(layer) {
-//   // Remove all layers except the background (tilelayer)
-//   // EDIT: and the main marker with the custom property
-//   if (!(layer instanceof L.TileLayer) && layer.options.myCustomProperty != 'myMainMarker')) {
-//     map.removeLayer(layer);
-//   }
-// });
+
 function getRandomColor() {
 var letters = '0123456789ABCDEF';
 var color = '#';
@@ -162,11 +127,8 @@ color += letters[Math.floor(Math.random() * 16)];
 return color;
 }
 
-
 loadData();
 
-
-        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 function toggleNewReqMenu() {
   if (state != 0) {
     a.innerHTML = "";
@@ -175,18 +137,13 @@ function toggleNewReqMenu() {
 
     centerOnMarker(map,tempMarker);
 
-  //document.getElementById("st0Id").style.fill = "rgb(255,30,0)";
-  //console.log(st0Id);
-
 if (s.style.display === "none") {
     s.style.display = "block";
-    //Initial values
-      //map.locate({setView: true});
+
     document.getElementById('titleBox').value = '';
     document.getElementById('nameBox').value = '';
     document.getElementById('colorPicker').style.backgroundColor = markerColor;
-//CODE FOR COLOR
-    //document.getElementById('test').path.style.fill = randomStartColor;
+
 } else {
     s.style.display = "none";
     state = 1;
@@ -195,7 +152,6 @@ if (s.style.display === "none") {
   a.innerHTML = "No pin has been detected. You first need to create a pin and choose its location on the map.";
 }
 }
-        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 function createSVG(markerColor) {
 
@@ -232,13 +188,8 @@ function createPin(ev) {
 
    y.style.opacity="1";
         latlng = map.mouseEventToLatLng(ev.originalEvent);
-        //console.log(latlng.lat + ', ' + latlng.lng);
-// if (!formSubmitted){
-//         map.removeLayer(marker);
-//         formSubmitted = false;
-//       }
+
   map.removeLayer(tempMarker);
-            //(latlng, {icon: markerIcon})
 
             createSVG(markerColor)
             map.off('click',createPin);
@@ -252,45 +203,19 @@ function Dragpin(e,tempMarker) {
           tempMarker._icon.style.transition = "transform 0.3s ease-out";
           tempMarker._shadow.style.transition = "transform 0.3s ease-out";
       	tempMarker.setLatLng(latlng);
-
       }
-
             }
 
-        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 function onLocationError(e) {
     alert(e.message);
 }
 
 function relocate() {
-    //instantiatePin(marker);
-    //console.log(myMarker.latlng);
     map.locate({setView: true})
     map.on('locationfound', function(ev){
             tempMarker.setLatLng(ev.latlng);
     })
 }
-
-
-
-
-//   var liveTitleInput;
-//   var liveNameInput;
-//
-// $('#nameBox').on('input', function() {
-//     //console.log("title : "+titleInput);
-//     //return liveTitleInput;
-//     liveTitleInput = document.getElementById("titleBox").value;
-//     return liveTitleInput;
-// });
-//
-// $('#titleBox').on('input', function() {
-//     //console.log("title : "+titleInput);
-//     liveNameInput = document.getElementById("nameBox").value;
-//     return liveNameInput;
-// });
-//
-// console.log(liveNameInput);
 
 
  $("#reqForm").submit(function(e) {
@@ -303,11 +228,6 @@ function relocate() {
 
      state = 0;
      y.style.opacity="0.3";
-
-     //var marker = tempMarker;
-// if tempMarker becomes marker, then GEOJSON counts it. But if it stays tempMarker, then GeoJSON
-// does not count it, but marker stays the same...
-
 
      var geojsonFeature = {
      "type": "Feature",
@@ -353,10 +273,6 @@ function relocate() {
            failure: function(response) {console.log(response)}
        });
 
-       //loadData();
-// } else {
-//   alert("Please enter a title and a name.")
-// }
 });
 
 
@@ -365,14 +281,6 @@ function loadData() {
 
   $.getJSON('markers.json',function(data) {
 
-//     $.each(data, function(k, v){
-//     alert(v["name"]);
-// });
-// $.each( data, function( key, val ) {
-//   keyData.push(key);
-//   valData.push(val);
-// })
-//console.log("test:: "+data[0]);
 for(let i = 0; i<data.length;i++){
 for(let property in data[i]){
   let obj = data[i][property];
@@ -380,10 +288,6 @@ for(let property in data[i]){
 
   $('a_title').val(marker.title);
   console.log(marker.title);
-
-
-
-
 
   var icon = "<svg version='1.1' id='Capa_1' xmlns='http://www.w3.org/2000/svg' x='0px' y='0px' viewBox='0 0 30 51' style='enable-background:new 0 0 30 51;' xml:space='preserve'> <path fill='"+marker.color+"' d='M15,0.8C6.9,0.8,0.3,7.4,0.3,15.5c0,7.4,5.5,13.4,12.6,14.5v21h4.2V29.9c7.1-1,12.6-7.1,12.6-14.5 C29.7,7.4,23.1,0.8,15,0.8z M10.8,13.4c-2.3,0-4.2-1.9-4.2-4.2C6.6,6.9,8.5,5,10.8,5S15,6.9,15,9.2S13.1,13.4,10.8,13.4z'/><path fill = 'white' d='M15,9.2c0,2.3-1.9,4.2-4.2,4.2s-4.2-1.9-4.2-4.2C6.6,6.9,8.5,5,10.8,5S15,6.9,15,9.2z'/></svg>";
   var svgURL = "data:image/svg+xml;base64," + btoa(icon);
@@ -400,25 +304,13 @@ for(let property in data[i]){
            popupAnchor:  [-3, -24] // point from which the popup should open relative to the iconAnchor
 
        });
-  //var marker = L.marker([-73.5703754425049,45.490607239870464], {icon: markerIcon}).bindPopup("<b>Hello world!</b><br>I am a popup.").openPopup().addTo(map);
 
-//console.log(marker.coordinates.lat);
    var customPopup ="<b>"+marker.title+"</div></b><br>Requested by "+marker.name+".";
 
   permanentMarker = L.marker([marker.coordinates.lng,marker.coordinates.lat], {icon: markerIcon}).bindPopup(customPopup).addTo(map);
 
   // Set popup wrapper to marker color
     document.documentElement.style.setProperty(`--color`, marker.color);
-
-
-    // $('#a_title').autocomplete({
-    //     lookup: marker,
-    //     lookupLimit: 3,
-    //     onSelect: function (suggestion) {
-    //         $('#test').val(marker.title);//set zipcode textfield with the data of state clicked
-    //     }
-    // });
-
 
     var countries = [
        { value: 'Andorra', data: 'AD' },
@@ -437,44 +329,12 @@ for(let property in data[i]){
 } //first for loop
 
           loaded=true;
-
         })
         //fail
         .fail(function() {
           console.log( "error" );
         });
       }
-
-
-
-      // var allMarkersObjArray = [];//new Array();
-      // var allMarkersGeoJsonArray = [];//new Array();
-      // $.each(map._layers, function (ml) {
-      //     //console.log(map._layers);
-      //     if (map._layers[ml].feature) {
-      //         allMarkersObjArray.push(this)
-      //                                 allMarkersGeoJsonArray.push(JSON.stringify(this.toGeoJSON()))
-      //     }
-      // })
-
-
-             //console.log("how many markers : "+allMarkersGeoJsonArray.length);
-
-    //console.log(allMarkersObjArray);
-    //alert("total Markers : " + allMarkersGeoJsonArray.length + "\n\n" + allMarkersGeoJsonArray + "\n\n Also see your console for object view of this array" );
-
-// var coordinates = [
-//   [],
-//   []
-// ]
-//
-//     for (i = 0; i < coordinates.length; i++) {
-//         marker = L.marker([coordinates[i][0], coordinates[i][1]]);
-//         layerGroup.addLayer(marker);
-//     }
-//
-//     var overlay = {'markers': layerGroup};
-//     L.control.layers(null, overlay).addTo(map);
 
 </script>
   </body>
