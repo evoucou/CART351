@@ -375,33 +375,50 @@ function submitForm() {
 function displayAllMarkers() {
   console.log("called");
 
+
   var keyData = [];
 var valData = [];
+
+
+
+var availableTags = [];
 
   $.getJSON('markers.json',function(data) {
 
 //     $.each(data, function(k, v){
 //     alert(v["name"]);
 // });
-$.each( data, function( key, val ) {
-  keyData.push(key);
-  valData.push(val);
-});
+// $.each( data, function( key, val ) {
+//   keyData.push(key);
+//   valData.push(val);
+// })
+//console.log("test:: "+data[0]);
+for(let i = 0; i<data.length;i++){
+for(let property in data[i]){
+  let obj = data[i][property];
+  let marker = JSON.parse(obj.marker);
+
+  console.log(marker.title);
+}
+  //console.log(test);
+  //console.log(obj.length);
+
+
+}
+
+
+data = data[0];
+availableTags[0] = data["title"];
+availableTags[1] = data["name"];
+availableTags[2] = data["color"];
+//console.log(availableTags[0]);
+
 
 
    for (i = 0; i < data.length; i++) {
- alert(keyData[i]+' = '+valData[i]);
+ //alert(keyData[i]+' = '+valData[i]);
 }
 
-      //   var availableTags = [];
-      //
-      // data = data[0];
-      // availableTags[0] = data["title"];
-      // availableTags[1] = data["name"];
-      // availableTags[2] = data["color"];
-     //console.log(availableTags[0]);
-
-     //console.log(data[0].name);
 
       //console.log( "JSON Data received, name is " + data.name);
 
@@ -449,31 +466,6 @@ $.each( data, function( key, val ) {
 //           var mTitle ='Sauce';
 //           var username = 'Bro';
 // var markerColor ='red';
-
-                var icon = "<svg version='1.1' id='Capa_1' xmlns='http://www.w3.org/2000/svg' x='0px' y='0px' viewBox='0 0 30 51' style='enable-background:new 0 0 30 51;' xml:space='preserve'> <path fill='"+col+"' d='M15,0.8C6.9,0.8,0.3,7.4,0.3,15.5c0,7.4,5.5,13.4,12.6,14.5v21h4.2V29.9c7.1-1,12.6-7.1,12.6-14.5 C29.7,7.4,23.1,0.8,15,0.8z M10.8,13.4c-2.3,0-4.2-1.9-4.2-4.2C6.6,6.9,8.5,5,10.8,5S15,6.9,15,9.2S13.1,13.4,10.8,13.4z'/><path fill = 'white' d='M15,9.2c0,2.3-1.9,4.2-4.2,4.2s-4.2-1.9-4.2-4.2C6.6,6.9,8.5,5,10.8,5S15,6.9,15,9.2z'/></svg>";
-                var svgURL = "data:image/svg+xml;base64," + btoa(icon);
-                     //create icon
-                      //console.log(color[i]);
-
-                     var markerIcon = L.icon({
-                         iconUrl: svgURL,
-                         shadowUrl: 'sources/shadow.png',
-                         iconSize:     [19, 40], // size of the icon
-                         shadowSize:   [30, 30], // size of the shadow
-                         iconAnchor:   [12, 30], // point of the icon which will correspond to marker's location
-                         shadowAnchor: [10, 23],  // the same for the shadow
-                         popupAnchor:  [-3, -24] // point from which the popup should open relative to the iconAnchor
-
-                     });
-                //var marker = L.marker([-73.5703754425049,45.490607239870464], {icon: markerIcon}).bindPopup("<b>Hello world!</b><br>I am a popup.").openPopup().addTo(map);
-
-
-                 var customPopup ="<b>"+tit+"</b><br>Requested by "+nam+".";
-
-                bla = L.marker(x, {icon: markerIcon}).bindPopup(customPopup).addTo(map);
-
-                // Set popup wrapper to marker color
-                  document.documentElement.style.setProperty(`--color`, col);
 
         })
         //fail
