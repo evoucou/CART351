@@ -170,7 +170,7 @@ function createSVG(markerColor) {
            shadowSize:   [30, 30], // size of the shadow
            iconAnchor:   [12, 30], // point of the icon which will correspond to marker's location
            shadowAnchor: [10, 23],  // the same for the shadow
-           popupAnchor:  [-3, -24] // point from which the popup should open relative to the iconAnchor
+           popupAnchor:  [-3, -22] // point from which the popup should open relative to the iconAnchor
        });
 
   tempMarker = L.marker(latlng, {icon: markerIcon}).addTo(map);
@@ -286,57 +286,67 @@ function relocate() {
 // };
 
 
+function duplicateMarker() {
+  console.log("clicked");
+}
 
 
 function loadData() {
 
-
-  var options = {
-    url: "markers.json",
-
-    listLocation: "marker",
-
-    getValue: "title",
-
-    list: {
-      onSelectItemEvent: function() {
-  			var value = $("#titleBox").getSelectedItemData().color;
-
-  			$("#colorPicker").val(value).trigger("change");
-  		},
-  		match: {
-  			enabled: true
-  		},
-      showAnimation: {
-  type: "slide", //normal|slide|fade
-  time: 400,
-  callback: function() {}
-},
-
-hideAnimation: {
-  type: "slide", //normal|slide|fade
-  time: 400,
-  callback: function() {}
-}
-  	}
-  };
+  //  var options = {url: "test.json", listLocation: "markers",getValue: "name"};
+  var options = {url: "markers.json",getValue: "title",list: {match: {enabled: true}}};
 
   $("#titleBox").easyAutocomplete(options);
+
+//   var options = {
+//     url: "markers.json",
+//
+//     listLocation: "marker",
+//
+//     getValue: "title",
+//
+//     list: {
+//       onSelectItemEvent: function() {
+//   			var value = $("#titleBox").getSelectedItemData().color;
+//
+//   			$("#colorPicker").val(value).trigger("change");
+//   		},
+//   		match: {
+//   			enabled: true
+//   		},
+//       showAnimation: {
+//   type: "slide", //normal|slide|fade
+//   time: 400,
+//   callback: function() {}
+// },
+//
+// hideAnimation: {
+//   type: "slide", //normal|slide|fade
+//   time: 400,
+//   callback: function() {}
+// }
+//   	}
+//   };
+//
+//   $("#titleBox").easyAutocomplete(options);
 
 
   $.getJSON('markers.json',function(data) {
 
+// for(let i = 0; i<data.length;i++){
+// var customPopup;
+//
+// for(let property in data[i]){
+//   let obj = data[i][property];
+//   let marker = JSON.parse(obj.marker);
 
-
-for(let i = 0; i<data.length;i++){
-for(let property in data[i]){
-  let obj = data[i][property];
-  let marker = JSON.parse(obj.marker);
+for(let i=0; i< data.length; i++){
+  console.log(data[i].color);
 
   // $('#titleBox').val(marker.title);
-  // console.log(marker.title);
+  console.log(data[i].title);
 
-  var icon = "<svg version='1.1' id='Capa_1' xmlns='http://www.w3.org/2000/svg' x='0px' y='0px' viewBox='0 0 30 51' style='enable-background:new 0 0 30 51;' xml:space='preserve'> <path fill='"+marker.color+"' d='M15,0.8C6.9,0.8,0.3,7.4,0.3,15.5c0,7.4,5.5,13.4,12.6,14.5v21h4.2V29.9c7.1-1,12.6-7.1,12.6-14.5 C29.7,7.4,23.1,0.8,15,0.8z M10.8,13.4c-2.3,0-4.2-1.9-4.2-4.2C6.6,6.9,8.5,5,10.8,5S15,6.9,15,9.2S13.1,13.4,10.8,13.4z'/><path fill = 'white' d='M15,9.2c0,2.3-1.9,4.2-4.2,4.2s-4.2-1.9-4.2-4.2C6.6,6.9,8.5,5,10.8,5S15,6.9,15,9.2z'/></svg>";
+  var icon = "<svg version='1.1' id='Capa_1' xmlns='http://www.w3.org/2000/svg' x='0px' y='0px' viewBox='0 0 30 51' style='enable-background:new 0 0 30 51;' xml:space='preserve'> <path fill='"+data[i].color+"' d='M15,0.8C6.9,0.8,0.3,7.4,0.3,15.5c0,7.4,5.5,13.4,12.6,14.5v21h4.2V29.9c7.1-1,12.6-7.1,12.6-14.5 C29.7,7.4,23.1,0.8,15,0.8z M10.8,13.4c-2.3,0-4.2-1.9-4.2-4.2C6.6,6.9,8.5,5,10.8,5S15,6.9,15,9.2S13.1,13.4,10.8,13.4z'/><path fill = 'white' d='M15,9.2c0,2.3-1.9,4.2-4.2,4.2s-4.2-1.9-4.2-4.2C6.6,6.9,8.5,5,10.8,5S15,6.9,15,9.2z'/></svg>";
   var svgURL = "data:image/svg+xml;base64," + btoa(icon);
        //create icon
         //console.log(color[i]);
@@ -348,19 +358,20 @@ for(let property in data[i]){
            shadowSize:   [30, 30], // size of the shadow
            iconAnchor:   [12, 30], // point of the icon which will correspond to marker's location
            shadowAnchor: [10, 23],  // the same for the shadow
-           popupAnchor:  [-3, -24] // point from which the popup should open relative to the iconAnchor
+           popupAnchor:  [-3, -22] // point from which the popup should open relative to the iconAnchor
 
        });
 
-   var customPopup ="<b>"+marker.title+"</div></b><br>Requested by "+marker.name+".";
+    document.documentElement.style.setProperty(`--color`, data[i].color);
 
-  permanentMarker = L.marker([marker.coordinates.lng,marker.coordinates.lat], {icon: markerIcon}).bindPopup(customPopup).addTo(map);
+   customPopup ="<p style='font-size:15px;font-weight:bold;margin-bottom:0px;line-height:14px;margin-bottom:4px;'>"+data[i].title+"</p>Requested by <b>"+data[i].name+"</b>.<br><button id='duplicateButton' onclick='duplicateMarker()'>Duplicate Marker</button>";
+
+  permanentMarker = L.marker([data[i].coordinates.lng,data[i].coordinates.lat], {icon: markerIcon}).bindPopup(customPopup).addTo(map);
 
   // Set popup wrapper to marker color
-    document.documentElement.style.setProperty(`--color`, marker.color);
 
 }// second for loop
-} //first for loop
+//first for loop
 
 
 // var options = {
@@ -382,6 +393,7 @@ for(let property in data[i]){
           console.log( "error" );
         });
       }
+
 
 </script>
   </body>
