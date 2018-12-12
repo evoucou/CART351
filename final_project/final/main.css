@@ -168,7 +168,7 @@ text-align: center;
 
 }
 
-#titleBox, #nameBox, #colorPicker, #submitButton {
+#titleBox, #nameBox, #colorPicker, #submitButton, #disabledPicker {
   color: #ccc;
   font-size: 14px;
 
@@ -183,6 +183,7 @@ text-align: center;
   background-color: white;
   padding-left: 7px;
 }
+
 
 button {
   box-sizing: border-box;

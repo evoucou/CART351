@@ -69,7 +69,7 @@
           <input type="search" placeholder="Type in your request..." onfocus="this.style.color='black';" id="titleBox" maxlength = "40" name = "a_title" required>
           <input type="text" placeholder="What's your name?" onfocus="this.style.color='black';" id="nameBox" maxlength = "40" name = "a_username" required>
         <button class="jscolor {width: 280, height: 260, position:'center' , onFineChange:'update(this)', valueElement:null, closable:true}" id="colorPicker">
-          Choose your pin's color</button>
+          Choose your marker's color</button>
   <button type="submit" name = "submit">Submit</button><br><br>
 </div></form>
   </div>
@@ -96,14 +96,17 @@ var layerGroup = new L.layerGroup().addTo(map);
 var markerColor;
 var permanentMarker = new L.marker;
 var tempMarker = new L.marker;
+var disabledPicker = false;
 
 function update(jscolor) {
+  if (!disabledPicker) {
     // Marker has color that user choses
     markerColor = '#' + jscolor;
     console.log('markerColor in update : '+markerColor);
     //setIcon();
     map.removeLayer(tempMarker);
     createSVG(markerColor);
+  }
 }
 
 
@@ -136,6 +139,13 @@ loadData();
 
 function toggleNewReqMenu() {
   if (state != 0) {
+
+
+      disabledPicker = false;
+      document.getElementById('colorPicker').style.backgroundColor = markerColor;
+      document.getElementById('colorPicker').style.opacity = 1;
+      document.getElementById('colorPicker').innerHTML = "Choose your marker's color";
+
     a.innerHTML = "";
     state = 2;
       map.off('click',function(e){Dragpin(e,tempMarker);});
@@ -298,8 +308,28 @@ function duplicateMarker() {
 
 function loadData() {
 
+
+
   //  var options = {url: "test.json", listLocation: "markers",getValue: "name"};
-  var options = {url: "markers.json",getValue: "title",list: {match: {enabled: true}}};
+  var options = {url: "markers.json",getValue: "title",
+
+  list: {
+    match: {enabled: true},
+
+    onSelectItemEvent: function() {
+        var selectedMarkerColor = $("#titleBox").getSelectedItemData().color;
+        markerColor = selectedMarkerColor;
+
+  //Marker needs to be the same color.
+  map.removeLayer(tempMarker);
+  createSVG(markerColor);
+document.getElementById('colorPicker').style.backgroundColor = markerColor;
+document.getElementById('colorPicker').style.opacity = 0.4;
+document.getElementById('colorPicker').innerHTML = "Already an assigned color for this request";
+disabledPicker = true;
+    },
+
+  }};
 
   $("#titleBox").easyAutocomplete(options);
 
@@ -358,7 +388,7 @@ for(let i=0; i< data.length; i++){
 //Parsing coordinates back as we stringifyed them before
 let parsedLatlng = JSON.parse(data[i].coordinates);
 
-   customPopup ="<p style='font-size:15px;font-weight:bold;margin-bottom:0px;line-height:14px;margin-bottom:4px;'>"+data[i].title+"</p>Requested by <b>"+data[i].name+"</b>.<br><button id='duplicateButton' onclick='duplicateMarker()'>Duplicate Marker</button>";
+   customPopup ="<p style='font-size:15px;font-weight:bold;margin-bottom:0px;line-height:14px;margin-bottom:4px;'>"+data[i].title+"</p>Requested by <b>"+data[i].name+"</b>.<br><button id='duplicateButton' onclick='duplicateMarker()'>Duplicate Marker</button><br>(Function not yet available)";
 
   permanentMarker = L.marker([parsedLatlng.lng, parsedLatlng.lat], {icon: markerIcon}).bindPopup(customPopup).addTo(map);
 
