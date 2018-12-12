@@ -18,7 +18,5 @@
 
     echo("success");
     exit;
-
-
   }
   ?>

@@ -66,7 +66,7 @@
         <div id="newReqMenuContainer"><form id="reqForm">
             <div id="newReqTextBox">
           <h2>CREATE A REQUEST</h2>
-          <input type="text" placeholder="Type in your request..." onfocus="this.style.color='black';" id="titleBox" maxlength = "40" name = "a_title" required>
+          <input type="search" placeholder="Type in your request..." onfocus="this.style.color='black';" id="titleBox" maxlength = "40" name = "a_title" required>
           <input type="text" placeholder="What's your name?" onfocus="this.style.color='black';" id="nameBox" maxlength = "40" name = "a_username" required>
         <button class="jscolor {width: 280, height: 260, position:'center' , onFineChange:'update(this)', valueElement:null, closable:true}" id="colorPicker">
           Choose your pin's color</button>
@@ -181,7 +181,7 @@ function createSVG(markerColor) {
          state = 1;
          //If there was one, the error message disappears.
         map.on('click',createPin);
-        a.innerHTML = "";
+        a.innerHTML = "Click anywhere on the map to add a pin. Click again to drag it.";
 // Create a new random color for each new pin
           markerColor = getRandomColor();
         } else {
@@ -190,6 +190,7 @@ console.log("cannot create pin");
         }
     }
 function createPin(ev) {
+  a.innerHTML = "";
 
    y.style.opacity="1";
         latlng = map.mouseEventToLatLng(ev.originalEvent);
@@ -261,12 +262,16 @@ function relocate() {
    s.style.display="none";
 
 
-    latlng = tempMarker.getLatLng();
+    latlng = JSON.stringify(tempMarker.getLatLng());
     var titleInput = document.getElementById("titleBox").value;
     var nameInput = document.getElementById("nameBox").value;
 
-      var myJSON = { "title": titleInput, "name": nameInput, "color": markerColor, "coordinates": latlng};
-      var markerData = JSON.stringify(myJSON);
+    // var strTitle = JSON.stringify(titleInput);
+    // var strName = JSON.stringify(nameInput);
+    // var strColor = JSON.stringify(markerColor);
+    // var strLatlng = JSON.stringify(latlng);
+
+      var markerData = { "title": titleInput, "name": nameInput, "color": markerColor, "coordinates": latlng};
       console.log(markerData);
 
      $.ajax
@@ -298,6 +303,7 @@ function loadData() {
 
   $("#titleBox").easyAutocomplete(options);
 
+
 //   var options = {
 //     url: "markers.json",
 //
@@ -314,17 +320,6 @@ function loadData() {
 //   		match: {
 //   			enabled: true
 //   		},
-//       showAnimation: {
-//   type: "slide", //normal|slide|fade
-//   time: 400,
-//   callback: function() {}
-// },
-//
-// hideAnimation: {
-//   type: "slide", //normal|slide|fade
-//   time: 400,
-//   callback: function() {}
-// }
 //   	}
 //   };
 //
@@ -341,10 +336,6 @@ function loadData() {
 //   let marker = JSON.parse(obj.marker);
 
 for(let i=0; i< data.length; i++){
-  console.log(data[i].color);
-
-  // $('#titleBox').val(marker.title);
-  console.log(data[i].title);
 
   var icon = "<svg version='1.1' id='Capa_1' xmlns='http://www.w3.org/2000/svg' x='0px' y='0px' viewBox='0 0 30 51' style='enable-background:new 0 0 30 51;' xml:space='preserve'> <path fill='"+data[i].color+"' d='M15,0.8C6.9,0.8,0.3,7.4,0.3,15.5c0,7.4,5.5,13.4,12.6,14.5v21h4.2V29.9c7.1-1,12.6-7.1,12.6-14.5 C29.7,7.4,23.1,0.8,15,0.8z M10.8,13.4c-2.3,0-4.2-1.9-4.2-4.2C6.6,6.9,8.5,5,10.8,5S15,6.9,15,9.2S13.1,13.4,10.8,13.4z'/><path fill = 'white' d='M15,9.2c0,2.3-1.9,4.2-4.2,4.2s-4.2-1.9-4.2-4.2C6.6,6.9,8.5,5,10.8,5S15,6.9,15,9.2z'/></svg>";
   var svgURL = "data:image/svg+xml;base64," + btoa(icon);
@@ -364,9 +355,12 @@ for(let i=0; i< data.length; i++){
 
     document.documentElement.style.setProperty(`--color`, data[i].color);
 
+//Parsing coordinates back as we stringifyed them before
+let parsedLatlng = JSON.parse(data[i].coordinates);
+
    customPopup ="<p style='font-size:15px;font-weight:bold;margin-bottom:0px;line-height:14px;margin-bottom:4px;'>"+data[i].title+"</p>Requested by <b>"+data[i].name+"</b>.<br><button id='duplicateButton' onclick='duplicateMarker()'>Duplicate Marker</button>";
 
-  permanentMarker = L.marker([data[i].coordinates.lng,data[i].coordinates.lat], {icon: markerIcon}).bindPopup(customPopup).addTo(map);
+  permanentMarker = L.marker([parsedLatlng.lng, parsedLatlng.lat], {icon: markerIcon}).bindPopup(customPopup).addTo(map);
 
   // Set popup wrapper to marker color
 
