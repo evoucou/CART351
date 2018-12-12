@@ -134,7 +134,7 @@ position: fixed;
     border: 2px solid rgba(230, 230, 230, 0.1);
     border-radius: 10px;
     background-color: white;
-    background-image: url('sources/searchicon.svg');
+    background-image: url('searchicon.svg');
     background-repeat: no-repeat;
     padding-left: 30px;
 }

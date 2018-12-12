@@ -21,7 +21,7 @@
   <script src="https://unpkg.com/esri-leaflet-geocoder"></script>
 
   <!-- Jscolor picker -->
-  <script src="jscolor.js"></script>
+  <script src="lib/jscolor.js"></script>
 
   <!-- Bootstrap search -->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
@@ -37,13 +37,13 @@
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 
   <!-- this demo plugin bundles the needed code from Esri Leaflet and Esri Leaflet Geocoder -->
-  <script src="bootstrap-geocoder.js"></script>
+  <script src="lib/bootstrap-geocoder.js"></script>
 
   <!-- Easy autocomplete -->
-  <script src="jquery.easy-autocomplete.min.js"></script>
-  <link rel="stylesheet" href="easy-autocomplete.min.css">
+  <script src="lib/jquery.easy-autocomplete.min.js"></script>
+  <link rel="stylesheet" href="css/easy-autocomplete.min.css">
 
-  <link rel="stylesheet" href="main.css"/>
+  <link rel="stylesheet" href="css/main.css"/>
 
 </head>
 
